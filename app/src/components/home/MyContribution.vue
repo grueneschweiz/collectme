@@ -1,21 +1,29 @@
 <template>
   <BaseCard>
     <template #header>
-      Mein Beitrag zur Klimafonds-initiative
+      {{t('HomeView.MyContribution.title')}}
     </template>
 
     <template #default>
-      <p>A paragraph for the main content.</p>
-      <p>And another one.</p>
+      <div class="collectme-my-contribution__body">
+        <div>donut</div>
+        <div>
+          <p>{{t('HomeView.MyContribution.body')}}</p>
+          <button>asdf</button>
+        </div>
+      </div>
     </template>
   </BaseCard>
 </template>
 
 <script setup lang="ts">
-
 import BaseCard from "@/components/layout/BaseCard.vue";
+import t from "@/utility/i18n";
 </script>
 
-<style scoped>
-
+<style>
+  .collectme-my-contribution__body {
+    display: flex;
+    align-items: center;
+  }
 </style>

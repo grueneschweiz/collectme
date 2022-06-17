@@ -21,11 +21,25 @@ class ShortcodeHandler
         $atts = (array)$atts;
 
         $defaults = [
-            'cause' => ''
+            'causeuuid' => '',
+            'stringoverwritesjson' => '{}'
         ];
 
-        $attributes = shortcode_atts($defaults, $atts);
+        $args = shortcode_atts($defaults, $atts);
 
-        return $this->appController->cause($attributes['cause']);
+        try {
+            $stringOverwrites = json_decode($args['stringoverwritesjson'], true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            $stringOverwrites = [];
+            trigger_error(
+                "Invalid JSON in collectme shortcode's stringOverwritesJson property. Overwrites ignored.",
+                E_USER_NOTICE
+            );
+        }
+
+        return $this->appController->index(
+            $args['causeuuid'],
+            $stringOverwrites
+        );
     }
 }

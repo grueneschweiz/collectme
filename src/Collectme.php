@@ -22,6 +22,10 @@ const DIST_DIR = 'dist';
  */
 const MANIFEST_PATH = COLLECTME_BASE_PATH . '/' . DIST_DIR . '/manifest.json';
 
+/**
+ * Path to the translated strings for the frontend
+ */
+const APP_STRINGS_PATH = COLLECTME_BASE_PATH . '/languages/app-strings.php';
 
 class Collectme
 {

@@ -6,6 +6,8 @@ namespace Collectme\Controller;
 
 use Collectme\Misc\AssetLoader;
 
+use const Collectme\APP_STRINGS_PATH;
+
 
 class AppController
 {
@@ -17,10 +19,13 @@ class AppController
     /**
      * @throws \JsonException
      */
-    public function cause(string $causeUuid): string
+    public function index(string $causeUuid, array $stringOverwrites): string
     {
+        $translations = require APP_STRINGS_PATH;
+
         $data = [
-            'cause' => $causeUuid
+            'cause' => $causeUuid,
+            't' => array_replace_recursive($translations, $stringOverwrites)
         ];
 
         return '<div id="collectme-app"></div>'

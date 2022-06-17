@@ -1,5 +1,10 @@
 # Collectme V2
 
+## Shortcode
+```
+[collectme causeUuid='{uuid}' stringOverwritesJson='{json}']
+```
+
 ## Architecture
 
 ### Server side
