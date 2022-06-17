@@ -91,6 +91,10 @@ class AssetLoader
      */
     private function getStylesUrls(): array
     {
+        if ($this->isDevMode()) {
+            return []; // the styles are inlined in the css
+        }
+
         return [
             plugin_dir_url(COLLECTME_PLUGIN_NAME)
             . DIST_DIR . '/'
