@@ -24,4 +24,11 @@
 
     /* ELEMENT COLORS */
     --bg-base-card: var(--color-grey-1);
+
+    /* BREAKPOINTS */
+    --size-tiny: 375px;
+    --size-small: 768px;
+    --size-medium: 1024px;
+    --size-large: 1680px;
+    --size-huge: 2560px;
 }
