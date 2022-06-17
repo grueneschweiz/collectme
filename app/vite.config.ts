@@ -11,14 +11,10 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
+  base: '/wp-content/plugins/collectme/app/',
   build: {
     outDir: '../dist',
     manifest: true,
     emptyOutDir: true,
-    rollupOptions: {
-      external: [
-        /theme-les-verts-styles/,
-      ],
-    }
   }
 })

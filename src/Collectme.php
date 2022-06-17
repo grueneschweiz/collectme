@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Collectme;
 
-use Collectme\Misc\AssetLoader;
 use Collectme\Misc\Installer;
 use Collectme\Misc\ShortcodeHandler;
 
@@ -23,23 +22,12 @@ const DIST_DIR = 'dist';
  */
 const MANIFEST_PATH = COLLECTME_BASE_PATH . '/' . DIST_DIR . '/manifest.json';
 
-/**
- * Handle for the JS file that holds our frontend application
- */
-const FRONTEND_SCRIPT_HANDLE = 'collectme-frontend-js';
-
-/**
- * Handle for the CSS file that holds our frontend application's styles
- */
-const FRONTEND_STYLE_HANDLE = 'collectme-frontend-css';
-
 
 class Collectme
 {
     public function __construct(
         private readonly Installer $installer,
         private readonly ShortcodeHandler $shortcodeHandler,
-        private readonly AssetLoader $assetLoader,
     )
     {
     }
@@ -57,9 +45,14 @@ class Collectme
         register_activation_hook(COLLECTME_PLUGIN_NAME, [$this->installer, 'activate']);
         register_deactivation_hook(COLLECTME_PLUGIN_NAME, [$this->installer, 'deactivate']);
 
-        add_action('wp_enqueue_scripts', [$this->assetLoader, 'enqueueAssets'], 10);
-
-        add_filter('script_loader_tag', [$this->assetLoader, 'modifyScriptTag'], 10, 3);
+        /**
+         * Don't add styles and scripts the WordPress way, this doesn't allow to add them only if the
+         * shortcode is present in combination with a timber based theme. Additionally, it's hacky
+         * as we need to customize the script tag to support modules.
+         *
+         * Scripts and styles are therefore directly printed by the controller.
+         */
+        // add_action('wp_enqueue_scripts', '');
     }
 
     private function registerShortcodes(): void {

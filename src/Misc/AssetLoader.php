@@ -7,80 +7,58 @@ namespace Collectme\Misc;
 use JsonException;
 
 use const Collectme\DIST_DIR;
-use const Collectme\FRONTEND_SCRIPT_HANDLE;
-use const Collectme\FRONTEND_STYLE_HANDLE;
 use const Collectme\MANIFEST_PATH;
 
 class AssetLoader
 {
     private array $manifest;
-    private array $requiredStyles = [];
-    private array $requiredScripts = [];
-    private array $addedScriptData = [];
-
-    public function requireScript(string $handle): void
-    {
-        $this->requiredScripts[] = $handle;
-    }
-
-    public function requireStyle(string $handle): void
-    {
-        $this->requiredStyles[] = $handle;
-    }
 
     /**
      * @throws JsonException
      */
-    public function addScriptData(string $scriptHandle, string $jsVarName, array $data): void
+    public function getScriptDataHtml(string $jsVarName, array $data): string
     {
-        $pretty = defined('WP_DEBUG') && WP_DEBUG ? JSON_PRETTY_PRINT : 0;
+        $pretty = $this->isDevMode() ? JSON_PRETTY_PRINT : 0;
         $json = json_encode($data, JSON_THROW_ON_ERROR | $pretty);
-        $this->addedScriptData[$scriptHandle] = "const $jsVarName = $json;";
+        return "<script>const $jsVarName = $json;</script>";
     }
 
-    public function modifyScriptTag(string $tag, string $handle, string $src): string
+    private function isDevMode(): bool
     {
-        if (FRONTEND_SCRIPT_HANDLE === $handle) {
-            return str_replace('<script src=', '<script type="module" src=', $tag);
-        }
-
-        return $tag;
+        return defined('SCRIPT_DEBUG') && SCRIPT_DEBUG;
     }
 
     /**
      * @throws JsonException
      */
-    public function enqueueAssets(): void
+    public function getScriptsHtml(): string
     {
-        $styles = $this->getStyles();
-        foreach ($this->requiredStyles as $handle) {
-            $style = $styles[$handle];
-            wp_enqueue_style(...$style);
-        }
-
-        $scripts = $this->getScripts();
-        foreach ($this->requiredScripts as $handle) {
-            $script = $scripts[$handle];
-            wp_enqueue_script(...$script);
-        }
-
-        foreach ($this->addedScriptData as $handle => $data) {
-            wp_add_inline_script($handle, $data, 'before');
-        }
+        /** @noinspection HtmlUnknownTarget */
+        $template = '<script type="module" src="%s"></script>';
+        $htmlTags = array_map(static fn($src) => sprintf($template, $src), $this->getScriptUrls());
+        return implode('', $htmlTags);
     }
 
     /**
      * @throws JsonException
      */
-    private function getStyles(): array
+    private function getScriptUrls(): array
     {
+        if ($this->isDevMode()) {
+            $defaultDevServerUrl = 'http://localhost:3000';
+            $serverUrl = function_exists('getenv_docker') ?
+                getenv_docker('NODEJS_DEV_SERVER_BASE_URL', $defaultDevServerUrl)
+                : $defaultDevServerUrl;
+
+            $spaUrl = "$serverUrl/wp-content/plugins/collectme/app/src/main.ts";
+        } else {
+            $spaUrl = plugin_dir_url(COLLECTME_PLUGIN_NAME)
+                . DIST_DIR . '/'
+                . $this->getManifest()['index.html']['file'];
+        }
+
         return [
-            FRONTEND_STYLE_HANDLE => [
-                'handle' => FRONTEND_STYLE_HANDLE,
-                'src' => plugin_dir_url(COLLECTME_PLUGIN_NAME)
-                    . DIST_DIR . '/'
-                    . $this->getManifest()['index.html']['css'][0],
-            ],
+            $spaUrl,
         ];
     }
 
@@ -100,18 +78,23 @@ class AssetLoader
     /**
      * @throws JsonException
      */
-    private function getScripts(): array
+    public function getStylesHtml(): string
+    {
+        /** @noinspection HtmlUnknownTarget */
+        $template = '<link rel="stylesheet" href="%s">';
+        $htmlTags = array_map(static fn($src) => sprintf($template, $src), $this->getStylesUrls());
+        return implode('', $htmlTags);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    private function getStylesUrls(): array
     {
         return [
-            FRONTEND_SCRIPT_HANDLE => [
-                'handle' => FRONTEND_SCRIPT_HANDLE,
-                'src' => plugin_dir_url(COLLECTME_PLUGIN_NAME)
-                    . DIST_DIR . '/'
-                    . $this->getManifest()['index.html']['file'],
-                'deps' => [],
-                'ver' => COLLECTME_VERSION,
-                'in_footer' => true
-            ],
+            plugin_dir_url(COLLECTME_PLUGIN_NAME)
+            . DIST_DIR . '/'
+            . $this->getManifest()['index.html']['css'][0],
         ];
     }
 }

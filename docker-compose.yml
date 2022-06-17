@@ -12,8 +12,11 @@ services:
       WORDPRESS_DB_PASSWORD: ""
       WORDPRESS_DB_USER: "root"
       WORDPRESS_DEBUG: 1
-      # disable deprecation notices as wordpress core throws a ton with php 8.1
-      WORDPRESS_CONFIG_EXTRA: 'ini_set("error_reporting", E_ALL & ~E_DEPRECATED);'
+      WORDPRESS_CONFIG_EXTRA: |
+        define( "WP_DEBUG_DISPLAY", false ); 
+        define( "WP_DEBUG_LOG", "/dev/stderr" );
+        define( 'SCRIPT_DEBUG', true );
+      NODEJS_DEV_SERVER_BASE_URL: "http://localhost:3000"
     depends_on:
       - "mysql"
     ports:
