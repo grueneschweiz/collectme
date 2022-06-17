@@ -1,0 +1,27 @@
+#collectme-app {
+    /* BASE COLORS */
+    --color-white: #ffffff;
+    --color-grey-1: #f1f1f1;
+    --color-grey-2: #e2e2e2;
+    --color-grey-3: #6a6a6a;
+    --color-black: #000000;
+    --color-red: #ef0606;
+
+    --color-primary: #84B414;
+    --color-primary-dark: #516F0A;
+    --color-primary-light: #CEE1A1;
+    --color-primary-super-light: #E6F0D0;
+
+    --color-secondary: #E10078;
+    --color-secondary-dark: #B1025F;
+    --color-secondary-light: #F0CEE1;
+
+    --color-text: #333333;
+    --color-text-light: #4E4E4E;
+
+    --color-warning: #fff7dc;
+
+
+    /* ELEMENT COLORS */
+    --bg-base-card: var(--color-grey-1);
+}

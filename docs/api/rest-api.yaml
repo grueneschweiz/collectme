@@ -1,0 +1,878 @@
+---
+openapi: 3.0.0
+
+info:
+  description: |
+    API specification for the Collectme V2 WordPress plugin.
+  version: 1.0.0
+  title: Collectme V2
+  contact:
+    email: admin@gruene.ch
+  license:
+    name: LGPL-3.0
+    url: 'https://opensource.org/licenses/LGPL-3.0'
+
+servers:
+  - description: Prism Mock API
+    url: http://localhost:8040/
+
+tags:
+  - name: users
+  - name: sessions
+    description: persistent sessions
+  - name: groups
+    description: signature groups
+  - name: signatures
+    description: signature entries
+  - name: objectives
+    description: pledges and quotas
+  - name: activities
+    description: activity feed
+
+
+components:
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
+
+  schemas:
+    # --------------------------------------------------------------------------
+    # ModelBase
+    # --------------------------------------------------------------------------
+
+    ActivityBase:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/FieldId'
+        type:
+          type: string
+          example: activity
+
+    GroupBase:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/FieldId'
+        type:
+          type: string
+          example: group
+
+    ObjectiveBase:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/FieldId'
+        type:
+          type: string
+          example: objective
+
+    SessionBase:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/FieldId'
+        type:
+          type: string
+          example: session
+
+    SignatureBase:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/FieldId'
+        type:
+          type: string
+          example: signature
+
+    UserBase:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/FieldId'
+        type:
+          type: string
+          example: user
+
+
+    # --------------------------------------------------------------------------
+    # ModelAttributes
+    # --------------------------------------------------------------------------
+
+    ActivityAttributes:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - pledge
+            - personal signature
+            - organization signature
+            - personal goal achieved
+            - personal goal raised
+        count:
+          type: integer
+          example: 55
+        created:
+          type: string
+          format: date-time
+
+    GroupAttributes:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Maria Muster
+        type:
+          type: string
+          enum: [person, organization]
+        signatures:
+          type: integer
+          example: 45
+          description: Computed. The total amount of signatures of this group.
+        writeable:
+          description: Computed. Tells if the current user has write permission for this group.
+          type: boolean
+          example: true
+
+    LoginAttributes:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+          example: Maria
+        lastName:
+          type: string
+          example: Muster
+
+    ObjectiveAttributes:
+      type: object
+      properties:
+        objective:
+          type: integer
+          example: 200
+        source:
+          type: string
+          example: Newsletter
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+
+    SessionAttributes:
+      type: object
+      properties:
+        login_counter:
+          type: integer
+          example: 0
+        last_login:
+          type: string
+          format: date-time
+        activated:
+          type: string
+          format: date-time
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+
+    SignatureAttributes:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 13
+
+    UserAttributes:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+          example: Maria
+        lastName:
+          type: string
+          example: Muster
+        lang:
+          type: string
+          enum: [d, f, e]
+
+
+    # --------------------------------------------------------------------------
+    # Models
+    # --------------------------------------------------------------------------
+
+    Activity:
+      allOf:
+        - $ref: '#/components/schemas/ActivityBase'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/ActivityAttributes'
+        - type: object
+          properties:
+            relationships:
+              type: object
+              properties:
+                group:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/GroupBase'
+                user:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserBase'
+
+
+    Group:
+      allOf:
+        - $ref: '#/components/schemas/GroupBase'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/GroupAttributes'
+        - type: object
+          properties:
+            relationships:
+              type: object
+              properties:
+                objective:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ObjectiveBase'
+
+    Objective:
+      allOf:
+        - $ref: '#/components/schemas/ObjectiveBase'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/ObjectiveAttributes'
+
+    Session:
+      allOf:
+        - $ref: '#/components/schemas/SessionBase'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/SessionAttributes'
+        - type: object
+          properties:
+            relationships:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserBase'
+
+    Signature:
+      allOf:
+        - $ref: '#/components/schemas/SignatureBase'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/SignatureAttributes'
+        - type: object
+          properties:
+            relationships:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserBase'
+                group:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/GroupBase'
+                activity:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ActivityBase'
+
+    User:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/UserAttributes'
+
+
+    # --------------------------------------------------------------------------
+    # Misc
+    # --------------------------------------------------------------------------
+
+    FieldId:
+      type: string
+      format: uuid
+
+    PaginationLinks:
+      type: object
+      properties:
+        first:
+          type: string
+          format: url
+          example: "/activities"
+          nullable: true
+        last:
+          type: string
+          format: url
+          nullable: true
+          example: null
+        prev:
+          type: string
+          format: url
+          nullable: true
+          example: "/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        next:
+          type: string
+          format: url
+          nullable: true
+          example: "/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
+
+    # --------------------------------------------------------------------------
+    # Errors
+    # --------------------------------------------------------------------------
+
+    ErrorModel:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        title:
+          type: string
+          example: Bad Request
+
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorModel'
+
+    InvalidEmail:
+      allOf:
+        - $ref: '#/components/schemas/Errors'
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 422
+                  title:
+                    type: string
+                    example: Invalid data
+                  source:
+                    type: object
+                    properties:
+                      pointer:
+                        type: string
+                        example: "/data/attributes/email"
+
+    InvalidToken:
+      allOf:
+        - $ref: '#/components/schemas/Errors'
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  status:
+                    example: 403
+                  title:
+                    example: Invalid Token
+
+    NotFound:
+      allOf:
+        - $ref: '#/components/schemas/Errors'
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  status:
+                    example: 404
+                  title:
+                    example: Not Found
+
+
+    Unauthorized:
+      allOf:
+        - $ref: '#/components/schemas/Errors'
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 401
+                  title:
+                    type: string
+                    example: Unauthorized
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+
+  parameters:
+    uuid:
+      name: uuid
+      in: path
+      required: true
+      description: Uuid of the previous element in the path
+      schema:
+        type: string
+        format: uuid
+
+paths:
+  /users/current:
+    get:
+      tags:
+        - users
+      summary: Get logged in user
+      description: |
+        Retreives the user object of the currently logged in user.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - cookieAuth: []
+
+  /users/session:
+    get:
+      tags:
+        - users
+      summary: Login user with existing authentication cookie
+      description: |
+        Get a PHP session from the `WP_COLLECTME_AUTH` cookie, which references to a persistent session.
+      parameters:
+        - name: WP_COLLECTME_AUTH
+          in: cookie
+          description: The encrypted uuid of the persistent session
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            Set-Cookie:
+              description: PHPSESSID
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: The permanent session was not yet activated. Keep polling.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: The permanent session was closed or not found. Please log in again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+
+
+  /users/form-auth:
+    post:
+      tags:
+        - users
+      summary: Authenticate user by email
+      description: |
+        - Create user if it doesn't exist.
+        - Send the user an email with a login link.
+        - Set the `WP_COLLECTME_AUTH` cookie in the response.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: login
+                    attributes:
+                      $ref: '#/components/schemas/LoginAttributes'
+
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+          headers:
+            Location:
+              description: /sessions/{uuid}
+              schema:
+                type: string
+            Set-Cookie:
+              description: |
+                WP_COLLECTME_AUTH='{enc_sessions_uuid}'; Secure; HttpOnly; SameSite=Strict; Expires=Tue, 01 Jan 2030 00:00:00 GMT
+              schema:
+                type: string
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidEmail'
+
+  /users/link-auth:
+    parameters:
+      - name: token
+        description: The `login_token`
+        in: query
+        schema:
+          type: string
+          minLength: 64
+          maxLength: 64
+        required: true
+
+    get:
+      tags:
+        - users
+      summary: Authenticate user by secret link
+      description: |
+        - Check link secret.
+        - Create user if it doesn't exist.
+        - Set the `WP_COLLECTME_AUTH` cookie in the response.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+          headers:
+            Set-Cookie:
+              description: |
+                WP_COLLECTME_AUTH='{enc_sessions_uuid}'; Secure; HttpOnly; SameSite=Strict; Expires=Tue, 01 Jan 2030 00:00:00 GMT
+              schema:
+                type: string
+        '404':
+          description: No user with this token found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidToken'
+
+
+  /sessions/{uuid}:
+    parameters:
+      - $ref: '#/components/parameters/uuid'
+
+    get:
+      tags:
+        - sessions
+      summary: Activate persistent session
+      description: |
+        Activate a persistent session object in the database. 
+        
+        Uses a get request so we can generate a link that is distributable by email.
+      parameters:
+        - name: token
+          description: The `activation_secret` of the persistent session
+          in: query
+          schema:
+            type: string
+            minLength: 64
+            maxLength: 64
+          required: true
+      responses:
+        '204':
+          description: OK
+        '404':
+          description: Activation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidToken'
+
+    delete:
+      tags:
+        - sessions
+      summary: Logout
+      description: |
+        Closes the persistent session in the database and removes the PHP session on the server. Additionally, the response contains cookie exiration headers for the client.
+      responses:
+        '204':
+          description: OK
+          headers:
+            Set-Cookie:
+              description: |
+                WP_COLLECTME_AUTH=''; Max-Age=0
+              schema:
+                type: string
+            "\0Set-Cookie":
+              description: |
+                PHPSESSID=''; Max-Age=0
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - cookieAuth: []
+
+  /causes/{uuid}/groups:
+    parameters:
+      - $ref: '#/components/parameters/uuid'
+
+    get:
+      tags:
+        - groups
+      summary: List of groups this user can view
+      description: |
+        Get an array with all groups, the current user has read permission for.
+        
+        Using a non-existing cause uuid returns an empty array.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+                  included:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Objective'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - cookieAuth: []
+
+  /signatures:
+    post:
+      tags:
+        - signatures
+      summary: Add signature entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: signature
+                    attributes:
+                      type: object
+                      properties:
+                        count:
+                          type: integer
+                          example: 13
+                relationships:
+                  type: object
+                  properties:
+                    user:
+                      type: object
+                      properties:
+                        data:
+                          $ref: '#/components/schemas/UserBase'
+                    group:
+                      type: object
+                      properties:
+                        data:
+                          $ref: '#/components/schemas/GroupBase'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Signature'
+          headers:
+            Location:
+              description: /signatures/{uuid}
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - cookieAuth: []
+
+  /signatures/{uuid}:
+    parameters:
+      - $ref: '#/components/parameters/uuid'
+
+    delete:
+      tags:
+        - signatures
+      summary: Remove signature entry
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - cookieAuth: []
+
+  /objectives:
+    post:
+      tags:
+        - objectives
+      summary: Add objective
+      description: |
+        Adds a new objective. The objective with the highest count is the 
+        authorative one.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: objective
+                    attributes:
+                      type: object
+                      properties:
+                        objective:
+                          type: integer
+                          example: 200
+                        source:
+                          type: string
+                          example: app
+                relationships:
+                  type: object
+                  properties:
+                    user:
+                      type: object
+                      properties:
+                        data:
+                          $ref: '#/components/schemas/UserBase'
+                    group:
+                      type: object
+                      properties:
+                        data:
+                          $ref: '#/components/schemas/GroupBase'
+      responses:
+        '204':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Objective'
+          headers:
+            Location:
+              description: /objectives/{uuid}
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - cookieAuth: []
+
+  /activities:
+    get:
+      tags:
+        - activities
+      parameters:
+        - name: page[cursor]
+          description: |
+            The uuid of the latest activity of the page to retrieve or null to
+            get the page with the latest activities.
+          in: query
+          schema:
+            type: string
+            minLength: 36
+            maxLength: 36
+
+      summary: Get activities
+      description: Paginated list of activities, sorted by creation date, newest first.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Activity'
+                  links:
+                    $ref: '#/components/schemas/PaginationLinks'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - cookieAuth: []

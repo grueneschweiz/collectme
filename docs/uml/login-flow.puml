@@ -1,0 +1,48 @@
+@startuml
+Actor Email
+Actor Browser
+Actor OtherBrowser
+Participant ServerApp
+Database Database
+
+
+== Authenticate by Link\n<size:10>obtain persistent session cookie ""WP_COLLECTME_AUTH"" via link</size> ==
+Email -> Browser : ""GET /users/link-login?token=***""
+Browser -> ServerApp : ""GET /users/link-login?token=***""
+ServerApp -> Database : getLinkAuthByToken
+Database --> ServerApp : LinkAuth
+ServerApp -> Database  : getOrCreateUser
+Database --> ServerApp : User
+ServerApp -> Database  : createPersistentSession
+note right: create activated session
+Database --> ServerApp : PersistentSession
+ServerApp --> Browser  : ""WP_COLLECTME_AUTH"" Cookie\nPersistentSession
+
+== Authenticate by Login Form\n<size:10>obtain persistent session cookie ""WP_COLLECTME_AUTH"" via login form</size> ==
+Browser -> ServerApp   : ""POST /users/form-login""
+ServerApp -> Database  : getOrCreateUser
+Database --> ServerApp : User
+ServerApp -> Database  : createPersistentSession
+note right: session not activated
+Database --> ServerApp : PersistentSession
+ServerApp -> Email     : ActivationSecret
+ServerApp --> Browser  : ""WP_COLLECTME_AUTH"" Cookie\nPersistentSession
+Email -> OtherBrowser  : ActivationSecret
+OtherBrowser -> ServerApp: ""GET /sessions/{uuid}?token=***""
+ServerApp -> Database  : activatePersistentSession
+
+== Login\n<size:10>authenticate by ""WP_COLLECTME_AUTH"" cookie</size> ==
+Browser -> ServerApp : ""GET /users/session""
+ServerApp -> Database : isSessionActive
+Database --> ServerApp : ""true""
+ServerApp -> Database : noteLogin
+ServerApp -> ServerApp : addUserToPhpSession
+ServerApp --> Browser : User
+
+note over Browser, Database
+Repeat authentication steps (poll) if ServerApp responds with status code 401.
+It means, the user hasn't clicked the activation link in the email yet.
+
+If the persistent session was closed or not found, a 404 is returned.
+end note
+@enduml

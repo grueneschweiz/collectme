@@ -1,0 +1,6 @@
+/gen
+/wordpress
+/tmp
+!/tmp/.gitkeep
+/dist
+/vendor

@@ -1,0 +1,95 @@
+---
+version: '3.8'
+
+services:
+  wordpress:
+    build:
+      context: .
+      dockerfile: "./.docker/wordpress.Dockerfile"
+    environment:
+      WORDPRESS_DB_HOST: "mysql"
+      WORDPRESS_DB_NAME: "wordpress"
+      WORDPRESS_DB_PASSWORD: ""
+      WORDPRESS_DB_USER: "root"
+      WORDPRESS_DEBUG: 1
+      # disable deprecation notices as wordpress core throws a ton with php 8.1
+      WORDPRESS_CONFIG_EXTRA: 'ini_set("error_reporting", E_ALL & ~E_DEPRECATED);'
+    depends_on:
+      - "mysql"
+    ports:
+      - "8000:80"
+    volumes:
+      - "wp:/var/www/html:rw"
+      - ".:/var/www/html/wp-content/plugins/collectme:rw"
+      - "./.docker/addon-php.ini:/usr/local/etc/php/conf.d/addon-php.ini:ro"
+      - "./.docker/ssmtp.conf:/etc/ssmtp/ssmtp.conf:ro"
+
+  mysql:
+    image: "mysql:5.6"
+    volumes:
+      - "db:/var/lib/mysql"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "wordpress"
+      MYSQL_ROOT_PASSWORD: ""
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '8010:80'
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ""
+      UPLOAD_LIMIT: 1G
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - '8020:8025'
+    command: ["-smtp-bind-addr", "0.0.0.0:25"]
+    expose:
+      - 25
+
+  node:
+    image: node:18
+    working_dir: /home/node/collectme/app
+    user: node
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./:/home/node/collectme:cached
+    command: yarn dev
+    ports:
+      - '3000:3000'
+    depends_on:
+      - wordpress
+
+  swagger-editor:
+    image: swaggerapi/swagger-editor:v4.2.9
+    ports:
+      - "8030:8080"
+    volumes:
+      - ./docs/api:/tmp/swagger
+    environment:
+      SWAGGER_FILE: /tmp/swagger/rest-api.yaml
+
+  swagger-codegen:
+    image: swaggerapi/swagger-codegen-cli-v3:3.0.34
+    volumes:
+      - ./docs/api:/tmp/swagger/input:ro
+      - ./gen:/tmp/swagger/output
+    command: "" # see README.md on how to generate stubs.
+
+  prism:
+    image: stoplight/prism:4.10.0
+    volumes:
+      - ./docs/api:/tmp/prism:ro
+    ports:
+      - "8040:4010"
+    command: mock -h 0.0.0.0 /tmp/prism/rest-api.yaml
+
+volumes:
+  db:
+  wp:
