@@ -17,6 +17,7 @@
           :validation-status="emailValid"
           :validation-message="t('HomeView.TheLogin.emailInvalid')"
           v-model="email"
+          required
       />
 
       <TransitionAppearFade>
@@ -29,9 +30,10 @@
               :label="t('HomeView.TheLogin.firstNameLabel')"
               type="text"
               autocomplete="given-name"
-              :validation-status="nameValid(firstName)"
+              :validation-status="firstNameValid"
               :validation-message="t('HomeView.TheLogin.firstNameInvalid')"
               v-model="firstName"
+              required
           />
 
           <BaseInput
@@ -39,12 +41,25 @@
               :label="t('HomeView.TheLogin.lastNameLabel')"
               type="text"
               autocomplete="family-name"
-              :validation-status="nameValid(lastName)"
+              :validation-status="lastNameValid"
               :validation-message="t('HomeView.TheLogin.lastNameInvalid')"
               v-model="lastName"
+              required
           />
         </div>
       </TransitionAppearFade>
+
+      <div class="collectme-the-login__submit-wrapper">
+        <BaseButton
+            secondary
+            :muted="!isFormValid"
+            :disabled="!isFormValid"
+            class="collectme-the-login__submit-button"
+        >
+          {{ t('HomeView.TheLogin.signIn') }}
+        </BaseButton>
+        <p class="collectme-the-login__submit-byline">{{t('HomeView.TheLogin.submitByline')}}</p>
+      </div>
     </template>
 
   </TheBaseOverlay>
@@ -59,6 +74,7 @@ import isEmail from 'validator/es/lib/isEmail';
 import isLength from 'validator/es/lib/isLength';
 import type {ValidationStatus} from "@/components/base/BaseInput/BaseInputTypes";
 import TransitionAppearFade from '@/components/transition/TransitionAppearFade.vue'
+import BaseButton from '@/components/base/BaseButton.vue'
 
 const email = ref('');
 const firstName = ref('');
@@ -72,13 +88,27 @@ const emailValid = computed<ValidationStatus>(() => {
   return isEmail(email.value) ? 'valid' : 'invalid'
 })
 
-const nameValid: (name: string) => (ValidationStatus) = name => {
+const firstNameValid = computed<ValidationStatus>(() => {
+  return minLen(firstName.value, 2)
+})
+
+const lastNameValid = computed<ValidationStatus>(() => {
+  return minLen(lastName.value, 2)
+})
+
+const minLen: (name: string, len: number) => (ValidationStatus) = (name, len) => {
   if (!name) {
     return 'unvalidated'
   }
 
-  return isLength(name, {min: 2}) ? 'valid' : 'invalid'
+  return isLength(name, {min: len}) ? 'valid' : 'invalid'
 }
+
+const isFormValid = computed(() => {
+  return emailValid.value === 'valid'
+    && firstNameValid.value === 'valid'
+    && lastNameValid.value === 'valid'
+})
 
 let nameInputsShown = false;
 const showNameInputs = computed(() => {
@@ -92,6 +122,22 @@ const showNameInputs = computed(() => {
 
 <style>
 .collectme-the-login__login-msg {
+  margin: 0;
+}
+
+.collectme-the-login__submit-wrapper {
+  margin: 20px 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+}
+
+.collectme-the-login__submit-button {
+  flex: none;
+}
+
+.collectme-the-login__submit-byline {
   margin: 0;
 }
 </style>
