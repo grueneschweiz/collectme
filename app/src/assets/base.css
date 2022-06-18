@@ -31,4 +31,9 @@
     --size-medium: 1024px;
     --size-large: 1680px;
     --size-huge: 2560px;
+
+    /* TRANSITIONS */
+    --transition-speed-fast: 200ms;
+    --transition-speed-normal: 400ms;
+    --transition-speed-slow: 800ms;
 }

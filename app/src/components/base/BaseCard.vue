@@ -19,9 +19,14 @@
 </script>
 
 <style>
-  .collectme-base-card {
-    background-color: var(--bg-base-card);
-    border-bottom: 2px solid var(--color-primary);
-    border-radius: 3px;
-  }
+.collectme-base-card {
+  background-color: var(--bg-base-card);
+  border-bottom: 2px solid var(--color-primary);
+  border-radius: 5px;
+  padding: clamp(10px, calc(3vw), 20px);
+}
+
+.collectme-base-card__title {
+  margin-top: 0;
+}
 </style>
