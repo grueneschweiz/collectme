@@ -1,11 +1,34 @@
 # Collectme V2
 
 ## Shortcode
+
 ```
 [collectme causeUuid='{uuid}' stringOverwritesJson='{json}']
 ```
 
 ## Architecture
+
+### Vue JS
+
+#### Components
+
+Paths:
+
+- General components live in [/app/src/components/base/](/app/src/components/base)
+- Specific components [/app/src/components/specific/{routeName}/](/app/src/components/specific)
+- Components with assets or specific child components are to be packed into a subdirectory with the name of the
+  component (in `PascalCase`)
+
+Naming:
+
+- `PascalCase` file names
+- General components names are prefixed with `Base`
+- Components naming rules:
+    - At least [two words](https://vuejs.org/style-guide/rules-essential.html#use-multi-word-component-names)
+    - `The` prefix for components, that should only ever have a single active instance (e.g. `TheBaseOverlay`)
+    - Tightly coupled or specific child components include the parent component name as prefix.
+    - Start with the highest level words and put more specific ones after (e.g. `SearchButtonClear.vue`)
+
 
 ### Server side
 

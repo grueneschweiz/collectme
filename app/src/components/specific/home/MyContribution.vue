@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseCard from "@/components/layout/BaseCard.vue";
+import BaseCard from "@/components/base/BaseCard.vue";
 import t from "@/utility/i18n";
 </script>
 
