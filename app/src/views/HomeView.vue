@@ -4,7 +4,7 @@ import MyContribution from "@/components/specific/home/MyContribution.vue";
 </script>
 
 <template>
-  <div class="collectme-home">
+  <div class="collectme-home-view">
     <MyContribution />
   </div>
   <RouterView />

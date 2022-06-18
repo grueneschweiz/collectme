@@ -1,7 +1,7 @@
 <template>
   <div class="collectme-base-card">
     <header>
-      <h3>
+      <h3 class="collectme-base-card__title">
         <slot name="header"></slot>
       </h3>
     </header>

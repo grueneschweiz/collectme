@@ -19,7 +19,7 @@ Paths:
 - Components with assets or specific child components are to be packed into a subdirectory with the name of the
   component (in `PascalCase`)
 
-Naming:
+Component Naming:
 
 - `PascalCase` file names
 - General components names are prefixed with `Base`
@@ -28,6 +28,15 @@ Naming:
     - `The` prefix for components, that should only ever have a single active instance (e.g. `TheBaseOverlay`)
     - Tightly coupled or specific child components include the parent component name as prefix.
     - Start with the highest level words and put more specific ones after (e.g. `SearchButtonClear.vue`)
+
+HTML Class Naming:
+
+- Wrapping container: `collectme-{component-name}` e.g. `collectme-the-base-overlay`
+- Inner elements: `collectme-{component-name}__{specific-tag}` e.g. `collectme-the-base-overlay__title`
+
+CSS:
+
+- Don't use the styles `scoped` attribute (so themes can overwrite the plugins styles)
 
 
 ### Server side

@@ -6,6 +6,6 @@
   const msg = "Login"
 </script>
 
-<style scoped>
+<style>
 
 </style>
