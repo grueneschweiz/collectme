@@ -31,6 +31,7 @@ const PATH_APP_STRINGS = COLLECTME_BASE_PATH . '/languages/app-strings.php';
  * Plugin option keys for WordPress' option API
  */
 const OPTION_KEY_DB_VERSION = 'collectme_db_version';
+const OPTION_KEY_PLUGIN_VERSION = 'collectme_plugin_version';
 
 class Collectme
 {
@@ -54,6 +55,7 @@ class Collectme
         register_activation_hook(COLLECTME_PLUGIN_NAME, [$this->installer, 'activate']);
         register_deactivation_hook(COLLECTME_PLUGIN_NAME, [$this->installer, 'deactivate']);
         register_uninstall_hook(COLLECTME_PLUGIN_NAME, [Installer::class, 'uninstall']);
+        add_action('admin_init', [$this->installer, 'afterPluginUpdated']);
 
         /**
          * Don't add styles and scripts the WordPress way, this doesn't allow to add them only if the

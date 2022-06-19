@@ -6,6 +6,8 @@ namespace Collectme\Misc;
 
 use Collectme\Exceptions\CollectmeException;
 
+use const Collectme\OPTION_KEY_PLUGIN_VERSION;
+
 class Installer
 {
     public function __construct(
@@ -15,14 +17,13 @@ class Installer
 
     /**
      * @throws CollectmeException
+     * @noinspection PhpDocRedundantThrowsInspection
      */
-    public function activate(bool $networkWide): void
+    public static function uninstall(): void
     {
-        if ($networkWide) {
-            self::forEachSite([$this->dbInstaller, 'setupTables']);
-        } else {
-            $this->dbInstaller->setupTables();
-        }
+        // this function must be static, so we can use be used by the register_uninstall_hook
+
+        self::forEachSite([DbInstaller::class, 'removeTables']);
     }
 
     private static function forEachSite(callable $callback): void
@@ -44,18 +45,45 @@ class Installer
         }
     }
 
+    /**
+     * @throws CollectmeException
+     */
+    public function activate(bool $networkWide): void
+    {
+        if ($networkWide) {
+            self::forEachSite([$this->dbInstaller, 'setupTables']);
+        } else {
+            $this->dbInstaller->setupTables();
+        }
+
+        $this->storeCurrentPluginVersion();
+    }
+
+    private function storeCurrentPluginVersion(): void
+    {
+        update_option(OPTION_KEY_PLUGIN_VERSION, COLLECTME_VERSION);
+    }
+
     public function deactivate(): void
     {
     }
 
     /**
      * @throws CollectmeException
-     * @noinspection PhpDocRedundantThrowsInspection
      */
-    public static function uninstall(): void
+    public function afterPluginUpdated(): void
     {
-        // this function must be static, so we can use be used by the register_uninstall_hook
+        if (!$this->wasPluginUpdated()) {
+            return;
+        }
 
-        self::forEachSite([DbInstaller::class, 'removeTables']);
+        $this->dbInstaller->setupTables();
+        $this->storeCurrentPluginVersion();
+    }
+
+    private function wasPluginUpdated(): bool
+    {
+        $storedVersion = get_option(OPTION_KEY_PLUGIN_VERSION, '0');
+        return 1 === version_compare(COLLECTME_VERSION, $storedVersion);
     }
 }
