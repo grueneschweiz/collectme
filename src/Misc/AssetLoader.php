@@ -7,7 +7,7 @@ namespace Collectme\Misc;
 use JsonException;
 
 use const Collectme\DIST_DIR;
-use const Collectme\MANIFEST_PATH;
+use const Collectme\PATH_MANIFEST;
 
 class AssetLoader
 {
@@ -68,7 +68,7 @@ class AssetLoader
     private function getManifest(): array
     {
         if (empty($this->manifest)) {
-            $manifestData = file_get_contents(MANIFEST_PATH);
+            $manifestData = file_get_contents(PATH_MANIFEST);
             $this->manifest = json_decode($manifestData, true, 512, JSON_THROW_ON_ERROR);
         }
 

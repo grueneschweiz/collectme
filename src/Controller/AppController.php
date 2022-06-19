@@ -6,7 +6,7 @@ namespace Collectme\Controller;
 
 use Collectme\Misc\AssetLoader;
 
-use const Collectme\APP_STRINGS_PATH;
+use const Collectme\PATH_APP_STRINGS;
 
 
 class AppController
@@ -21,7 +21,7 @@ class AppController
      */
     public function index(string $causeUuid, array $stringOverwrites): string
     {
-        $translations = require APP_STRINGS_PATH;
+        $translations = require PATH_APP_STRINGS;
 
         $data = [
             'cause' => $causeUuid,
