@@ -33,6 +33,17 @@ const PATH_APP_STRINGS = COLLECTME_BASE_PATH . '/languages/app-strings.php';
 const OPTION_KEY_DB_VERSION = 'collectme_db_version';
 const OPTION_KEY_PLUGIN_VERSION = 'collectme_plugin_version';
 
+/**
+ * Routing related
+ */
+const REST_ROUTE_PREFIX = 'collectme';
+const REST_V1_NAMESPACE = REST_ROUTE_PREFIX.'/v1';
+
+/**
+ * Database related
+ */
+const DB_PREFIX = 'collectme_';
+
 class Collectme
 {
     public function __construct(

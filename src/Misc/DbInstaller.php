@@ -6,6 +6,7 @@ namespace Collectme\Misc;
 
 use Collectme\Exceptions\CollectmeException;
 
+use const Collectme\DB_PREFIX;
 use const Collectme\OPTION_KEY_DB_VERSION;
 
 class DbInstaller
@@ -95,10 +96,11 @@ class DbInstaller
     private function replaceSchemaAndTableNames(string $sql): string
     {
         global $wpdb;
+        $prefix = $wpdb->prefix . DB_PREFIX;
 
         return preg_replace(
             "/`collectme`.`([^`]+)`/",
-            "`{$wpdb->prefix}collectme_$1`",
+            "`$prefix$1`",
             $sql
         );
     }
@@ -231,8 +233,9 @@ class DbInstaller
         // this function must be static, so we can use be used by the register_uninstall_hook
 
         global $wpdb;
+        $prefix = $wpdb->prefix . DB_PREFIX;
 
-        $tables = $wpdb->get_col("SHOW TABLES LIKE '{$wpdb->prefix}collectme_%'");
+        $tables = $wpdb->get_col("SHOW TABLES LIKE '$prefix%'");
 
         $queries = [];
         foreach ($tables as $table) {
