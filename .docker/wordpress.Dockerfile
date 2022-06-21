@@ -4,7 +4,9 @@ RUN apt-get update
 RUN apt-get install -y \
     less \
     vim \
-    msmtp
+    msmtp \
+    subversion \
+    default-mysql-client
 
 # Cleanup
 RUN apt-get clean
@@ -30,4 +32,4 @@ WORKDIR /var/www/html
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # run as www-data
-USER www-data:www-data
+#USER www-data:www-data

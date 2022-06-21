@@ -6,6 +6,17 @@
 [collectme causeUuid='{uuid}' stringOverwritesJson='{json}']
 ```
 
+
+## Testing
+
+```
+# run tests
+docker-compose run wordpress bash -c \
+  "cd wp-content/plugins/collectme \
+  && bin/install-wp-tests.sh collectme_test root '' mysql 6.0 \
+  && php vendor/bin/phpunit"
+```
+
 ## Architecture
 
 ### Vue JS
