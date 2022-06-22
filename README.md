@@ -6,16 +6,27 @@
 [collectme causeUuid='{uuid}' stringOverwritesJson='{json}']
 ```
 
-
 ## Testing
 
 ```
+# install test environement
+docker-compose run wordpress bash -c \
+  'cd wp-content/plugins/collectme \
+  && TMPDIR=$(pwd)/tmp bin/install-wp-tests.sh collectme_test root "" mysql latest'
+
 # run tests
 docker-compose run wordpress bash -c \
-  "cd wp-content/plugins/collectme \
-  && bin/install-wp-tests.sh collectme_test root '' mysql 6.0 \
-  && php vendor/bin/phpunit"
+  'cd wp-content/plugins/collectme \
+  && php vendor/bin/phpunit'
 ```
+
+Set `PHP_IDE_CONFIG='serverName=Docker'` in your IDEs run configuration if you want to run tests directly in your IDE.
+`serverName=Docker` corresponds to the server name configured in your IDE (`Settings > PHP > Servers > Name` for
+PHPStorm).
+
+Please note also, that the `WP_TESTS_DIR="$(pwd)/tmp/wordpress-tests-lib"` environment variable is set in 
+[/phpunit.xml.dist](phpunit.xml.dist). It must point to the same directory as `TMPDIR`, you've used for installing the 
+tests.
 
 ## Architecture
 
@@ -48,7 +59,6 @@ HTML Class Naming:
 CSS:
 
 - Don't use the styles `scoped` attribute (so themes can overwrite the plugins styles)
-
 
 ### Server side
 
@@ -101,6 +111,20 @@ Helpful resources:
 - `docker-compose run swagger-codegen langs`
 - `docker-compose run swagger-codegen generate`
 - [Swagger-Codegen](https://github.com/swagger-api/swagger-codegen) on GitHub
+
+#### OpenAPI Schema to JSON Schema
+
+- Converts the [OpenAPI 3.0](https://spec.openapis.org/oas/v3.0.3.html) definition to
+  a [JSON Schema 4](http://json-schema.org/specification-links.html#draft-4) (which is recommended by WordPress)
+- Currently, not containerized
+
+```
+npm install -g openapi2schema
+```
+
+Helpful resources:
+
+- [OpenAPI Schema to JSON Schema](https://github.com/openapi-contrib/openapi-schema-to-json-schema)
 
 #### Prism
 

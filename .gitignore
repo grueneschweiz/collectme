@@ -4,3 +4,4 @@
 !/tmp/.gitkeep
 /dist
 /vendor
+.phpunit.result.cache

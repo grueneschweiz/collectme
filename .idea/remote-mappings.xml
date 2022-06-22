@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteMappingsManager">
+    <list>
+      <list>
+        <remote-mappings server-id="php@ebe5a491-a1b8-4918-b4c2-160a7d454309">
+          <settings>
+            <list>
+              <mapping local-root="$PROJECT_DIR$/tmp/wordpress" remote-root="/var/www/html" />
+            </list>
+          </settings>
+        </remote-mappings>
+      </list>
+    </list>
+  </component>
+</project>

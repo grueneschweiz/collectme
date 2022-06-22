@@ -17,6 +17,7 @@ services:
         define( "WP_DEBUG_LOG", "/dev/stderr" );
         define( 'SCRIPT_DEBUG', true );
       NODEJS_DEV_SERVER_BASE_URL: "http://localhost:3000"
+      PHP_IDE_CONFIG: serverName=Docker
     depends_on:
       - "mysql"
     ports:

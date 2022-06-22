@@ -9,6 +9,20 @@
           </resourceRoots>
         </entryData>
       </entry>
+      <entry url="file://$PROJECT_DIR$/tmp/wordpress">
+        <entryData>
+          <resourceRoots>
+            <path value="file://$PROJECT_DIR$/tmp/wordpress" />
+          </resourceRoots>
+        </entryData>
+      </entry>
+      <entry url="file://$PROJECT_DIR$/tmp/wordpress-tests-lib">
+        <entryData>
+          <resourceRoots>
+            <path value="file://$PROJECT_DIR$/tmp/wordpress-tests-lib" />
+          </resourceRoots>
+        </entryData>
+      </entry>
     </contentEntries>
   </component>
 </project>

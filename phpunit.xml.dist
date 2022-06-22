@@ -9,8 +9,10 @@
 	>
 	<testsuites>
 		<testsuite name="collectme">
-			<directory prefix="test-" suffix=".php">./tests/</directory>
-			<exclude>./tests/test-sample.php</exclude>
+			<directory prefix="" suffix="Test.php">./tests/</directory>
 		</testsuite>
 	</testsuites>
+	<php>
+		<env name="WP_TESTS_DIR" value="/var/www/html/wp-content/plugins/collectme/tmp/wordpress-tests-lib"/>
+	</php>
 </phpunit>

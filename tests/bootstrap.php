@@ -5,6 +5,8 @@
  * @package Collectme
  */
 
+use Collectme\Misc\Installer;
+
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
 if ( ! $_tests_dir ) {
@@ -29,7 +31,8 @@ require_once "{$_tests_dir}/includes/functions.php";
  * Manually load the plugin being tested.
  */
 function _manually_load_plugin() {
-	require dirname( dirname( __FILE__ ) ) . '/collectme.php';
+	require dirname(__FILE__, 2) . '/collectme.php';
+    collectme_get_container()->call([Installer::class, 'activate'], ['networkWide' => false]);
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
