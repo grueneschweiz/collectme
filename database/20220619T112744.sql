@@ -286,6 +286,7 @@ CREATE TABLE IF NOT EXISTS `collectme`.`login_tokens`
 -- Triggers
 -- -----------------------------------------------------
 
+DROP TRIGGER IF EXISTS `collectme`.`users_BEFORE_INSERT`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`users_BEFORE_INSERT`
     BEFORE INSERT
@@ -299,6 +300,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`users_BEFORE_UPDATE`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`users_BEFORE_UPDATE`
     BEFORE UPDATE
@@ -308,6 +310,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`causes_BEFORE_INSERT`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`causes_BEFORE_INSERT`
     BEFORE INSERT
@@ -321,6 +324,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`causes_BEFORE_UPDATE`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`causes_BEFORE_UPDATE`
     BEFORE UPDATE
@@ -330,6 +334,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`groups_BEFORE_INSERT`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`groups_BEFORE_INSERT`
     BEFORE INSERT
@@ -343,6 +348,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`groups_BEFORE_UPDATE`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`groups_BEFORE_UPDATE`
     BEFORE UPDATE
@@ -352,6 +358,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`objectives_BEFORE_INSERT`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`objectives_BEFORE_INSERT`
     BEFORE INSERT
@@ -365,6 +372,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`objectives_BEFORE_UPDATE`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`objectives_BEFORE_UPDATE`
     BEFORE UPDATE
@@ -374,6 +382,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`users_causes_BEFORE_INSERT`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`users_causes_BEFORE_INSERT`
     BEFORE INSERT
@@ -387,6 +396,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`users_causes_BEFORE_UPDATE`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`users_causes_BEFORE_UPDATE`
     BEFORE UPDATE
@@ -396,6 +406,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`sessions_BEFORE_INSERT`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`sessions_BEFORE_INSERT`
     BEFORE INSERT
@@ -409,6 +420,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`sessions_BEFORE_UPDATE`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`sessions_BEFORE_UPDATE`
     BEFORE UPDATE
@@ -418,6 +430,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`roles_BEFORE_INSERT`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`roles_BEFORE_INSERT`
     BEFORE INSERT
@@ -431,6 +444,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`roles_BEFORE_UPDATE`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`roles_BEFORE_UPDATE`
     BEFORE UPDATE
@@ -440,6 +454,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`activity_logs_BEFORE_INSERT`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`activity_logs_BEFORE_INSERT`
     BEFORE INSERT
@@ -453,6 +468,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`activity_logs_BEFORE_UPDATE`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`activity_logs_BEFORE_UPDATE`
     BEFORE UPDATE
@@ -462,6 +478,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`signatures_BEFORE_INSERT`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`signatures_BEFORE_INSERT`
     BEFORE INSERT
@@ -475,6 +492,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`signatures_BEFORE_UPDATE`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`signatures_BEFORE_UPDATE`
     BEFORE UPDATE
@@ -484,6 +502,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`login_tokens_BEFORE_INSERT`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`login_tokens_BEFORE_INSERT`
     BEFORE INSERT
@@ -497,6 +516,7 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
+DROP TRIGGER IF EXISTS `collectme`.`login_tokens_BEFORE_UPDATE`;
 DELIMITER $$
 CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`login_tokens_BEFORE_UPDATE`
     BEFORE UPDATE
