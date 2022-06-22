@@ -14,6 +14,27 @@ class DbInstaller
     /**
      * @throws CollectmeException
      */
+    public static function removeTables(): void
+    {
+        // this function must be static, so we can use be used by the register_uninstall_hook
+
+        global $wpdb;
+        $prefix = $wpdb->prefix . DB_PREFIX;
+
+        $tables = $wpdb->get_col("SHOW TABLES LIKE '$prefix%'");
+
+        $queries = [];
+        foreach ($tables as $table) {
+            $queries[] = "DROP TABLE $table;";
+        }
+
+        self::executeTransactional($queries);
+        delete_option(OPTION_KEY_DB_VERSION);
+    }
+
+    /**
+     * @throws CollectmeException
+     */
     public function setupTables(): void
     {
         // don't use dbDelta() as it doesn't support foreign key constraints (and has some other quirks too).
@@ -214,35 +235,19 @@ class DbInstaller
 
         global $wpdb;
 
+        $wpdb->query('SET autocommit = 0;');
+        $wpdb->query('START TRANSACTION');
+
         foreach ($queries as $sql) {
             if (false === $wpdb->query($sql)) {
                 $error = $wpdb->last_error;
                 $wpdb->query('ROLLBACK;');
+                $wpdb->query('SET autocommit = 1;');
                 throw new CollectmeException($error);
             }
         }
 
         $wpdb->query('COMMIT;');
-    }
-
-    /**
-     * @throws CollectmeException
-     */
-    public static function removeTables(): void
-    {
-        // this function must be static, so we can use be used by the register_uninstall_hook
-
-        global $wpdb;
-        $prefix = $wpdb->prefix . DB_PREFIX;
-
-        $tables = $wpdb->get_col("SHOW TABLES LIKE '$prefix%'");
-
-        $queries = [];
-        foreach ($tables as $table) {
-            $queries[] = "DROP TABLE $table;";
-        }
-
-        self::executeTransactional($queries);
-        delete_option(OPTION_KEY_DB_VERSION);
+        $wpdb->query('SET autocommit = 1;');
     }
 }
