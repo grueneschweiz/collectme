@@ -26,6 +26,8 @@ services:
       - ".:/var/www/html/wp-content/plugins/collectme:rw"
       - "./.docker/addon-php.ini:/usr/local/etc/php/conf.d/addon-php.ini:ro"
       - "./.docker/ssmtp.conf:/etc/ssmtp/ssmtp.conf:ro"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   mysql:
     image: "mysql:5.6"
