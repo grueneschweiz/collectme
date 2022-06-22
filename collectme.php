@@ -32,7 +32,8 @@ require 'vendor/autoload.php';
 //add_action( 'all', function() {echo "<pre>\n" . current_action() . '</pre>';} );
 
 
-function collectme_run() {
+function collectme_get_container(): \DI\Container
+{
     $builder = new \DI\ContainerBuilder();
     $builder->addDefinitions(COLLECTME_BASE_PATH.'/dependency-config.php');
 
@@ -42,10 +43,13 @@ function collectme_run() {
     }
 
     /** @noinspection PhpUnhandledExceptionInspection */
-    $container = $builder->build();
+    return $builder->build();
+}
 
+function collectme_run(): void
+{
     /** @noinspection PhpUnhandledExceptionInspection */
-    $container->get(Collectme\Collectme::class)->init();
+    collectme_get_container()->get(Collectme\Collectme::class)->init();
 }
 
 collectme_run();
