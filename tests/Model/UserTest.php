@@ -33,6 +33,23 @@ class UserTest extends \WP_UnitTestCase
         $this->assertNull($user->deleted);
     }
 
+    public function test_getByEmail(): void
+    {
+        $uuid = $this->insertTestUserIntoDB('mail@example.com', 'first', 'last', 'e', 'test');
+
+        $user = User::getByEmail('mail@example.com');
+
+        $this->assertSame($uuid, $user->uuid);
+        $this->assertSame('mail@example.com', $user->email);
+        $this->assertSame('first', $user->firstName);
+        $this->assertSame('last', $user->lastName);
+        $this->assertSame(EnumLang::EN, $user->lang);
+        $this->assertSame('test', $user->source);
+        $this->assertInstanceOf(\DateTime::class, $user->created);
+        $this->assertInstanceOf(\DateTime::class, $user->updated);
+        $this->assertNull($user->deleted);
+    }
+
     private function insertTestUserIntoDB(
         string $email,
         string $firstName,

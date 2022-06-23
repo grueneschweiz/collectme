@@ -55,6 +55,21 @@ class User extends Entity
     }
 
     /**
+     * @throws CollectmeDBException
+     */
+    public static function getByEmail(string $email): self
+    {
+        global $wpdb;
+
+        $query = $wpdb->prepare(
+            "SELECT * FROM " . self::getTableName() . " WHERE email = '%s' AND deleted_at IS NULL",
+            $email
+        );
+
+        return self::getByQuery($query);
+    }
+
+    /**
      * Convert lang string to enum
      *
      * @param string $lang
