@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Model;
+namespace Model\Entities;
 
 use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Model\Entities\EnumLang;
