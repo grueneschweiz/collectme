@@ -141,7 +141,7 @@ class UserTest extends \WP_UnitTestCase
                     'updated' => $userData['updated']->format(DATE_RFC3339_EXTENDED),
                 ]
             ],
-            $apiModel
+            $apiModel->toArray()
         );
     }
 

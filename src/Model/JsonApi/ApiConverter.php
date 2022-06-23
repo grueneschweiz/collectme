@@ -6,7 +6,6 @@ namespace Collectme\Model\JsonApi;
 
 use Collectme\Exceptions\CollectmeException;
 use Collectme\Model\DateTimeTypeHandler;
-use JetBrains\PhpStorm\ArrayShape;
 
 trait ApiConverter
 {
@@ -14,28 +13,148 @@ trait ApiConverter
 
     /**
      * @throws CollectmeException
+     */
+    public static function fromApiModelToPropsArray(array $apiModel): array
+    {
+        return [
+            ...self::convertIdFromApi($apiModel),
+            ...self::convertAttributesFromApi($apiModel),
+            ...self::convertRelationshipsFromApi($apiModel),
+        ];
+    }
+
+    /**
+     * @throws CollectmeException
+     */
+    private static function convertIdFromApi(array $apiModel): array
+    {
+        if (!array_key_exists('id', $apiModel)) {
+            return [];
+        }
+
+        return [self::getApiModelIdProperty()->name => $apiModel['id']];
+    }
+
+    private static function convertAttributesFromApi(array $apiModel): array
+    {
+        if (!array_key_exists('attributes', $apiModel)) {
+            return [];
+        }
+
+        $apiAttributes = $apiModel['attributes'];
+        $propertiesMap = self::getInstanceApiPropertiesMap(ApiModelAttribute::class);
+
+        $props = [];
+        foreach ($propertiesMap as $propertyMap) {
+            ['instancePropertyName' => $propertyName, 'apiFieldName' => $apiFieldName] = $propertyMap;
+
+            if (!array_key_exists($apiFieldName, $apiAttributes)) {
+                continue;
+            }
+
+            $props[$propertyName] = self::convertFieldFromApi(
+                $propertyName,
+                $apiAttributes[$apiFieldName]
+            );
+        }
+
+        return $props;
+    }
+
+    /**
+     * Get array that maps instance property names to the api attribute names.
+     *
+     * Properties without the #[ApiModelAttribute] attribute are ignored.
+     *
+     * @return array{
+     *     array{
+     *          instancePropertyName: string,
+     *          apiFieldName: string
+     *    }
+     * }
+     */
+    private static function getInstanceApiPropertiesMap(string $attributeClass): array
+    {
+        $instanceProperties = (new \ReflectionClass(static::class))->getProperties();
+
+        $map = [];
+        foreach ($instanceProperties as $instanceProperty) {
+            $instancePropertyName = $instanceProperty->getName();
+
+            $apiAttributes = $instanceProperty->getAttributes($attributeClass);
+
+            if (empty($apiAttributes)) {
+                continue;
+            }
+
+            $apiFieldName = $apiAttributes[0]->newInstance()->name;
+
+            if (empty($apiFieldName)) {
+                $apiFieldName = $instancePropertyName;
+            }
+
+            $map[] = [
+                'instancePropertyName' => $instancePropertyName,
+                'apiFieldName' => $apiFieldName,
+            ];
+        }
+
+        return $map;
+    }
+
+    private static function convertFieldFromApi(string $instancePropertyName, mixed $value): mixed
+    {
+        $getterName = '_convertFromApi' . ucfirst($instancePropertyName);
+        /** @noinspection DuplicatedCode */
+        if (method_exists(self::class, $getterName) || method_exists(static::class, $getterName)) {
+            return static::$getterName($value);
+        }
+
+        $getterName = '_convertFrom' . ucfirst($instancePropertyName);
+        if (method_exists(self::class, $getterName) || method_exists(static::class, $getterName)) {
+            return static::$getterName($value);
+        }
+
+        if (self::isDateTime($instancePropertyName)) {
+            return self::convertToDateTime($value);
+        }
+
+        return $value;
+    }
+
+    private static function convertRelationshipsFromApi(array $apiModel): array
+    {
+        if (!array_key_exists('relationships', $apiModel)) {
+            return [];
+        }
+
+        $apiRelationships = $apiModel['relationships'];
+        $propertiesMap = self::getInstanceApiPropertiesMap(ApiModelRelationship::class);
+
+        $props = [];
+        foreach ($propertiesMap as $propertyMap) {
+            ['instancePropertyName' => $propertyName, 'apiFieldName' => $apiFieldName] = $propertyMap;
+
+            if (!array_key_exists($apiFieldName, $apiRelationships)) {
+                continue;
+            }
+
+            $props[$propertyName] = $apiRelationships[$apiFieldName]['data']['id'];
+        }
+
+        return $props;
+    }
+
+    /**
+     * @throws CollectmeException
      * @throws \ReflectionException
      */
-    #[ArrayShape([
-        'id' => 'string',
-        'type' => 'string',
-        'attributes' => 'array',
-        'relationships' => 'array',
-    ])]
-    public function toApiModel(): array
+    public function toApiModel(): ApiModel
     {
         $model = $this->toApiBaseModel();
 
-        $attributes = $this->getApiModelAttributes();
-        $relationships = $this->getApiModelRelationships();
-
-        if ($attributes) {
-            $model['attributes'] = $attributes;
-        }
-
-        if ($relationships) {
-            $model['relationships'] = $relationships;
-        }
+        $model->attributes = $this->getApiModelAttributes();
+        $model->relationships = $this->getApiModelRelationships();
 
         return $model;
     }
@@ -44,17 +163,12 @@ trait ApiConverter
      * @throws CollectmeException
      * @throws \ReflectionException
      */
-    #[ArrayShape([
-            'id' => 'string',
-            'type' => 'string'
-        ]
-    )]
-    public function toApiBaseModel(): array
+    public function toApiBaseModel(): ApiModel
     {
-        return [
-            'id' => $this->getApiModelId(),
-            'type' => $this->getApiModelType()
-        ];
+        return new ApiModel(
+            id: $this->getApiModelId(),
+            type: $this->getApiModelType()
+        );
     }
 
     /**
@@ -65,6 +179,9 @@ trait ApiConverter
         return self::getApiModelIdProperty()->getValue($this);
     }
 
+    /**
+     * @throws CollectmeException
+     */
     private static function getApiModelIdProperty(): \ReflectionProperty
     {
         $properties = static::getClassProperties();
@@ -177,140 +294,5 @@ trait ApiConverter
         }
 
         return $relationships;
-    }
-
-    /**
-     * @throws CollectmeException
-     */
-    public static function fromApiModelToPropsArray(array $apiModel): array
-    {
-        return [
-            ...self::convertIdFromApi($apiModel),
-            ...self::convertAttributesFromApi($apiModel),
-            ...self::convertRelationshipsFromApi($apiModel),
-        ];
-    }
-
-    /**
-     * @throws CollectmeException
-     */
-    private static function convertIdFromApi(array $apiModel): array
-    {
-        if (!array_key_exists('id', $apiModel)) {
-            return [];
-        }
-
-        return [self::getApiModelIdProperty()->name => $apiModel['id']];
-    }
-
-    private static function convertAttributesFromApi(array $apiModel): array
-    {
-        if (!array_key_exists('attributes', $apiModel)) {
-            return [];
-        }
-
-        $apiAttributes = $apiModel['attributes'];
-        $propertiesMap = self::getInstanceApiPropertiesMap(ApiModelAttribute::class);
-
-        $props = [];
-        foreach ($propertiesMap as $propertyMap) {
-            ['instancePropertyName' => $propertyName, 'apiFieldName' => $apiFieldName ] = $propertyMap;
-
-            if (! array_key_exists($apiFieldName, $apiAttributes)) {
-                continue;
-            }
-
-            $props[$propertyName] = self::convertFieldFromApi(
-                $propertyName,
-                $apiAttributes[$apiFieldName]
-            );
-        }
-
-        return $props;
-    }
-
-    private static function convertRelationshipsFromApi(array $apiModel): array
-    {
-        if (!array_key_exists('relationships', $apiModel)) {
-            return [];
-        }
-
-        $apiRelationships = $apiModel['relationships'];
-        $propertiesMap = self::getInstanceApiPropertiesMap(ApiModelRelationship::class);
-
-        $props = [];
-        foreach ($propertiesMap as $propertyMap) {
-            ['instancePropertyName' => $propertyName, 'apiFieldName' => $apiFieldName ] = $propertyMap;
-
-            if (! array_key_exists($apiFieldName, $apiRelationships)) {
-                continue;
-            }
-
-            $props[$propertyName] = $apiRelationships[$apiFieldName]['data']['id'];
-        }
-
-        return $props;
-    }
-
-    /**
-     * Get array that maps instance property names to the api attribute names.
-     *
-     * Properties without the #[ApiModelAttribute] attribute are ignored.
-     *
-     * @return array{
-     *     array{
-     *          instancePropertyName: string,
-     *          apiFieldName: string
-     *    }
-     * }
-     */
-    private static function getInstanceApiPropertiesMap(string $attributeClass): array
-    {
-        $instanceProperties = (new \ReflectionClass(static::class))->getProperties();
-
-        $map = [];
-        foreach ($instanceProperties as $instanceProperty) {
-            $instancePropertyName = $instanceProperty->getName();
-
-            $apiAttributes = $instanceProperty->getAttributes($attributeClass);
-
-            if (empty($apiAttributes)) {
-                continue;
-            }
-
-            $apiFieldName = $apiAttributes[0]->newInstance()->name;
-
-            if (empty($apiFieldName)) {
-                $apiFieldName = $instancePropertyName;
-            }
-
-            $map[] = [
-                'instancePropertyName' => $instancePropertyName,
-                'apiFieldName' => $apiFieldName,
-            ];
-        }
-
-        return $map;
-    }
-
-    /** @noinspection DuplicatedCode */
-
-    private static function convertFieldFromApi(string $instancePropertyName, mixed $value): mixed
-    {
-        $getterName = '_convertFromApi' . ucfirst($instancePropertyName);
-        if (method_exists(self::class, $getterName) || method_exists(static::class, $getterName)) {
-            return static::$getterName($value);
-        }
-
-        $getterName = '_convertFrom' . ucfirst($instancePropertyName);
-        if (method_exists(self::class, $getterName) || method_exists(static::class, $getterName)) {
-            return static::$getterName($value);
-        }
-
-        if (self::isDateTime($instancePropertyName)) {
-            return self::convertToDateTime($value);
-        }
-
-        return $value;
     }
 }
