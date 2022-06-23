@@ -42,7 +42,7 @@ class UserTest extends \WP_UnitTestCase
         string $source
     ): string {
         global $wpdb;
-        $uuid = Uuid::uuid4()->toString();
+        $uuid = wp_generate_uuid4();
         $wpdb->query(
             "INSERT INTO {$wpdb->prefix}collectme_users (uuid, email, first_name, last_name, lang, source) " .
             "VALUES ('$uuid', '$email', '$firstName', '$lastName', '$lang', '$source')"

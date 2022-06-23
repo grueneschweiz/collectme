@@ -16,8 +16,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^8.1",
-        "php-di/php-di": "^6.4",
-        "ramsey/uuid": "^4.3"
+        "php-di/php-di": "^6.4"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
