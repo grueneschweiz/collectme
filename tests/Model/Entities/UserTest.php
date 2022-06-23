@@ -11,11 +11,6 @@ use Collectme\Model\Entities\User;
 
 class UserTest extends \WP_UnitTestCase
 {
-    public function test_example(): void
-    {
-        $this->assertTrue(true);
-    }
-
     public function test_get(): void
     {
         $uuid = $this->insertTestUserIntoDB('mail@example.com', 'first', 'last', 'e', 'test');
