@@ -12,6 +12,7 @@ class ApiError
         public ?string $detail = null,
         public ?string $pointer = null,
         public ?string $parameter = null,
+        public ?\Throwable $exception = null,
     )
     {
     }
@@ -37,6 +38,10 @@ class ApiError
 
         if (!empty($this->parameter)) {
             $data['source']['parameter'] = $this->parameter;
+        }
+
+        if (!empty($this->exception) && defined('WP_DEBUG') && WP_DEBUG ) {
+            $data['meta']['exception'] = $this->exception;
         }
 
         /** @noinspection JsonEncodingApiUsageInspection */
