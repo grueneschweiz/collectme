@@ -261,9 +261,9 @@ CREATE TABLE IF NOT EXISTS `collectme`.`signatures`
 
 
 -- -----------------------------------------------------
--- Table `collectme`.`login_tokens`
+-- Table `collectme`.`account_tokens`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `collectme`.`login_tokens`
+CREATE TABLE IF NOT EXISTS `collectme`.`account_tokens`
 (
     `uuid`        VARCHAR(36)          NOT NULL,
     `token`       VARCHAR(64)          NOT NULL,
@@ -502,11 +502,11 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
-DROP TRIGGER IF EXISTS `collectme`.`login_tokens_BEFORE_INSERT`;
+DROP TRIGGER IF EXISTS `collectme`.`account_tokens_BEFORE_INSERT`;
 DELIMITER $$
-CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`login_tokens_BEFORE_INSERT`
+CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`account_tokens_BEFORE_INSERT`
     BEFORE INSERT
-    ON `collectme`.`login_tokens`
+    ON `collectme`.`account_tokens`
     FOR EACH ROW
 BEGIN
     IF new.uuid IS NULL THEN
@@ -516,11 +516,11 @@ BEGIN
     SET new.updated_at = now();
 END$$
 
-DROP TRIGGER IF EXISTS `collectme`.`login_tokens_BEFORE_UPDATE`;
+DROP TRIGGER IF EXISTS `collectme`.`account_tokens_BEFORE_UPDATE`;
 DELIMITER $$
-CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`login_tokens_BEFORE_UPDATE`
+CREATE DEFINER = CURRENT_USER TRIGGER `collectme`.`account_tokens_BEFORE_UPDATE`
     BEFORE UPDATE
-    ON `collectme`.`login_tokens`
+    ON `collectme`.`account_tokens`
     FOR EACH ROW
 BEGIN
     SET new.updated_at = now();
