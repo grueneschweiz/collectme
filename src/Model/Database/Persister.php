@@ -56,7 +56,7 @@ trait Persister
 
         $props = [];
         foreach ($propertiesMap as $propertyMap) {
-            $props[$propertyMap['dbFieldName']] = $this->convertFieldValueForDb($propertyMap['instancePropertyName']);
+            $props[$propertyMap['dbFieldName']] = $this->getConvertedValueForDb($propertyMap['instancePropertyName']);
         }
 
         return $props;
@@ -110,14 +110,23 @@ trait Persister
      * use the following naming pattern: _convertDb{InstancePropertyName}. So the db
      * getter for a property called 'created' has to be called _convertDbCreated.
      *
+     * If a general getter, _convert{InstancePropertyName} exists but no db getter
+     * the general getter is used. Where no getter exists, the unconverted value
+     * of the property is returned.
+     *
      * @param string $instancePropertyName
      * @return mixed
      */
-    private function convertFieldValueForDb(string $instancePropertyName): mixed
+    private function getConvertedValueForDb(string $instancePropertyName): mixed
     {
-        $dbGetterName = '_convertDb' . ucfirst($instancePropertyName);
-        if (method_exists($this, $dbGetterName)) {
-            return $this->$dbGetterName();
+        $getterName = '_convertToDb' . ucfirst($instancePropertyName);
+        if (method_exists($this, $getterName)) {
+            return $this->$getterName();
+        }
+
+        $getterName = '_convertTo' . ucfirst($instancePropertyName);
+        if (method_exists($this, $getterName)) {
+            return $this->$getterName();
         }
 
         if (self::isDateTime($instancePropertyName)) {
@@ -167,7 +176,7 @@ trait Persister
 
         // manually set uuid, as we can't get it back from the
         // database if we let the trigger create it on insert
-        $data['uuid'] = Uuid::uuid4()->toString();
+        $data['uuid'] = wp_generate_uuid4();
 
         $count = $wpdb->insert(
             self::getTableName(),
@@ -209,16 +218,16 @@ trait Persister
             throw new CollectmeDBException('Failed to get ' . static::class . ": $query");
         }
 
-        return new static(...self::convertDataForModel($result));
+        return new static(...self::convertFieldsFromDb($result));
     }
 
-    private static function convertDataForModel(array $data): array
+    private static function convertFieldsFromDb(array $data): array
     {
         $propertiesMap = self::getInstanceDbPropertiesMap();
 
         $props = [];
         foreach ($propertiesMap as $propertyMap) {
-            $props[$propertyMap['instancePropertyName']] = self::convertFieldValueForModel(
+            $props[$propertyMap['instancePropertyName']] = self::convertFieldFromDb(
                 $propertyMap['instancePropertyName'],
                 $data[$propertyMap['dbFieldName']]
             );
@@ -227,11 +236,16 @@ trait Persister
         return $props;
     }
 
-    private static function convertFieldValueForModel(string $instancePropertyName, mixed $value): mixed
+    private static function convertFieldFromDb(string $instancePropertyName, mixed $value): mixed
     {
-        $modelGetterName = '_convertModel' . ucfirst($instancePropertyName);
-        if (method_exists(self::class, $modelGetterName) || method_exists(static::class, $modelGetterName)) {
-            return static::$modelGetterName($value);
+        $getterName = '_convertFromDb' . ucfirst($instancePropertyName);
+        if (method_exists(self::class, $getterName) || method_exists(static::class, $getterName)) {
+            return static::$getterName($value);
+        }
+
+        $getterName = '_convertFrom' . ucfirst($instancePropertyName);
+        if (method_exists(self::class, $getterName) || method_exists(static::class, $getterName)) {
+            return static::$getterName($value);
         }
 
         if (self::isDateTime($instancePropertyName)) {
@@ -239,19 +253,6 @@ trait Persister
         }
 
         return $value;
-    }
-
-    /**
-     * @param string|null $date
-     * @return ?\DateTime
-     */
-    private static function convertToDate(?string $date): \DateTime|null
-    {
-        if (!$date) {
-            return null;
-        }
-
-        return date_create($date);
     }
 
     /**

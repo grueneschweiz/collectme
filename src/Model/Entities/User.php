@@ -49,7 +49,7 @@ class User extends Entity
      * @return EnumLang
      * @noinspection PhpUnused
      */
-    protected static function _getModelLang(string $lang): EnumLang
+    protected static function _convertFromLang(string $lang): EnumLang
     {
         return EnumLang::from($lang);
     }
@@ -60,7 +60,7 @@ class User extends Entity
      * @return string
      * @noinspection PhpUnused
      */
-    protected function _getDbLang(): string
+    protected function _convertToLang(): string
     {
         return $this->lang->value;
     }
