@@ -168,9 +168,9 @@ class UserTest extends \WP_UnitTestCase
                 'lastName' => 'Doe',
                 'lang' => 'f',
                 'source' => 'via api',
-                'created' => date_create()->format(DATE_RFC3339_EXTENDED),
-                'updated' => date_create()->format(DATE_RFC3339_EXTENDED),
-                'deleted' => date_create()->format(DATE_RFC3339_EXTENDED),
+                'created' => date_create()->format(DATE_ATOM),
+                'updated' => date_create()->format(DATE_ATOM),
+                'deleted' => date_create()->format(DATE_ATOM),
             ]
         ];
 
@@ -187,8 +187,8 @@ class UserTest extends \WP_UnitTestCase
         $this->assertSame($apiData['attributes']['lastName'], $user->lastName);
         $this->assertSame(EnumLang::FR, $user->lang);
         $this->assertSame('must be added manually', $user->source);
-        $this->assertSame($apiData['attributes']['created'], $user->created->format(DATE_RFC3339_EXTENDED));
-        $this->assertSame($apiData['attributes']['created'], $user->updated->format(DATE_RFC3339_EXTENDED));
+        $this->assertSame($apiData['attributes']['created'], $user->created->format(DATE_ATOM));
+        $this->assertSame($apiData['attributes']['created'], $user->updated->format(DATE_ATOM));
         $this->assertNull($user->deleted);
     }
 }
