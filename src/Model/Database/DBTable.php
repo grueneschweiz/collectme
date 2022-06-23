@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Collectme\Model;
+namespace Collectme\Model\Database;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class DBTable

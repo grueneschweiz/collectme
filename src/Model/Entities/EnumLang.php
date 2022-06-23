@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Collectme\Model;
+namespace Collectme\Model\Entities;
 
 enum EnumLang: string {
     case DE = 'd';
