@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `collectme`.`sessions`
     `login_counter`     INT         NOT NULL DEFAULT 0,
     `last_login`        TIMESTAMP   NULL,
     `activation_secret` VARCHAR(64) NOT NULL,
-    `session_secret`    VARCHAR(64) NOT NULL,
+    `session_hash`      VARCHAR(64) NOT NULL,
     `activated_at`      TIMESTAMP   NULL,
     `closed_at`         TIMESTAMP   NULL,
     `created_at`        TIMESTAMP   NOT NULL DEFAULT NOW(),
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `collectme`.`sessions`
     PRIMARY KEY (`uuid`),
     INDEX `fk_sessions_users1_idx` (`users_uuid` ASC),
     UNIQUE INDEX `activation_secret_UNIQUE` (`activation_secret` ASC),
-    UNIQUE INDEX `session_secret_UNIQUE` (`session_secret` ASC),
+    UNIQUE INDEX `session_hash_UNIQUE` (`session_hash` ASC),
     CONSTRAINT `fk_sessions_users1`
         FOREIGN KEY (`users_uuid`)
             REFERENCES `collectme`.`users` (`uuid`)
