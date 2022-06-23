@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Collectme\Model\Database;
 
 use Collectme\Exceptions\CollectmeDBException;
-use Ramsey\Uuid\Uuid;
+use Collectme\Model\DateTimeTypeHandler;
 
 use const Collectme\DB_PREFIX;
 
 
 trait Persister
 {
+    use DateTimeTypeHandler;
+
     /**
      * @throws CollectmeDBException
      */
@@ -118,29 +120,11 @@ trait Persister
             return $this->$dbGetterName();
         }
 
-        if (self::isDate($instancePropertyName)) {
-            return $this->convertDateToString($this->$instancePropertyName);
+        if (self::isDateTime($instancePropertyName)) {
+            return $this->convertDateTimeToString($this->$instancePropertyName);
         }
 
         return $this->$instancePropertyName;
-    }
-
-    private static function isDate(string $instancePropertyName): bool
-    {
-        try {
-            $instanceProperty = new \ReflectionProperty(static::class, $instancePropertyName);
-        } catch (\ReflectionException $e) {
-            return false;
-        }
-
-        $dbAttributes = $instanceProperty->getAttributes(DBFieldDate::class);
-
-        return !empty($dbAttributes);
-    }
-
-    private function convertDateToString(null|\DateTime $value): ?string
-    {
-        return $value?->format('Y-m-d H:i:s');
     }
 
     protected static function getTableName(): string
@@ -250,8 +234,8 @@ trait Persister
             return static::$modelGetterName($value);
         }
 
-        if (self::isDate($instancePropertyName)) {
-            return self::convertToDate($value);
+        if (self::isDateTime($instancePropertyName)) {
+            return self::convertToDateTime($value);
         }
 
         return $value;

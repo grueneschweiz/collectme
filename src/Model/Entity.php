@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace Collectme\Model;
 
 use Collectme\Model\Database\DBField;
-use Collectme\Model\Database\DBFieldDate;
 use Collectme\Model\Database\Persistable;
 use Collectme\Model\Database\Persister;
+use Collectme\Model\JsonApi\ApiConverter;
+use Collectme\Model\JsonApi\ApiConvertible;
 use Collectme\Model\JsonApi\ApiModelAttribute;
 use Collectme\Model\JsonApi\ApiModelId;
-use Collectme\Model\JsonApi\ApiSerializeable;
-use Collectme\Model\JsonApi\ApiSerializer;
 
 abstract class Entity implements Persistable, ApiSerializeable
 {
-    use ApiSerializer;
+    use ApiConverter;
     use Persister;
 
     #[ApiModelId]
@@ -24,16 +23,16 @@ abstract class Entity implements Persistable, ApiSerializeable
 
     #[ApiModelAttribute('created')]
     #[DBField('created_at')]
-    #[DBFieldDate]
+    #[DateProperty]
     public readonly ?\DateTime $created;
 
     #[ApiModelAttribute('updated')]
     #[DBField('updated_at')]
-    #[DBFieldDate]
+    #[DateProperty]
     public readonly ?\DateTime $updated;
 
     #[DBField('deleted_at')]
-    #[DBFieldDate]
+    #[DateProperty]
     public ?\DateTime $deleted;
 
     protected function __construct(
