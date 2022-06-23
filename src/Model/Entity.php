@@ -12,7 +12,7 @@ use Collectme\Model\JsonApi\ApiConvertible;
 use Collectme\Model\JsonApi\ApiModelAttribute;
 use Collectme\Model\JsonApi\ApiModelId;
 
-abstract class Entity implements Persistable, ApiSerializeable
+abstract class Entity implements Persistable, ApiConvertible
 {
     use ApiConverter;
     use Persister;

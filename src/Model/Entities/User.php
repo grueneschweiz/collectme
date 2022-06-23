@@ -2,24 +2,36 @@
 
 declare(strict_types=1);
 
-namespace Collectme\Model;
+namespace Collectme\Model\Entities;
 
+use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Model\Database\DBField;
+use Collectme\Model\Database\DBTable;
+use Collectme\Model\Entity;
+use Collectme\Model\JsonApi\ApiModelAttribute;
+use Collectme\Model\JsonApi\ApiModelType;
+
+#[ApiModelType('user')]
 #[DBTable('users')]
 class User extends Entity
 {
-    #[DBAttribute]
+    #[ApiModelAttribute]
+    #[DBField]
     public string $email;
 
-    #[DBAttribute('first_name')]
+    #[ApiModelAttribute]
+    #[DBField('first_name')]
     public string $firstName;
 
-    #[DBAttribute('last_name')]
+    #[ApiModelAttribute]
+    #[DBField('last_name')]
     public string $lastName;
 
-    #[DBAttribute]
+    #[ApiModelAttribute]
+    #[DBField]
     public EnumLang $lang;
 
-    #[DBAttribute]
+    #[DBField]
     public string $source;
 
     public function __construct(

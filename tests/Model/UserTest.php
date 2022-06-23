@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Model;
 
 use Collectme\Exceptions\CollectmeDBException;
-use Collectme\Model\EnumLang;
-use Collectme\Model\User;
-use Ramsey\Uuid\Uuid;
+use Collectme\Model\Entities\EnumLang;
+use Collectme\Model\Entities\User;
 
 
 class UserTest extends \WP_UnitTestCase
@@ -111,4 +110,73 @@ class UserTest extends \WP_UnitTestCase
         User::get($uuid);
     }
 
+    public function test_toApiModel(): void
+    {
+        $userData = [
+            'uuid' => wp_generate_uuid4(),
+            'email' => 'mail@example.com',
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+            'lang' => EnumLang::DE,
+            'source' => 'test: some string',
+            'created' => date_create(),
+            'updated' => date_create(),
+            'deleted' => date_create(),
+        ];
+
+        $user = new User(...$userData);
+
+        $apiModel = $user->toApiModel();
+
+        $this->assertEqualsCanonicalizing(
+            [
+                'id' => $userData['uuid'],
+                'type' => 'user',
+                'attributes' => [
+                    'email' => $userData['email'],
+                    'firstName' => $userData['firstName'],
+                    'lastName' => $userData['lastName'],
+                    'lang' => $userData['lang']->value,
+                    'created' => $userData['created']->format(DATE_RFC3339_EXTENDED),
+                    'updated' => $userData['updated']->format(DATE_RFC3339_EXTENDED),
+                ]
+            ],
+            $apiModel
+        );
+    }
+
+    public function test_fromApiModelToPropsArray(): void
+    {
+        $apiData = [
+            'id' => wp_generate_uuid4(),
+            'type' => 'user',
+            'attributes' => [
+                'email' => 'mail@example.com',
+                'firstName' => 'John',
+                'lastName' => 'Doe',
+                'lang' => 'f',
+                'source' => 'via api',
+                'created' => date_create()->format(DATE_RFC3339_EXTENDED),
+                'updated' => date_create()->format(DATE_RFC3339_EXTENDED),
+                'deleted' => date_create()->format(DATE_RFC3339_EXTENDED),
+            ]
+        ];
+
+
+        $userProps = User::fromApiModelToPropsArray($apiData);
+        $this->assertArrayNotHasKey('source', $userProps);
+
+        /** @noinspection PhpParamsInspection */
+        $user = new User(...$userProps, source: 'must be added manually');
+
+        $this->assertSame($apiData['id'], $user->uuid);
+        $this->assertSame($apiData['attributes']['email'], $user->email);
+        $this->assertSame($apiData['attributes']['firstName'], $user->firstName);
+        $this->assertSame($apiData['attributes']['lastName'], $user->lastName);
+        $this->assertSame(EnumLang::FR, $user->lang);
+        $this->assertSame('must be added manually', $user->source);
+        $this->assertSame($apiData['attributes']['created'], $user->created->format(DATE_RFC3339_EXTENDED));
+        $this->assertSame($apiData['attributes']['created'], $user->updated->format(DATE_RFC3339_EXTENDED));
+        $this->assertNull($user->deleted);
+    }
 }
