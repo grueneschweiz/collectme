@@ -8,7 +8,7 @@ namespace Collectme\Model\JsonApi;
 class ApiModelRelationship
 {
     public function __construct(
-        public string $name
+        public string $classFQN,
     ) {
     }
 }

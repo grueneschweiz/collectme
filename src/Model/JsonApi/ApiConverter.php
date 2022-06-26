@@ -13,6 +13,7 @@ trait ApiConverter
 
     /**
      * @throws CollectmeException
+     * @throws \ReflectionException
      */
     public static function fromApiModelToPropsArray(array $apiModel): array
     {
@@ -35,6 +36,32 @@ trait ApiConverter
         return [self::getApiModelIdProperty()->name => $apiModel['id']];
     }
 
+    /**
+     * @throws CollectmeException
+     */
+    private static function getApiModelIdProperty(): \ReflectionProperty
+    {
+        $properties = static::getClassProperties();
+
+        foreach ($properties as $property) {
+            $attributes = $property->getAttributes(ApiModelId::class);
+
+            if (!empty($attributes)) {
+                return $property;
+            }
+        }
+
+        throw new CollectmeException('Missing property with attribute ApiModelId in: ' . static::class);
+    }
+
+    /**
+     * @return \ReflectionProperty[]
+     */
+    private static function getClassProperties(): array
+    {
+        return (new \ReflectionClass(static::class))->getProperties();
+    }
+
     private static function convertAttributesFromApi(array $apiModel): array
     {
         if (!array_key_exists('attributes', $apiModel)) {
@@ -42,7 +69,7 @@ trait ApiConverter
         }
 
         $apiAttributes = $apiModel['attributes'];
-        $propertiesMap = self::getInstanceApiPropertiesMap(ApiModelAttribute::class);
+        $propertiesMap = self::getInstanceApiAttributesMap();
 
         $props = [];
         foreach ($propertiesMap as $propertyMap) {
@@ -73,7 +100,7 @@ trait ApiConverter
      *    }
      * }
      */
-    private static function getInstanceApiPropertiesMap(string $attributeClass): array
+    private static function getInstanceApiAttributesMap(): array
     {
         $instanceProperties = (new \ReflectionClass(static::class))->getProperties();
 
@@ -81,7 +108,7 @@ trait ApiConverter
         foreach ($instanceProperties as $instanceProperty) {
             $instancePropertyName = $instanceProperty->getName();
 
-            $apiAttributes = $instanceProperty->getAttributes($attributeClass);
+            $apiAttributes = $instanceProperty->getAttributes(ApiModelAttribute::class);
 
             if (empty($apiAttributes)) {
                 continue;
@@ -122,6 +149,9 @@ trait ApiConverter
         return $value;
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     private static function convertRelationshipsFromApi(array $apiModel): array
     {
         if (!array_key_exists('relationships', $apiModel)) {
@@ -129,7 +159,7 @@ trait ApiConverter
         }
 
         $apiRelationships = $apiModel['relationships'];
-        $propertiesMap = self::getInstanceApiPropertiesMap(ApiModelRelationship::class);
+        $propertiesMap = self::getInstanceApiRelationshipsMap();
 
         $props = [];
         foreach ($propertiesMap as $propertyMap) {
@@ -143,6 +173,55 @@ trait ApiConverter
         }
 
         return $props;
+    }
+
+    /**
+     * Get array that maps instance property names to the api relationship names.
+     *
+     * Properties without the #[ApiModelRelationship] attribute are ignored.
+     *
+     * @return array{
+     *     array{
+     *          instancePropertyName: string,
+     *          apiFieldName: string
+     *    }
+     * }
+     * @throws \ReflectionException
+     */
+    private static function getInstanceApiRelationshipsMap(): array
+    {
+        $instanceProperties = (new \ReflectionClass(static::class))->getProperties();
+
+        $map = [];
+        foreach ($instanceProperties as $instanceProperty) {
+            $instancePropertyName = $instanceProperty->getName();
+
+            $apiAttributes = $instanceProperty->getAttributes(ApiModelRelationship::class);
+
+            if (empty($apiAttributes)) {
+                continue;
+            }
+
+            $relatedClassFQN = $apiAttributes[0]->newInstance()->classFQN;
+            $type = self::getApiModelType($relatedClassFQN);
+
+            $map[] = [
+                'instancePropertyName' => $instancePropertyName,
+                'apiFieldName' => $type,
+            ];
+        }
+
+        return $map;
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    protected static function getApiModelType(string $className = null): string
+    {
+        $className = $className ?? static::class;
+        $attributes = (new \ReflectionClass($className))->getAttributes(ApiModelType::class);
+        return $attributes[0]->newInstance()->typeName;
     }
 
     /**
@@ -167,7 +246,7 @@ trait ApiConverter
     {
         return new ApiModel(
             id: $this->getApiModelId(),
-            type: $this->getApiModelType()
+            type: self::getApiModelType()
         );
     }
 
@@ -177,42 +256,6 @@ trait ApiConverter
     protected function getApiModelId(): ?string
     {
         return self::getApiModelIdProperty()->getValue($this);
-    }
-
-    /**
-     * @throws CollectmeException
-     */
-    private static function getApiModelIdProperty(): \ReflectionProperty
-    {
-        $properties = static::getClassProperties();
-
-        foreach ($properties as $property) {
-            $attributes = $property->getAttributes(ApiModelId::class);
-
-            if (!empty($attributes)) {
-                return $property;
-            }
-        }
-
-        throw new CollectmeException('Missing property with attribute ApiModelId in: ' . static::class);
-    }
-
-    /**
-     * @return \ReflectionProperty[]
-     */
-    private static function getClassProperties(): array
-    {
-        return (new \ReflectionClass(static::class))->getProperties();
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    protected function getApiModelType(string $className = null): string
-    {
-        $className = $className ?? static::class;
-        $attributes = (new \ReflectionClass($className))->getAttributes(ApiModelType::class);
-        return $attributes[0]->newInstance()->typeName;
     }
 
     protected function getApiModelAttributes(): array
@@ -279,10 +322,10 @@ trait ApiConverter
             $instanceAttrs = $property->getAttributes(ApiModelRelationship::class);
 
             if (!empty($instanceAttrs)) {
-                $class = $instanceAttrs[0]->newInstance()->className;
+                $class = $instanceAttrs[0]->newInstance()->classFQN;
                 $id = $property->getValue($this);
 
-                $type = $this->getApiModelType($class);
+                $type = self::getApiModelType($class);
 
                 $relationships[$type] = [
                     'data' => [
