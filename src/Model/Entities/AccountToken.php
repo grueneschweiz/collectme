@@ -53,7 +53,7 @@ class AccountToken extends Entity
         global $wpdb;
 
         $query = $wpdb->prepare(
-            "SELECT * FROM " . self::getTableName() . " WHERE token = '%s' AND deleted_at IS NULL",
+            "SELECT * FROM " . self::getTableName() . " WHERE token = '%s' AND valid_until > NOW() AND deleted_at IS NULL",
             $token
         );
 
