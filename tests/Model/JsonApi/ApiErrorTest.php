@@ -37,7 +37,7 @@ class ApiErrorTest extends TestCase
             'Invalid Token',
             'Invalid token format',
             null,
-            '/data/attributes/token',
+            'token',
         );
 
         $actualJson = json_encode($error);
@@ -45,7 +45,7 @@ class ApiErrorTest extends TestCase
             'status' => 403,
             'title' => 'Invalid Token',
             'detail' => 'Invalid token format',
-            'source' => ['parameter' => '/data/attributes/token']
+            'source' => ['parameter' => 'token']
         ]);
 
         $this->assertJsonStringEqualsJsonString($expectedJson, $actualJson);
