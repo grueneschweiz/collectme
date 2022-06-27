@@ -67,8 +67,8 @@ class AuthController extends WP_REST_Controller
     private function makeInvalidTokenResponse(): ResponseApiError
     {
         return new ResponseApiError(
-            403,
-            [new ApiError(403, 'Invalid Token', parameter: 'token')]
+            404,
+            [new ApiError(404, 'Invalid Token', parameter: 'token')]
         );
     }
 

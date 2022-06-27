@@ -21,7 +21,7 @@ class AuthControllerTest extends TestCase
         $expectedJson = json_encode([
             'errors' => [
                 [
-                    'status' => 403,
+                    'status' => 404,
                     'title' => 'Invalid Token',
                     'source' => ['parameter' => 'token']
                 ],
@@ -35,7 +35,7 @@ class AuthControllerTest extends TestCase
 
         $resp = $controller->loginWithToken($request);
 
-        $this->assertEquals(403, $resp->get_status());
+        $this->assertEquals(404, $resp->get_status());
         $this->assertJsonStringEqualsJsonString($expectedJson, wp_json_encode($resp->jsonSerialize()));
     }
 
@@ -44,7 +44,7 @@ class AuthControllerTest extends TestCase
         $expectedJson = json_encode([
             'errors' => [
                 [
-                    'status' => 403,
+                    'status' => 404,
                     'title' => 'Invalid Token',
                     'source' => ['parameter' => 'token']
                 ],
@@ -60,7 +60,7 @@ class AuthControllerTest extends TestCase
 
         $resp = $controller->loginWithToken($request);
 
-        $this->assertEquals(403, $resp->get_status());
+        $this->assertEquals(404, $resp->get_status());
         $this->assertJsonStringEqualsJsonString($expectedJson, wp_json_encode($resp->jsonSerialize()));
     }
 
@@ -69,7 +69,7 @@ class AuthControllerTest extends TestCase
         $expectedJson = json_encode([
             'errors' => [
                 [
-                    'status' => 403,
+                    'status' => 404,
                     'title' => 'Invalid Token',
                     'source' => ['parameter' => 'token']
                 ],
@@ -85,7 +85,7 @@ class AuthControllerTest extends TestCase
 
         $resp = $controller->loginWithToken($request);
 
-        $this->assertEquals(403, $resp->get_status());
+        $this->assertEquals(404, $resp->get_status());
         $this->assertJsonStringEqualsJsonString($expectedJson, wp_json_encode($resp->jsonSerialize()));
     }
 
@@ -106,7 +106,7 @@ class AuthControllerTest extends TestCase
         $expectedJson = json_encode([
             'errors' => [
                 [
-                    'status' => 403,
+                    'status' => 404,
                     'title' => 'Invalid Token',
                     'source' => ['parameter' => 'token']
                 ],
@@ -126,7 +126,7 @@ class AuthControllerTest extends TestCase
 
         $resp = $controller->loginWithToken($request);
 
-        $this->assertEquals(403, $resp->get_status());
+        $this->assertEquals(404, $resp->get_status());
         $this->assertJsonStringEqualsJsonString($expectedJson, wp_json_encode($resp->jsonSerialize()));
     }
 
