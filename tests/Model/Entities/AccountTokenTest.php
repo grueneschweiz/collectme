@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Model\Entities;
 
+use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Model\Entities\AccountToken;
 use Collectme\Model\Entities\EnumLang;
 use PHPUnit\Framework\TestCase;
 
 class AccountTokenTest extends TestCase
 {
-    public function test_getByToken()
+    public function test_getByToken(): void
     {
         $token = wp_generate_password(64, false, false);
         $validUntil = date_create('+5 years')->format(DATE_ATOM);
@@ -46,5 +47,15 @@ class AccountTokenTest extends TestCase
         );
 
         return $uuid;
+    }
+
+    public function test_getByToken__expired(): void
+    {
+        $token = wp_generate_password(64, false, false);
+        $validUntil = date_create('-1 second')->format(DATE_ATOM);
+        $uuid = $this->insertTestTokenIntoDB($token, 'mail@example.com', 'Jane', 'Doe', 'd', $validUntil);
+
+        $this->expectException(CollectmeDBException::class);
+        $accountToken = AccountToken::getByToken($token);
     }
 }

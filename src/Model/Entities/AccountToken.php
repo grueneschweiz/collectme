@@ -15,12 +15,29 @@ class AccountToken extends Entity
 {
     public function __construct(
         string $uuid,
-        #[DBField] public string $token,
-        #[DBField] public string $email,
-        #[DBField('first_name')] public string $firstName,
-        #[DBField('last_name')] public string $lastName,
-        #[DBField] public EnumLang $lang,
-        #[DateProperty] #[DBField('valid_until')] public \DateTime $validUntil,
+
+        #[DBField]
+        public string $token,
+
+        #[DBField]
+        public string $email,
+
+        #[DBField('first_name')]
+        public string $firstName,
+
+        #[DBField('last_name')]
+        public string $lastName,
+
+        #[DBField]
+        public EnumLang $lang,
+
+        #[DateProperty]
+        #[DBField('valid_until')]
+        public \DateTime $validUntil,
+
+        #[DBField('users_uuid')]
+        public ?string $userUuid = null,
+
         ?\DateTime $created = null,
         ?\DateTime $updated = null,
         ?\DateTime $deleted = null,

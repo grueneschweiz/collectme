@@ -272,11 +272,17 @@ CREATE TABLE IF NOT EXISTS `collectme`.`account_tokens`
     `last_name`   VARCHAR(45)          NOT NULL,
     `lang`        ENUM ('d', 'f', 'e') NOT NULL,
     `valid_until` TIMESTAMP            NOT NULL,
+    `users_uuid`  VARCHAR(36)          NULL,
     `created_at`  TIMESTAMP            NOT NULL DEFAULT NOW(),
     `updated_at`  TIMESTAMP            NULL,
     `deleted_at`  TIMESTAMP            NULL,
     PRIMARY KEY (`uuid`),
-    INDEX `token_idx` (`token` ASC)
+    UNIQUE INDEX `token_UNIQUE` (`token` ASC),
+    CONSTRAINT `fk_account_tokens_users1`
+        FOREIGN KEY (`users_uuid`)
+            REFERENCES `collectme`.`users` (`uuid`)
+            ON DELETE SET NULL
+            ON UPDATE CASCADE
 )
     CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
     ENGINE = InnoDB;
