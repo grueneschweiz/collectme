@@ -14,7 +14,7 @@ use Collectme\Model\Entity;
 class AccountToken extends Entity
 {
     public function __construct(
-        string $uuid,
+        ?string $uuid,
 
         #[DBField]
         public string $token,
