@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection PhpUnused */
 declare(strict_types=1);
 
@@ -44,19 +45,27 @@ const REST_V1_NAMESPACE = REST_ROUTE_PREFIX.'/v1';
  */
 const DB_PREFIX = 'collectme_';
 
+/**
+ * Auth related
+ */
+const AUTH_COOKIE_KEY = 'WP_COLLECTME_AUTH';
+const AUTH_COOKIE_TTL = '5 years';
+const AUTH_SESSION_KEY = 'WP_COLLECTME_AUTH';
+
 class Collectme
 {
     public function __construct(
         private readonly Installer $installer,
         private readonly ShortcodeHandler $shortcodeHandler,
-    )
-    {
+        private readonly RestRouterV1 $restRouter,
+    ) {
     }
 
     /**
      * @throws \JsonException
      */
-    public function init(): void {
+    public function init(): void
+    {
         $this->registerHooks();
         $this->registerShortcodes();
     }
@@ -68,6 +77,8 @@ class Collectme
         register_uninstall_hook(COLLECTME_PLUGIN_NAME, [Installer::class, 'uninstall']);
         add_action('admin_init', [$this->installer, 'afterPluginUpdated']);
 
+        add_action('rest_api_init', [$this->restRouter, 'init']);
+
         /**
          * Don't add styles and scripts the WordPress way, this doesn't allow to add them only if the
          * shortcode is present in combination with a timber based theme. Additionally, it's hacky
@@ -78,7 +89,8 @@ class Collectme
         // add_action('wp_enqueue_scripts', '');
     }
 
-    private function registerShortcodes(): void {
+    private function registerShortcodes(): void
+    {
         add_shortcode(SHORTCODE_TAG, [$this->shortcodeHandler, 'process']);
     }
 }
