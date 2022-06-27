@@ -248,4 +248,52 @@ class PersistentSessionTest extends TestCase
         $this->assertSame($session->userUuid, $apiModel->relationships['user']['data']['id']);
         $this->assertSame('user', $apiModel->relationships['user']['data']['type']);
     }
+
+    public function test_isActive__notActivated(): void
+    {
+        $session = new PersistentSession(
+            wp_generate_uuid4(),
+            wp_generate_uuid4(),
+            0,
+            null,
+            wp_generate_password(64, false, false),
+            'invalid',
+            null,
+            null,
+        );
+
+        $this->assertFalse($session->isActive());
+    }
+
+    public function test_isActive__activatedNotClosed(): void
+    {
+        $session = new PersistentSession(
+            wp_generate_uuid4(),
+            wp_generate_uuid4(),
+            0,
+            null,
+            wp_generate_password(64, false, false),
+            'invalid',
+            date_create(),
+            null,
+        );
+
+        $this->assertTrue($session->isActive());
+    }
+
+    public function test_isActive__activatedClosed(): void
+    {
+        $session = new PersistentSession(
+            wp_generate_uuid4(),
+            wp_generate_uuid4(),
+            0,
+            null,
+            wp_generate_password(64, false, false),
+            'invalid',
+            date_create(),
+            date_create(),
+        );
+
+        $this->assertFalse($session->isActive());
+    }
 }

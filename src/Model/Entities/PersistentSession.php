@@ -74,13 +74,27 @@ class PersistentSession extends Entity
         return static::getByQuery($query);
     }
 
+    protected static function _convertFromLoginCounter(string|int $counter): int
+    {
+        return (int)$counter;
+    }
+
     public function checkSessionSecret(string $sessionSecret): bool
     {
         return password_verify($sessionSecret, $this->sessionHash);
     }
 
-    protected static function _convertFromLoginCounter(string|int $counter): int
+    public function isActive(): bool
     {
-        return (int)$counter;
+        if (empty($this->activated)) {
+            return false;
+        }
+
+        if (empty($this->closed)) {
+            return true;
+        }
+
+        return $this->activated < date_create()
+            && $this->closed > date_create();
     }
 }
