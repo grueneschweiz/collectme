@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Collectme\Model\JsonApi;
 
-class ApiError
+use JsonSerializable;
+
+class ApiError implements JsonSerializable
 {
     public function __construct(
         public int $status, 
@@ -18,6 +20,12 @@ class ApiError
     }
 
     public function __toString(): string
+    {
+        /** @noinspection JsonEncodingApiUsageInspection */
+        return json_encode($this->jsonSerialize());
+    }
+
+    public function jsonSerialize(): array
     {
         $data = [
             'status' => $this->status,
@@ -44,7 +52,6 @@ class ApiError
             $data['meta']['exception'] = $this->exception;
         }
 
-        /** @noinspection JsonEncodingApiUsageInspection */
-        return json_encode($data);
+        return $data;
     }
 }
