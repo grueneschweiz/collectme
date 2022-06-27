@@ -77,6 +77,11 @@ class Auth
         }
     }
 
+    public function getClaimedSessionUuid(): ?string
+    {
+        return $this->authCookie->get()?->getSessionUuid();
+    }
+
     /**
      * @throws CollectmeDBException
      */
