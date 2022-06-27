@@ -171,10 +171,10 @@ components:
     SessionAttributes:
       type: object
       properties:
-        login_counter:
+        loginCounter:
           type: integer
           example: 0
-        last_login:
+        lastLogin:
           type: string
           format: date-time
         activated:
@@ -579,7 +579,7 @@ paths:
   /users/link-auth:
     parameters:
       - name: token
-        description: The `login_token`
+        description: The `token`
         in: query
         schema:
           type: string
