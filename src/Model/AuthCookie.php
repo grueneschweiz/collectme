@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Collectme\Model;
 
+use Collectme\Misc\Cookie;
+
 use const Collectme\AUTH_COOKIE_KEY;
 use const Collectme\AUTH_COOKIE_TTL;
 
@@ -12,17 +14,20 @@ class AuthCookie
     private string $sessionUuid;
     private string $sessionSecret;
 
+    public function __construct(
+        private readonly Cookie $cookie
+    ) {
+    }
+
     public function set(string $sessionUuid, string $sessionSecret): void
     {
         $this->sessionUuid = $sessionUuid;
         $this->sessionSecret = $sessionSecret;
 
-        setcookie(
+        $this->cookie->set(
             AUTH_COOKIE_KEY,
             "$sessionUuid $sessionSecret",
-            date_create(AUTH_COOKIE_TTL)->getTimestamp(),
-            secure: true,
-            httponly: true
+            date_create(AUTH_COOKIE_TTL)->getTimestamp()
         );
     }
 
@@ -41,7 +46,7 @@ class AuthCookie
             return null;
         }
 
-        $data = explode(' ', $_COOKIE[AUTH_COOKIE_KEY]);
+        $data = explode(' ', $this->cookie->get(AUTH_COOKIE_KEY));
         $this->sessionUuid = $data[0];
         $this->sessionSecret = $data[1];
 
@@ -50,12 +55,15 @@ class AuthCookie
 
     private function authCookieIsSet(): bool
     {
-        return !empty($_COOKIE[AUTH_COOKIE_KEY]);
+        return (bool)$this->cookie->get(AUTH_COOKIE_KEY);
     }
 
     private function authCookieFormatIsValid(): bool
     {
-        return preg_match('/[[[:alnum:]]-]{36} [[:alnum:]]{64}/', $_COOKIE[AUTH_COOKIE_KEY]);
+        return preg_match(
+            '/[[[:alnum:]]-]{36} [[:alnum:]]{64}/',
+            $this->cookie->get(AUTH_COOKIE_KEY)
+        );
     }
 
     public function getSessionUuid(): string
