@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Collectme;
 
 use Collectme\Controller\AuthController;
+use Collectme\Controller\Http\UuidValidator;
 use Collectme\Controller\SessionController;
 use Collectme\Controller\UserController;
 use Collectme\Misc\Auth;
@@ -59,7 +60,23 @@ class RestRouterV1
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->sessionController, 'getCurrent'],
+                // permission checking is done in controller
                 'permission_callback' => '__return_true',
+            ]
+        );
+
+        register_rest_route(
+            REST_V1_NAMESPACE,
+            '/sessions/(?P<uuid>[a-zA-Z0-9-]{36})/activate',
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$this->sessionController, 'activate'],
+                'permission_callback' => '__return_true',
+                'args' => [
+                    'uuid' => [
+                        'validate_callback' => [UuidValidator::class, 'check']
+                    ]
+                ],
             ]
         );
     }

@@ -631,7 +631,7 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /sessions/{uuid}:
+  /sessions/{uuid}/activate:
     parameters:
       - $ref: '#/components/parameters/uuid'
 
@@ -661,6 +661,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvalidToken'
+
+  /sessions/{uuid}:
+    parameters:
+      - $ref: '#/components/parameters/uuid'
 
     delete:
       tags:
