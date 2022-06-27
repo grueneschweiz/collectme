@@ -30,6 +30,18 @@ class RestRouterV1
     {
         register_rest_route(
             REST_V1_NAMESPACE,
+            '/users/current',
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$this->userController, 'getCurrent'],
+                'permission_callback' => [$this->auth, 'isAuthenticated'],
+            ]
+        );
+
+        // todo: /users/form-auth
+
+        register_rest_route(
+            REST_V1_NAMESPACE,
             '/users/link-auth',
             [
                 'methods' => WP_REST_Server::READABLE,
