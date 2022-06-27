@@ -32,12 +32,13 @@ OtherBrowser -> ServerApp: ""GET /sessions/{uuid}?token=***""
 ServerApp -> Database  : activatePersistentSession
 
 == Login\n<size:10>authenticate by ""WP_COLLECTME_AUTH"" cookie</size> ==
-Browser -> ServerApp : ""GET /users/session""
-ServerApp -> Database : isSessionActive
-Database --> ServerApp : ""true""
+Browser -> ServerApp : ""GET /sessions/current""
+ServerApp -> Database : getSession
+Database --> ServerApp : Session
+ServerApp -> ServerApp : isSessionActive\n&& checkSessionSecret
 ServerApp -> Database : noteLogin
-ServerApp -> ServerApp : addUserToPhpSession
-ServerApp --> Browser : User
+ServerApp -> ServerApp : addSessionToPhpSession
+ServerApp --> Browser : Session
 
 note over Browser, Database
 Repeat authentication steps (poll) if ServerApp responds with status code 401.

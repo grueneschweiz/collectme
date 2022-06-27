@@ -498,45 +498,6 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /users/session:
-    get:
-      tags:
-        - users
-      summary: Get user's persistent session
-      description: |
-        May be used to check the user's login state if `WP_COLLECTME_AUTH` cookie is set. If the persistent session 
-        exists but waits for activation, a `401` is returned. It the persistent session was not found, deleted or 
-        closed, the api responds with a `404`.
-      responses:
-        '200':
-          description: OK
-          headers:
-            Set-Cookie:
-              description: PHPSESSID
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/User'
-        '401':
-          description: The permanent session was not yet activated. Keep polling.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Unauthorized'
-        '404':
-          description: The permanent session was closed or not found. Please log in again.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-      security:
-        - cookieAuth: [ ]
-
   /users/form-auth:
     post:
       tags:
@@ -631,6 +592,44 @@ paths:
               schema:
                 $ref: '#/components/schemas/InvalidToken'
 
+  /sessions/current:
+    get:
+      tags:
+        - sessions
+      summary: Get current user's persistent session
+      description: |
+        May be used to check the user's login state if `WP_COLLECTME_AUTH` cookie is set. If the persistent session 
+        exists but waits for activation, a `401` is returned. It the persistent session was not found, deleted or 
+        closed, the api responds with a `404`.
+      responses:
+        '200':
+          description: OK
+          headers:
+            Set-Cookie:
+              description: PHPSESSID
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Session'
+        '401':
+          description: The permanent session was not yet activated. Keep polling.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: The permanent session was closed or not found. Please log in again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+      security:
+        - cookieAuth: [ ]
 
   /sessions/{uuid}:
     parameters:
