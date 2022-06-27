@@ -13,12 +13,13 @@ class UserTest extends \WP_UnitTestCase
 {
     public function test_get(): void
     {
-        $uuid = $this->insertTestUserIntoDB('mail@example.com', 'first', 'last', 'e', 'test');
+        $email = $this->uniqueEmail();
+        $uuid = $this->insertTestUserIntoDB($email, 'first', 'last', 'e', 'test');
 
         $user = User::get($uuid);
 
         $this->assertSame($uuid, $user->uuid);
-        $this->assertSame('mail@example.com', $user->email);
+        $this->assertSame($email, $user->email);
         $this->assertSame('first', $user->firstName);
         $this->assertSame('last', $user->lastName);
         $this->assertSame(EnumLang::EN, $user->lang);
@@ -30,12 +31,13 @@ class UserTest extends \WP_UnitTestCase
 
     public function test_getByEmail(): void
     {
-        $uuid = $this->insertTestUserIntoDB('mail@example.com', 'first', 'last', 'e', 'test');
+        $email = $this->uniqueEmail();
+        $uuid = $this->insertTestUserIntoDB($email, 'first', 'last', 'e', 'test');
 
-        $user = User::getByEmail('mail@example.com');
+        $user = User::getByEmail($email);
 
         $this->assertSame($uuid, $user->uuid);
-        $this->assertSame('mail@example.com', $user->email);
+        $this->assertSame($email, $user->email);
         $this->assertSame('first', $user->firstName);
         $this->assertSame('last', $user->lastName);
         $this->assertSame(EnumLang::EN, $user->lang);
@@ -66,7 +68,7 @@ class UserTest extends \WP_UnitTestCase
     {
         $userData = [
             'uuid' => null,
-            'email' => 'mail@example.com',
+            'email' => $this->uniqueEmail(),
             'firstName' => 'John',
             'lastName' => 'Doe',
             'lang' => EnumLang::DE,
@@ -92,7 +94,7 @@ class UserTest extends \WP_UnitTestCase
     {
         $userData = [
             'uuid' => null,
-            'email' => 'mail@example.com',
+            'email' => $this->uniqueEmail(),
             'firstName' => 'John',
             'lastName' => 'Doe',
             'lang' => EnumLang::FR,
@@ -110,7 +112,7 @@ class UserTest extends \WP_UnitTestCase
 
     public function test_delete(): void
     {
-        $uuid = $this->insertTestUserIntoDB('mail@example.com', 'first', 'last', 'e', 'test');
+        $uuid = $this->insertTestUserIntoDB($this->uniqueEmail(), 'first', 'last', 'e', 'test');
 
         $user = User::get($uuid);
         $user->delete();
@@ -126,7 +128,7 @@ class UserTest extends \WP_UnitTestCase
     {
         $userData = [
             'uuid' => wp_generate_uuid4(),
-            'email' => 'mail@example.com',
+            'email' => $this->uniqueEmail(),
             'firstName' => 'John',
             'lastName' => 'Doe',
             'lang' => EnumLang::DE,
@@ -163,7 +165,7 @@ class UserTest extends \WP_UnitTestCase
             'id' => wp_generate_uuid4(),
             'type' => 'user',
             'attributes' => [
-                'email' => 'mail@example.com',
+                'email' => $this->uniqueEmail(),
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'lang' => 'f',
@@ -190,5 +192,9 @@ class UserTest extends \WP_UnitTestCase
         $this->assertSame($apiData['attributes']['created'], $user->created->format(DATE_ATOM));
         $this->assertSame($apiData['attributes']['created'], $user->updated->format(DATE_ATOM));
         $this->assertNull($user->deleted);
+    }
+
+    private function uniqueEmail(): string {
+        return wp_generate_uuid4() . '@example.com';
     }
 }
