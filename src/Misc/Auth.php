@@ -27,11 +27,6 @@ class Auth
         return $session && $session->isActive();
     }
 
-    public function setPersistentSession(PersistentSession $persistentSession): void
-    {
-        $this->persistentSession = $persistentSession;
-    }
-
     public function getPersistentSession(): ?PersistentSession
     {
         if (!isset($this->persistentSession)) {
@@ -51,6 +46,11 @@ class Auth
         return $this->persistentSession;
     }
 
+    public function setPersistentSession(PersistentSession $persistentSession): void
+    {
+        $this->persistentSession = $persistentSession;
+    }
+
     private function loginWithAuthCookie(): void
     {
         $authCookie = $this->authCookie->get();
@@ -61,7 +61,9 @@ class Auth
 
         try {
             $session = PersistentSession::getActive($authCookie->getSessionUuid());
-            if ($session->isActive() && $session->checkSessionSecret($authCookie->getSessionSecret())) {
+            if ($session->isActive()
+                && $session->checkSessionSecret($authCookie->getSessionSecret())
+            ) {
                 $validSession = $session;
             } else {
                 return;
