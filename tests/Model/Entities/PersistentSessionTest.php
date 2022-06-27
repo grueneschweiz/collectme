@@ -296,4 +296,68 @@ class PersistentSessionTest extends TestCase
 
         $this->assertFalse($session->isActive());
     }
+
+    public function test_isActivated__true(): void
+    {
+        $session = new PersistentSession(
+            wp_generate_uuid4(),
+            wp_generate_uuid4(),
+            0,
+            null,
+            wp_generate_password(64, false, false),
+            'invalid',
+            date_create(),
+            null,
+        );
+
+        $this->assertTrue($session->isActivated());
+    }
+
+    public function test_isActivated__false(): void
+    {
+        $session = new PersistentSession(
+            wp_generate_uuid4(),
+            wp_generate_uuid4(),
+            0,
+            null,
+            wp_generate_password(64, false, false),
+            'invalid',
+            null,
+            null,
+        );
+
+        $this->assertFalse($session->isActivated());
+    }
+
+    public function test_isClosed__true(): void
+    {
+        $session = new PersistentSession(
+            wp_generate_uuid4(),
+            wp_generate_uuid4(),
+            0,
+            null,
+            wp_generate_password(64, false, false),
+            'invalid',
+            null,
+            date_create(),
+        );
+
+        $this->assertTrue($session->isClosed());
+    }
+
+    public function test_isClosed__false(): void
+    {
+        $session = new PersistentSession(
+            wp_generate_uuid4(),
+            wp_generate_uuid4(),
+            0,
+            null,
+            wp_generate_password(64, false, false),
+            'invalid',
+            null,
+            null,
+        );
+
+        $this->assertFalse($session->isClosed());
+    }
 }

@@ -86,15 +86,25 @@ class PersistentSession extends Entity
 
     public function isActive(): bool
     {
+        return $this->isActivated()
+            && !$this->isClosed();
+    }
+
+    public function isActivated(): bool
+    {
         if (empty($this->activated)) {
             return false;
         }
 
+        return $this->activated <= date_create();
+    }
+
+    public function isClosed(): bool
+    {
         if (empty($this->closed)) {
-            return true;
+            return false;
         }
 
-        return $this->activated < date_create()
-            && $this->closed > date_create();
+        return $this->closed <= date_create();
     }
 }
