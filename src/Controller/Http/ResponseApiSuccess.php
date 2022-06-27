@@ -10,9 +10,9 @@ class ResponseApiSuccess extends \WP_REST_Response
 {
     /**
      * @param int $status HTTP status code
-     * @param ApiModel|ApiModel[] $models
+     * @param null|ApiModel|ApiModel[] $models
      */
-    public function __construct(int $status, ApiModel|array $models)
+    public function __construct(int $status, null|ApiModel|array $models)
     {
         parent::__construct($models, $status);
     }

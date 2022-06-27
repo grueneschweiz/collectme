@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Collectme\Controller;
 
 use Collectme\Controller\Http\ResponseApiError;
-use Collectme\Controller\Http\ResponseApiSuccess;
+use Collectme\Controller\Http\SuccessResponseMaker;
 use Collectme\Exceptions\CollectmeDBException;
-use Collectme\Exceptions\CollectmeException;
 use Collectme\Misc\Auth;
 use Collectme\Model\Entities\AccountToken;
 use Collectme\Model\JsonApi\ApiError;
@@ -17,6 +16,8 @@ use WP_REST_Response;
 
 class AuthController extends WP_REST_Controller
 {
+    use SuccessResponseMaker;
+
     public function __construct(
         private readonly Auth $auth
     ) {
@@ -49,14 +50,7 @@ class AuthController extends WP_REST_Controller
             return $this->makeInvalidTokenResponse();
         }
 
-        try {
-            return new ResponseApiSuccess(200, $session->toApiModel());
-        } catch (CollectmeException|\ReflectionException $e) {
-            return new ResponseApiError(
-                500,
-                [new ApiError(500, 'Internal Server Error', exception: $e)]
-            );
-        }
+        return $this->makeSuccessResponse(200, $session);
     }
 
     private function hasValidEmail(WP_REST_Request $request): bool
