@@ -4,6 +4,20 @@ openapi: 3.0.0
 info:
   description: |
     API specification for the Collectme V2 WordPress plugin.
+    
+    **Authentication**
+    
+    Users may authenticate themselves using the `/users/form-auth` or `/users/link-auth` endpoints. Authentication works
+    with the following two cookies: 
+    
+    - `WP_COLLECTME_AUTH`: Persistent login. Cookie contains the persistent session's `uuid` and a secret that 
+      corresponds to the `session_hash`.
+    - `PHPSESSID`: Session login. Cookie contains the PHP session id.
+    
+    While `WP_COLLECTME_AUTH` keeps the user logged in (for 5 years), the session cookie has a short ttl (default 
+    session duration) but better performance. The session cookie therefore takes precedence over the `WP_COLLECTME_AUTH`
+    cookie. Both cookies must be deleted, to log the user out.
+
   version: 1.0.0
   title: Collectme V2
   contact:
@@ -129,7 +143,7 @@ components:
           example: Maria Muster
         type:
           type: string
-          enum: [person, organization]
+          enum: [ person, organization ]
         signatures:
           type: integer
           example: 45
@@ -208,7 +222,7 @@ components:
           example: Muster
         lang:
           type: string
-          enum: [d, f, e]
+          enum: [ d, f, e ]
 
 
     # --------------------------------------------------------------------------
@@ -408,7 +422,7 @@ components:
                 type: object
                 properties:
                   status:
-                    example: 403
+                    example: 404
                   title:
                     example: Invalid Token
 
@@ -482,22 +496,17 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
       security:
-        - cookieAuth: []
+        - cookieAuth: [ ]
 
   /users/session:
     get:
       tags:
         - users
-      summary: Login user with existing authentication cookie
+      summary: Get user's persistent session
       description: |
-        Get a PHP session from the `WP_COLLECTME_AUTH` cookie, which references to a persistent session.
-      parameters:
-        - name: WP_COLLECTME_AUTH
-          in: cookie
-          description: The encrypted uuid of the persistent session
-          required: true
-          schema:
-            type: string
+        May be used to check the user's login state if `WP_COLLECTME_AUTH` cookie is set. If the persistent session 
+        exists but waits for activation, a `401` is returned. It the persistent session was not found, deleted or 
+        closed, the api responds with a `404`.
       responses:
         '200':
           description: OK
@@ -525,7 +534,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
-
+      security:
+        - cookieAuth: [ ]
 
   /users/form-auth:
     post:
@@ -566,7 +576,7 @@ paths:
                 type: string
             Set-Cookie:
               description: |
-                WP_COLLECTME_AUTH='{enc_sessions_uuid}'; Secure; HttpOnly; SameSite=Strict; Expires=Tue, 01 Jan 2030 00:00:00 GMT
+                WP_COLLECTME_AUTH='{sessionUuid sessionSecret}'; Secure; HttpOnly; SameSite=Strict; Expires=Tue, 01 Jan 2030 00:00:00 GMT
               schema:
                 type: string
         '422':
@@ -611,7 +621,7 @@ paths:
           headers:
             Set-Cookie:
               description: |
-                WP_COLLECTME_AUTH='{enc_sessions_uuid}'; Secure; HttpOnly; SameSite=Strict; Expires=Tue, 01 Jan 2030 00:00:00 GMT
+                WP_COLLECTME_AUTH='{sessionUuid sessionSecret}'; Secure; HttpOnly; SameSite=Strict; Expires=Tue, 01 Jan 2030 00:00:00 GMT
               schema:
                 type: string
         '404':
@@ -676,7 +686,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
       security:
-        - cookieAuth: []
+        - cookieAuth: [ ]
 
   /causes/{uuid}/groups:
     parameters:
@@ -709,7 +719,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
       security:
-        - cookieAuth: []
+        - cookieAuth: [ ]
 
   /signatures:
     post:
@@ -766,7 +776,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
       security:
-        - cookieAuth: []
+        - cookieAuth: [ ]
 
   /signatures/{uuid}:
     parameters:
@@ -782,7 +792,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
       security:
-        - cookieAuth: []
+        - cookieAuth: [ ]
 
   /objectives:
     post:
@@ -845,7 +855,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
       security:
-        - cookieAuth: []
+        - cookieAuth: [ ]
 
   /activities:
     get:
@@ -881,4 +891,4 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
       security:
-        - cookieAuth: []
+        - cookieAuth: [ ]
