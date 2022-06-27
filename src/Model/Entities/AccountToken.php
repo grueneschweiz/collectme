@@ -48,16 +48,29 @@ class AccountToken extends Entity
     /**
      * @throws CollectmeDBException
      */
-    public static function getByToken(string $token): self
+    public static function getByEmailAndToken(string $email, string $token): self
     {
         global $wpdb;
 
         $query = $wpdb->prepare(
-            "SELECT * FROM " . self::getTableName() . " WHERE token = '%s' AND valid_until > NOW() AND deleted_at IS NULL",
-            $token
+            "SELECT * FROM " . self::getTableName(
+            ) . " WHERE email = '%s' AND valid_until > NOW() AND deleted_at IS NULL",
+            $email
         );
 
-        return self::getByQuery($query);
+        $results = $wpdb->get_results($query, ARRAY_A);
+
+        if (empty($results)) {
+            throw new CollectmeDBException('Failed to get ' . static::class . ": $query");
+        }
+
+        foreach ($results as $result) {
+            if (hash_equals($result['token'], $token)) {
+                return new static(...self::convertFieldsFromDb($result));
+            }
+        }
+
+        throw new CollectmeDBException('Failed to get ' . static::class . " for token: $token");
     }
 
     /**

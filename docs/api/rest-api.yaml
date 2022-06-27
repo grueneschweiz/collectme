@@ -586,6 +586,12 @@ paths:
           minLength: 64
           maxLength: 64
         required: true
+      - name: email
+        in: query
+        schema:
+          type: string
+          format: email
+        required: true
 
     get:
       tags:

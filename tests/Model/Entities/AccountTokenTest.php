@@ -11,13 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 class AccountTokenTest extends TestCase
 {
-    public function test_getByToken(): void
+    public function test_getByEmailAndToken(): void
     {
         $token = wp_generate_password(64, false, false);
         $validUntil = date_create('+5 years')->format(DATE_ATOM);
         $uuid = $this->insertTestTokenIntoDB($token, 'mail@example.com', 'Jane', 'Doe', 'd', $validUntil);
 
-        $accountToken = AccountToken::getByToken($token);
+        $accountToken = AccountToken::getByEmailAndToken('mail@example.com', $token);
 
         $this->assertSame($uuid, $accountToken->uuid);
         $this->assertSame($token, $accountToken->token);
@@ -49,13 +49,46 @@ class AccountTokenTest extends TestCase
         return $uuid;
     }
 
-    public function test_getByToken__expired(): void
+    public function test_getByEmailAndToken__expired(): void
     {
         $token = wp_generate_password(64, false, false);
         $validUntil = date_create('-1 second')->format(DATE_ATOM);
         $uuid = $this->insertTestTokenIntoDB($token, 'mail@example.com', 'Jane', 'Doe', 'd', $validUntil);
 
         $this->expectException(CollectmeDBException::class);
-        $accountToken = AccountToken::getByToken($token);
+        $accountToken = AccountToken::getByEmailAndToken('mail@example.com', $token);
+    }
+
+    public function test_getByEmailAndToken__multiple(): void
+    {
+        $token1 = wp_generate_password(64, false, false);
+        $token2 = wp_generate_password(64, false, false);
+        $validUntil = date_create('+5 years')->format(DATE_ATOM);
+        $uuid1 = $this->insertTestTokenIntoDB($token1, 'mail@example.com', 'Jane', 'Doe', 'd', $validUntil);
+        $uuid2 = $this->insertTestTokenIntoDB($token2, 'mail@example.com', 'Jane', 'Doe', 'd', $validUntil);
+
+        $accountToken = AccountToken::getByEmailAndToken('mail@example.com', $token2);
+
+        $this->assertSame($uuid2, $accountToken->uuid);
+        $this->assertSame($token2, $accountToken->token);
+        $this->assertSame('mail@example.com', $accountToken->email);
+        $this->assertSame('Jane', $accountToken->firstName);
+        $this->assertSame('Doe', $accountToken->lastName);
+        $this->assertSame(EnumLang::DE, $accountToken->lang);
+        $this->assertSame($validUntil, $accountToken->validUntil->format(DATE_ATOM));
+        $this->assertInstanceOf(\DateTime::class, $accountToken->created);
+        $this->assertInstanceOf(\DateTime::class, $accountToken->updated);
+        $this->assertNull($accountToken->deleted);
+    }
+
+    public function test_getByEmailAndToken__noValidToken(): void
+    {
+        $token1 = wp_generate_password(64, false, false);
+        $token2 = wp_generate_password(64, false, false);
+        $validUntil = date_create('+5 years')->format(DATE_ATOM);
+        $uuid1 = $this->insertTestTokenIntoDB($token1, 'mail@example.com', 'Jane', 'Doe', 'd', $validUntil);
+
+        $this->expectException(CollectmeDBException::class);
+        $accountToken = AccountToken::getByEmailAndToken('mail@example.com', $token2);
     }
 }

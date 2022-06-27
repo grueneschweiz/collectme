@@ -7,8 +7,8 @@ Database Database
 
 
 == Authenticate by Link\n<size:10>obtain persistent session cookie ""WP_COLLECTME_AUTH"" via link</size> ==
-Email -> Browser : ""GET /users/link-auth?token=***""
-Browser -> ServerApp : ""GET /users/link-auth?token=***""
+Email -> Browser : ""GET /users/link-auth?token=***&email=m@pex.io""
+Browser -> ServerApp : ""GET /users/link-auth?token=***&email=m@pex.io""
 ServerApp -> Database : getAccountToken
 Database --> ServerApp : AccountToken
 ServerApp -> Database  : getOrCreateUser

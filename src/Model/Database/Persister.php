@@ -221,7 +221,7 @@ trait Persister
         return new static(...self::convertFieldsFromDb($result));
     }
 
-    private static function convertFieldsFromDb(array $data): array
+    protected static function convertFieldsFromDb(array $data): array
     {
         $propertiesMap = self::getInstanceDbPropertiesMap();
 
