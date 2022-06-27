@@ -61,7 +61,7 @@ class Auth
 
         try {
             $session = PersistentSession::getActive($authCookie->getSessionUuid());
-            if ($session->checkSessionSecret($authCookie->getSessionSecret())) {
+            if ($session->isActive() && $session->checkSessionSecret($authCookie->getSessionSecret())) {
                 $validSession = $session;
             } else {
                 return;
