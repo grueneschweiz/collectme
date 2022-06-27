@@ -71,10 +71,14 @@ class Auth
             return;
         }
 
-        if ($validSession) {
-            $this->persistentSession = $validSession;
-            $this->phpSession->set($validSession);
-        }
+        // note login
+        ++$validSession->loginCounter;
+        $validSession->lastLogin = date_create();
+        $validSession = $validSession->save();
+
+        // set session
+        $this->persistentSession = $validSession;
+        $this->phpSession->set($validSession);
     }
 
     public function getClaimedSessionUuid(): ?string

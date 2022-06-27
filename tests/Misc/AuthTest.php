@@ -124,8 +124,6 @@ class AuthTest extends TestCase
 
     public function test_createPersistentSession__notActivated(): void
     {
-
-
         $userUuid = $this->insertTestUserIntoDB($this->uniqueEmail(), 'first', 'last', 'e', 'test');
         $user = User::get($userUuid);
 
@@ -144,6 +142,50 @@ class AuthTest extends TestCase
 
         $this->assertIsArray($session);
         $this->assertNull($session['activated_at']);
+    }
+
+    public function test_getPersistentSession__fromAuthCookie__valid__checkLoginStats(): void
+    {
+        $userUuid = $this->insertTestUserIntoDB($this->uniqueEmail(), 'first', 'last', 'e', 'test');
+
+        $sessionSecret = wp_generate_password(64, false, false);
+        $sessionHash = password_hash($sessionSecret, PASSWORD_DEFAULT);
+        $session = new PersistentSession(
+            null,
+            $userUuid,
+            5,
+            date_create('2022-06-26T20:30:00+00:00'),
+            wp_generate_password(64, false, false),
+            $sessionHash,
+            date_create('2022-06-26T21:00:00+00:00'),
+            null,
+        );
+        $session->save();
+
+        $cookieMock = $this->createMock(Cookie::class);
+
+        $authCookie = new AuthCookie($cookieMock);
+        $authCookie->set($session->uuid, $sessionSecret);
+
+        $phpSessionMock = $this->createMock(PhpSession::class);
+        $authCookieMock = $this->createMock(AuthCookie::class);
+
+        $phpSessionMock->expects($this->once())
+            ->method('get')
+            ->willReturn(null);
+
+        $phpSessionMock->expects($this->once())
+            ->method('set')
+            ->with($this->callback(fn($subject) => $subject->uuid === $session->uuid));
+
+        $authCookieMock->expects($this->once())
+            ->method('get')
+            ->willReturn($authCookie);
+
+        $auth = new Auth($phpSessionMock, $authCookieMock);
+
+        $this->assertSame($session->loginCounter+1, $auth->getPersistentSession()->loginCounter);
+        $this->assertGreaterThan($session->lastLogin, $auth->getPersistentSession()->lastLogin);
     }
 
     public function test_createPersistentSession__activated(): void
