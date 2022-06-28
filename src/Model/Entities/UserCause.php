@@ -30,9 +30,10 @@ class UserCause extends Entity
     }
 
     /**
+     * @return UserCause[]
      * @throws CollectmeDBException
      */
-    public static function getByUserAndCause(string $userUuid, string $causeUuid): self
+    public static function findByUserAndCause(string $userUuid, string $causeUuid): array
     {
         global $wpdb;
 
@@ -45,6 +46,42 @@ class UserCause extends Entity
             $causeUuid
         );
 
-        return static::getByQuery($query);
+        return static::findByQuery($query);
+    }
+
+    /**
+     * @return UserCause[]
+     * @throws CollectmeDBException
+     */
+    public static function findByUser(string $userUuid): array
+    {
+        global $wpdb;
+
+        $query = $wpdb->prepare(
+            "SELECT * FROM " . self::getTableName() .
+            " WHERE users_uuid = '%s'" .
+            " AND deleted_at IS NULL",
+            $userUuid,
+        );
+
+        return static::findByQuery($query);
+    }
+
+    /**
+     * @return UserCause[]
+     * @throws CollectmeDBException
+     */
+    public static function findByCause(string $causeUuid): array
+    {
+        global $wpdb;
+
+        $query = $wpdb->prepare(
+            "SELECT * FROM " . self::getTableName() .
+            " WHERE causes_uuid = '%s'" .
+            " AND deleted_at IS NULL",
+            $causeUuid
+        );
+
+        return static::findByQuery($query);
     }
 }
