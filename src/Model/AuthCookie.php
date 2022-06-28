@@ -75,4 +75,13 @@ class AuthCookie
     {
         return $this->sessionSecret;
     }
+
+    public function invalidate(): void
+    {
+        $this->cookie->set(
+            AUTH_COOKIE_KEY,
+            '',
+            time() - 1
+        );
+    }
 }
