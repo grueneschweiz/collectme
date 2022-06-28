@@ -8,8 +8,9 @@ use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Model\Database\DBField;
 use Collectme\Model\Database\DBTable;
 use Collectme\Model\Entity;
+use Collectme\Model\JsonApi\ApiModelType;
 
-
+#[ApiModelType('cause')]
 #[DBTable('causes')]
 class Cause extends Entity
 {

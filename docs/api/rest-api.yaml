@@ -351,7 +351,7 @@ components:
         first:
           type: string
           format: url
-          example: "/activities"
+          example: "/causes/e3c9f7c1-3fc6-4e71-9cf5-dd09b93cd771/activities"
           nullable: true
         last:
           type: string
@@ -362,12 +362,12 @@ components:
           type: string
           format: url
           nullable: true
-          example: "/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          example: "/causes/e3c9f7c1-3fc6-4e71-9cf5-dd09b93cd771/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
         next:
           type: string
           format: url
           nullable: true
-          example: "/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          example: "/causes/e3c9f7c1-3fc6-4e71-9cf5-dd09b93cd771/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
 
     # --------------------------------------------------------------------------
     # Errors
@@ -864,7 +864,10 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /activities:
+  /causes/{uuid}/activities:
+    parameters:
+      - $ref: '#/components/parameters/uuid'
+
     get:
       tags:
         - activities
