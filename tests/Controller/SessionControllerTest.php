@@ -310,4 +310,74 @@ class SessionControllerTest extends TestCase
             wp_json_encode($resp->jsonSerialize())
         );
     }
+
+    public function test_logout__success(): void
+    {
+        $session = new PersistentSession(
+            wp_generate_uuid4(),
+            wp_generate_uuid4(),
+            0,
+            null,
+            wp_generate_password(64, false),
+            wp_hash_password(wp_generate_password(64, false)),
+            null,
+            null,
+        );
+
+        $authMock = $this->createMock(Auth::class);
+
+        $authMock->expects($this->once())
+            ->method('getPersistentSession')
+            ->willReturn($session);
+
+        $authMock->expects($this->once())
+            ->method('logout');
+
+        $request = new \WP_REST_Request();
+        $request->set_param('uuid', $session->uuid);
+
+        $controller = new SessionController($authMock);
+        $resp = $controller->logout($request);
+
+        $this->assertEquals(204, $resp->get_status());
+        $this->assertEmpty($resp->get_data());
+    }
+
+    public function test_logout__unauthorized(): void
+    {
+        $expectedJson = json_encode([
+            'errors' => [
+                [
+                    'status' => 401,
+                    'title' => 'Unauthorized',
+                ],
+            ]
+        ]);
+
+        $session = new PersistentSession(
+            null,
+            wp_generate_uuid4(),
+            0,
+            null,
+            wp_generate_password(64, false),
+            wp_hash_password(wp_generate_password(64, false)),
+            null,
+            null,
+        );
+
+        $authMock = $this->createMock(Auth::class);
+
+        $authMock->expects($this->once())
+            ->method('getPersistentSession')
+            ->willReturn($session);
+
+        $request = new \WP_REST_Request();
+        $request->set_param('uuid', wp_generate_uuid4());
+
+        $controller = new SessionController($authMock);
+        $resp = $controller->logout($request);
+
+        $this->assertEquals(401, $resp->get_status());
+        $this->assertJsonStringEqualsJsonString($expectedJson, wp_json_encode($resp->get_data()));
+    }
 }

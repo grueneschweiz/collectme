@@ -9,6 +9,7 @@ use Collectme\Controller\Http\ResponseApiError;
 use Collectme\Controller\Http\SuccessResponseMaker;
 use Collectme\Controller\Http\UnauthorizedResponseMaker;
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Exceptions\CollectmeException;
 use Collectme\Misc\Auth;
 use Collectme\Model\Entities\PersistentSession;
 use Collectme\Model\JsonApi\ApiError;
@@ -82,6 +83,28 @@ class SessionController extends \WP_REST_Controller
         } catch (CollectmeDBException) {
             return $this->makeNotFoundResponse();
         }
+    }
+
+    public function logout(WP_REST_Request $request): WP_REST_Response
+    {
+        $sessionUuid = $request->get_param('uuid');
+
+        $loggedInSession = $this->auth->getPersistentSession();
+
+        if ($loggedInSession?->uuid !== $sessionUuid) {
+            return $this->makeUnauthorizedResponse();
+        }
+
+        try {
+            $this->auth->logout();
+        } catch (CollectmeDBException|CollectmeException $e) {
+            return new ResponseApiError(
+                500,
+                [new ApiError(500, 'Internal Server Error', exception: $e)]
+            );
+        }
+
+        return new WP_REST_Response(null, 204);
     }
 
     private function hasValidToken(WP_REST_Request $request): bool

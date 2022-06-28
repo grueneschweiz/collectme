@@ -79,5 +79,20 @@ class RestRouterV1
                 ],
             ]
         );
+
+        register_rest_route(
+            REST_V1_NAMESPACE,
+            '/sessions/(?P<uuid>[a-zA-Z0-9-]{36})',
+            [
+                'methods' => WP_REST_Server::DELETABLE,
+                'callback' => [$this->sessionController, 'logout'],
+                'permission_callback' => [$this->auth, 'isAuthenticated'],
+                'args' => [
+                    'uuid' => [
+                        'validate_callback' => [UuidValidator::class, 'check']
+                    ]
+                ],
+            ]
+        );
     }
 }
