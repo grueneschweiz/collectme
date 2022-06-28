@@ -221,6 +221,31 @@ trait Persister
         return new static(...self::convertFieldsFromDb($result));
     }
 
+    /**
+     * @param string $query
+     * @return static[]
+     * @throws CollectmeDBException
+     */
+    protected static function findByQuery(string $query): array
+    {
+        global $wpdb;
+
+        $result = $wpdb->get_results($query, ARRAY_A);
+
+        if ($wpdb->error || $wpdb->last_error) {
+            throw new CollectmeDBException('Failed to find ' . static::class . ": $wpdb->last_error");
+        }
+
+        if (empty($result)) {
+            return [];
+        }
+
+        return array_map(
+            static fn($item) => new static(...self::convertFieldsFromDb($item)),
+            $result
+        );
+    }
+
     protected static function convertFieldsFromDb(array $data): array
     {
         $propertiesMap = self::getInstanceDbPropertiesMap();
