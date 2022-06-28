@@ -278,6 +278,14 @@ components:
           properties:
             attributes:
               $ref: '#/components/schemas/ObjectiveAttributes'
+            relationships:
+              type: object
+              properties:
+                group:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/GroupBase'
 
     Session:
       allOf:
@@ -836,11 +844,6 @@ paths:
                 relationships:
                   type: object
                   properties:
-                    user:
-                      type: object
-                      properties:
-                        data:
-                          $ref: '#/components/schemas/UserBase'
                     group:
                       type: object
                       properties:
