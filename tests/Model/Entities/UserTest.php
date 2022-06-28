@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Model\Entities;
 
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Model\Entities\Cause;
 use Collectme\Model\Entities\EnumLang;
 use Collectme\Model\Entities\User;
+use Collectme\Model\Entities\UserCause;
 
 
 class UserTest extends \WP_UnitTestCase
@@ -108,6 +110,134 @@ class UserTest extends \WP_UnitTestCase
         $dbUser = $user->save();
 
         $this->assertSame('Jane', $dbUser->firstName);
+    }
+
+    public function test_addCause__exists(): void
+    {
+        $user = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'John',
+            'Doe',
+            EnumLang::FR,
+            'add cause test'
+        );
+        $user->save();
+
+        $cause = new Cause(
+            null,
+            'user_cause_'.wp_generate_password(),
+        );
+        $cause->save();
+
+        $userCause = new UserCause(
+            null,
+            $user->uuid,
+            $cause->uuid
+        );
+        $userCause->save();
+
+        $user->addCause($cause->uuid);
+        $this->assertSame($cause->uuid, $user->causes()[0]->uuid);
+        $this->assertCount(1, $user->causes());
+    }
+
+    public function test_addCause__add(): void
+    {
+        $user = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'John',
+            'Doe',
+            EnumLang::FR,
+            'add cause test'
+        );
+        $user->save();
+
+        $cause = new Cause(
+            null,
+            'user_cause_'.wp_generate_password(),
+        );
+        $cause->save();
+
+        $user->addCause($cause->uuid);
+        $this->assertSame($cause->uuid, $user->causes()[0]->uuid);
+        $this->assertCount(1, $user->causes());
+    }
+
+    public function test_findByCause(): void
+    {
+        $user1 = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            'user cause test'
+        );
+        $user1->save();
+
+        $user2 = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            'user cause test'
+        );
+        $user2->save();
+
+        $user3 = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            'user cause test'
+        );
+        $user3->save();
+
+
+        $cause1 = new Cause(
+            null,
+            'user_cause_'.wp_generate_password(),
+        );
+        $cause1->save();
+
+        $cause2 = new Cause(
+            null,
+            'user_cause_'.wp_generate_password(),
+        );
+        $cause2->save();
+
+        $userCause1 = new UserCause(
+            null,
+            $user1->uuid,
+            $cause1->uuid
+        );
+        $userCause1->save();
+
+        $userCause2 = new UserCause(
+            null,
+            $user2->uuid,
+            $cause1->uuid
+        );
+        $userCause2->save();
+
+        $userCause3 = new UserCause(
+            null,
+            $user3->uuid,
+            $cause2->uuid
+        );
+        $userCause3->save();
+
+        $users = User::findByCause($cause1->uuid);
+
+        $this->assertEqualsCanonicalizing(
+            [$user1->uuid, $user2->uuid],
+            [$users[0]->uuid, $users[1]->uuid]
+        );
+        $this->assertCount(2, $users);
     }
 
     public function test_delete(): void

@@ -82,6 +82,57 @@ class User extends Entity
     }
 
     /**
+     * @throws CollectmeDBException
+     */
+    public function addCause(string $causeUuid): void
+    {
+        $userCauses = UserCause::findByUserAndCause($this->uuid, $causeUuid);
+        if (!empty($userCauses)) {
+            // already linked
+            return;
+        }
+
+        $userCause = new UserCause(
+            null,
+            $this->uuid,
+            $causeUuid
+        );
+        $userCause->save();
+    }
+
+    /**
+     * @return Cause[]
+     * @throws CollectmeDBException
+     */
+    public function causes(): array
+    {
+        return Cause::findByUser($this->uuid);
+    }
+
+    /**
+     * @return User[]
+     * @throws CollectmeDBException
+     */
+    public static function findByCause(string $causeUuid): array
+    {
+        global $wpdb;
+
+        $usersTbl = self::getTableName();
+        $userCausesTbl = UserCause::getTableName();
+
+        $query = $wpdb->prepare(
+            "SELECT {$usersTbl}.* FROM {$usersTbl}" .
+            " INNER JOIN {$userCausesTbl} ON {$usersTbl}.uuid = {$userCausesTbl}.users_uuid" .
+            " WHERE {$userCausesTbl}.causes_uuid = '%s'" .
+            " AND {$usersTbl}.deleted_at IS NULL" .
+            " AND {$userCausesTbl}.deleted_at IS NULL",
+            $causeUuid
+        );
+
+        return self::findByQuery($query);
+    }
+
+    /**
      * Return lang enum as string
      *
      * @return string
