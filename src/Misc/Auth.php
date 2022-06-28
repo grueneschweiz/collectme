@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Collectme\Misc;
 
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Exceptions\CollectmeException;
 use Collectme\Model\AuthCookie;
 use Collectme\Model\Entities\AccountToken;
 use Collectme\Model\Entities\PersistentSession;
@@ -142,5 +143,23 @@ class Auth
         $accountToken->save();
 
         return $user;
+    }
+
+    /**
+     * @throws CollectmeDBException
+     * @throws CollectmeException
+     */
+    public function logout(): void {
+        $session = $this->getPersistentSession();
+
+        if (! $session) {
+            throw new CollectmeException('Can not logout from session if not logged in.');
+        }
+
+        $session->closed = date_create('-1 second');
+        $session->save();
+
+        $this->authCookie->invalidate();
+        $this->phpSession->reset();
     }
 }

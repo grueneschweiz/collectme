@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Misc;
 
+use Collectme\Exceptions\CollectmeException;
 use Collectme\Misc\Auth;
 use Collectme\Misc\Cookie;
 use Collectme\Model\AuthCookie;
 use Collectme\Model\Entities\AccountToken;
+use Collectme\Model\Entities\EnumLang;
 use Collectme\Model\Entities\PersistentSession;
 use Collectme\Model\Entities\User;
 use Collectme\Model\PhpSession;
@@ -104,6 +106,28 @@ class AuthTest extends TestCase
         $this->assertSame($session->uuid, $auth->getPersistentSession()->uuid);
     }
 
+    private function insertTestUserIntoDB(
+        string $email,
+        string $firstName,
+        string $lastName,
+        string $lang,
+        string $source
+    ): string {
+        global $wpdb;
+        $uuid = wp_generate_uuid4();
+        $wpdb->query(
+            "INSERT INTO {$wpdb->prefix}collectme_users (uuid, email, first_name, last_name, lang, source) " .
+            "VALUES ('$uuid', '$email', '$firstName', '$lastName', '$lang', '$source')"
+        );
+
+        return $uuid;
+    }
+
+    private function uniqueEmail(): string
+    {
+        return wp_generate_uuid4() . '@example.com';
+    }
+
     public function test_getPersistentSession__fromAuthCookie__invalid(): void
     {
         $phpSessionMock = $this->createMock(PhpSession::class);
@@ -184,7 +208,7 @@ class AuthTest extends TestCase
 
         $auth = new Auth($phpSessionMock, $authCookieMock);
 
-        $this->assertSame($session->loginCounter+1, $auth->getPersistentSession()->loginCounter);
+        $this->assertSame($session->loginCounter + 1, $auth->getPersistentSession()->loginCounter);
         $this->assertGreaterThan($session->lastLogin, $auth->getPersistentSession()->lastLogin);
     }
 
@@ -240,7 +264,7 @@ class AuthTest extends TestCase
             5,
             date_create('2022-06-26T20:30:00+00:00'),
             wp_generate_password(64, false, false),
-            'asdf',
+            wp_hash_password(wp_generate_password(64, false, false)),
             date_create('2022-06-26T21:00:00+00:00'),
             date_create(),
         );
@@ -270,7 +294,15 @@ class AuthTest extends TestCase
 
         $token = wp_generate_password(64, false, false);
         $validUntil = date_create('+5 years')->format(DATE_ATOM);
-        $uuid = $this->insertTestTokenIntoDB($token, 'NOT_mail@example.com', 'Jane', 'Doe', 'd', $validUntil, $userUuid);
+        $uuid = $this->insertTestTokenIntoDB(
+            $token,
+            'NOT_mail@example.com',
+            'Jane',
+            'Doe',
+            'd',
+            $validUntil,
+            $userUuid
+        );
 
         $accountToken = AccountToken::get($uuid);
 
@@ -282,6 +314,33 @@ class AuthTest extends TestCase
         $user = $auth->getOrCreateUserFromAccountToken($accountToken);
 
         $this->assertSame($userUuid, $user->uuid);
+    }
+
+    private function insertTestTokenIntoDB(
+        string $token,
+        string $email,
+        string $firstName,
+        string $lastName,
+        string $lang,
+        string $validUntil,
+        ?string $userUuid = null,
+    ): string {
+        global $wpdb;
+        $uuid = wp_generate_uuid4();
+
+        $userKey = '';
+        $userValue = '';
+        if ($userUuid) {
+            $userKey = ', users_uuid';
+            $userValue = ", '$userUuid'";
+        }
+
+        $wpdb->query(
+            "INSERT INTO {$wpdb->prefix}collectme_account_tokens (uuid, token, email, first_name, last_name, lang, valid_until$userKey) " .
+            "VALUES ('$uuid', '$token', '$email', '$firstName', '$lastName', '$lang', '$validUntil'$userValue)"
+        );
+
+        return $uuid;
     }
 
     public function test_getOrCreateUserFromAccountToken__getByEmail(): void
@@ -348,52 +407,55 @@ class AuthTest extends TestCase
         $this->assertSame($userUuid, $accountToken->userUuid);
     }
 
+    public function test_logout__success(): void
+    {
+        $user = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'John',
+            'Doe',
+            EnumLang::FR,
+            'test: some string',
+        );
+        $user->save();
 
-    private function insertTestTokenIntoDB(
-        string $token,
-        string $email,
-        string $firstName,
-        string $lastName,
-        string $lang,
-        string $validUntil,
-        ?string $userUuid = null,
-    ): string {
-        global $wpdb;
-        $uuid = wp_generate_uuid4();
-
-        $userKey = '';
-        $userValue = '';
-        if ($userUuid) {
-            $userKey = ', users_uuid';
-            $userValue = ", '$userUuid'";
-        }
-
-        $wpdb->query(
-            "INSERT INTO {$wpdb->prefix}collectme_account_tokens (uuid, token, email, first_name, last_name, lang, valid_until$userKey) " .
-            "VALUES ('$uuid', '$token', '$email', '$firstName', '$lastName', '$lang', '$validUntil'$userValue)"
+        $session = new PersistentSession(
+            null,
+            $user->uuid,
+            5,
+            date_create('2022-06-26T20:30:00+00:00'),
+            wp_generate_password(64, false, false),
+            wp_hash_password(wp_generate_password(64, false, false)),
+            date_create('2022-06-26T21:00:00+00:00'),
+            null,
         );
 
-        return $uuid;
+        $phpSessionMock = $this->createMock(PhpSession::class);
+        $authCookieMock = $this->createMock(AuthCookie::class);
+
+        $auth = new Auth($phpSessionMock, $authCookieMock);
+        $auth->setPersistentSession($session);
+
+        $authCookieMock->expects($this->once())
+            ->method('invalidate');
+
+        $phpSessionMock->expects($this->once())
+            ->method('reset');
+
+        $auth->logout();
+
+        $this->assertFalse($auth->isAuthenticated());
+        $this->assertInstanceOf(\DateTime::class, $auth->getPersistentSession()->closed);
     }
 
-    private function insertTestUserIntoDB(
-        string $email,
-        string $firstName,
-        string $lastName,
-        string $lang,
-        string $source
-    ): string {
-        global $wpdb;
-        $uuid = wp_generate_uuid4();
-        $wpdb->query(
-            "INSERT INTO {$wpdb->prefix}collectme_users (uuid, email, first_name, last_name, lang, source) " .
-            "VALUES ('$uuid', '$email', '$firstName', '$lastName', '$lang', '$source')"
-        );
+    public function test_logout__fail(): void
+    {
+        $phpSessionMock = $this->createMock(PhpSession::class);
+        $authCookieMock = $this->createMock(AuthCookie::class);
 
-        return $uuid;
-    }
+        $auth = new Auth($phpSessionMock, $authCookieMock);
 
-    private function uniqueEmail(): string {
-        return wp_generate_uuid4() . '@example.com';
+        $this->expectException(CollectmeException::class);
+        $auth->logout();
     }
 }
