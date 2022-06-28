@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Model\Entities;
 
 use Collectme\Model\Entities\Cause;
+use Collectme\Model\Entities\EnumLang;
+use Collectme\Model\Entities\User;
+use Collectme\Model\Entities\UserCause;
 use PHPUnit\Framework\TestCase;
 
 class CauseTest extends TestCase
@@ -34,5 +37,76 @@ class CauseTest extends TestCase
 
         $this->assertNotEmpty($cause->uuid);
         $this->assertNotEmpty($cause->created);
+    }
+
+    public function test_findByUser(): void
+    {
+        $user1 = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            'user cause test'
+        );
+        $user1->save();
+
+        $user2 = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            'user cause test'
+        );
+        $user2->save();
+
+
+        $cause1 = new Cause(
+            null,
+            'user_cause_'.wp_generate_password(),
+        );
+        $cause1->save();
+
+        $cause2 = new Cause(
+            null,
+            'user_cause_'.wp_generate_password(),
+        );
+        $cause2->save();
+
+        $cause3 = new Cause(
+            null,
+            'user_cause_'.wp_generate_password(),
+        );
+        $cause3->save();
+
+        $userCause1 = new UserCause(
+            null,
+            $user1->uuid,
+            $cause1->uuid
+        );
+        $userCause1->save();
+
+        $userCause2 = new UserCause(
+            null,
+            $user1->uuid,
+            $cause2->uuid
+        );
+        $userCause2->save();
+
+        $userCause3 = new UserCause(
+            null,
+            $user2->uuid,
+            $cause3->uuid
+        );
+        $userCause3->save();
+
+        $causes = Cause::findByUser($user1->uuid);
+
+        $this->assertEqualsCanonicalizing(
+            [$cause1->uuid, $cause2->uuid],
+            [$causes[0]->uuid, $causes[1]->uuid]
+        );
+        $this->assertCount(2, $causes);
     }
 }
