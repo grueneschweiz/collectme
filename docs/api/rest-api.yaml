@@ -246,11 +246,6 @@ components:
                   properties:
                     data:
                       $ref: '#/components/schemas/GroupBase'
-                user:
-                  type: object
-                  properties:
-                    data:
-                      $ref: '#/components/schemas/UserBase'
 
 
     Group:

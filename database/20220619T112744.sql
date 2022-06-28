@@ -194,14 +194,12 @@ CREATE TABLE IF NOT EXISTS `collectme`.`activity_logs`
     `count`       INT                                                                                                               NOT NULL,
     `causes_uuid` VARCHAR(36)                                                                                                       NOT NULL,
     `groups_uuid` VARCHAR(36)                                                                                                       NULL,
-    `users_uuid`  VARCHAR(36)                                                                                                       NULL,
     `created_at`  TIMESTAMP                                                                                                         NOT NULL DEFAULT NOW(),
     `updated_at`  TIMESTAMP                                                                                                         NULL,
     `deleted_at`  TIMESTAMP                                                                                                         NULL,
     PRIMARY KEY (`uuid`),
     INDEX `fk_activity_log_causes1_idx` (`causes_uuid` ASC),
     INDEX `fk_activity_logs_groups1_idx` (`groups_uuid` ASC),
-    INDEX `fk_activity_logs_users1_idx` (`users_uuid` ASC),
     CONSTRAINT `fk_activity_log_causes1`
         FOREIGN KEY (`causes_uuid`)
             REFERENCES `collectme`.`causes` (`uuid`)
@@ -210,11 +208,6 @@ CREATE TABLE IF NOT EXISTS `collectme`.`activity_logs`
     CONSTRAINT `fk_activity_logs_groups1`
         FOREIGN KEY (`groups_uuid`)
             REFERENCES `collectme`.`groups` (`uuid`)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE,
-    CONSTRAINT `fk_activity_logs_users1`
-        FOREIGN KEY (`users_uuid`)
-            REFERENCES `collectme`.`users` (`uuid`)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 )
