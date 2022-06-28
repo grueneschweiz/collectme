@@ -8,6 +8,7 @@ namespace Controller;
 use Collectme\Controller\AuthController;
 use Collectme\Misc\Auth;
 use Collectme\Model\Entities\AccountToken;
+use Collectme\Model\Entities\Cause;
 use Collectme\Model\Entities\EnumLang;
 use Collectme\Model\Entities\PersistentSession;
 use Collectme\Model\Entities\User;
@@ -91,6 +92,12 @@ class AuthControllerTest extends TestCase
 
     public function test_loginWithToken__tokenExpired(): void
     {
+        $cause = new Cause(
+            null,
+            'auth_controller_'.wp_generate_password(),
+        );
+        $cause->save();
+
         $token = wp_generate_password(64, false, false);
         $accountToken = new AccountToken(
             null,
@@ -116,11 +123,39 @@ class AuthControllerTest extends TestCase
         $request = new \WP_REST_Request();
         $request->set_param('token', $token);
         $request->set_param('email', $accountToken->email);
+        $request->set_param('cause', $cause->uuid);
 
         $authMock = $this->createMock(Auth::class);
         $authMock->expects($this->once())
             ->method('getPersistentSession')
             ->willReturn(null);
+
+        $controller = new AuthController($authMock);
+
+        $resp = $controller->loginWithToken($request);
+
+        $this->assertEquals(404, $resp->get_status());
+        $this->assertJsonStringEqualsJsonString($expectedJson, wp_json_encode($resp->jsonSerialize()));
+    }
+
+    public function test_loginWithToken__invalidCause(): void
+    {
+        $expectedJson = json_encode([
+            'errors' => [
+                [
+                    'status' => 404,
+                    'title' => 'Invalid Cause',
+                    'source' => ['parameter' => 'cause']
+                ],
+            ]
+        ]);
+
+        $request = new \WP_REST_Request();
+        $request->set_param('token', wp_generate_password(64, false));
+        $request->set_param('email', 'mail@example.com');
+        $request->set_param('cause', wp_generate_uuid4());
+
+        $authMock = $this->createMock(Auth::class);
 
         $controller = new AuthController($authMock);
 
@@ -145,7 +180,7 @@ class AuthControllerTest extends TestCase
         $accountToken = $accountToken->save();
 
         $user = new User(
-            wp_generate_uuid4(),
+            null,
             $accountToken->email,
             $accountToken->firstName,
             $accountToken->lastName,
@@ -154,6 +189,7 @@ class AuthControllerTest extends TestCase
             date_create(),
             date_create(),
         );
+        $user->save();
 
         $sessionSecret = wp_generate_password(64, false, false);
         $sessionHash = password_hash($sessionSecret, PASSWORD_DEFAULT);
@@ -169,6 +205,12 @@ class AuthControllerTest extends TestCase
             date_create(),
             date_create(),
         );
+
+        $cause = new Cause(
+            null,
+            'auth_controller_'.wp_generate_password(),
+        );
+        $cause->save();
 
         $expectedJson = json_encode([
             'data' => [
@@ -195,6 +237,7 @@ class AuthControllerTest extends TestCase
         $request = new \WP_REST_Request();
         $request->set_param('token', $token);
         $request->set_param('email', $accountToken->email);
+        $request->set_param('cause', $cause->uuid);
 
         $authMock = $this->createMock(Auth::class);
         $authMock->expects($this->once())
@@ -214,5 +257,6 @@ class AuthControllerTest extends TestCase
 
         $this->assertEquals(200, $resp->get_status());
         $this->assertJsonStringEqualsJsonString($expectedJson, wp_json_encode($resp->jsonSerialize()));
+        $this->assertCount(1, $user->causes());
     }
 }

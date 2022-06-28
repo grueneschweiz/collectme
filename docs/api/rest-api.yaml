@@ -563,6 +563,12 @@ paths:
           type: string
           format: email
         required: true
+      - name: cause
+        in: query
+        schema:
+          type: string
+          format: uuid
+        required: true
 
     get:
       tags:
