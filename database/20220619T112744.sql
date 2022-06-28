@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS `collectme`.`groups`
     `deleted_at`     TIMESTAMP                       NULL,
     PRIMARY KEY (`uuid`),
     INDEX `fk_groups_causes1_idx` (`causes_uuid` ASC),
-    UNIQUE INDEX `name_UNIQUE` (`name` ASC),
     CONSTRAINT `fk_groups_causes1`
         FOREIGN KEY (`causes_uuid`)
             REFERENCES `collectme`.`causes` (`uuid`)
