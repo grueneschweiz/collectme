@@ -169,7 +169,20 @@ trait ApiConverter
                 continue;
             }
 
-            $props[$propertyName] = $apiRelationships[$apiFieldName]['data']['id'];
+            if (array_key_exists('data', $apiRelationships[$apiFieldName])) {
+
+                // to one relationship
+                $props[$propertyName] = $apiRelationships[$apiFieldName]['data']['id'];
+            } else {
+
+                // to many relationship
+                $ids = [];
+                foreach ($apiRelationships[$apiFieldName] as $relationship) {
+                    $ids[] = $relationship['data']['id'];
+                }
+                $props[$propertyName] = $ids;
+            }
+
         }
 
         return $props;
@@ -323,19 +336,44 @@ trait ApiConverter
 
             if (!empty($instanceAttrs)) {
                 $class = $instanceAttrs[0]->newInstance()->classFQN;
-                $id = $property->getValue($this);
-
                 $type = self::getApiModelType($class);
 
-                $relationships[$type] = [
-                    'data' => [
-                        'type' => $type,
-                        'id' => $id
-                    ]
-                ];
+                $relationships[$type] = $this->getRelationshipData($property, $type);
             }
         }
 
         return $relationships;
+    }
+
+    private function getRelationshipData(\ReflectionProperty $property, string $type): array
+    {
+        $value = $property->getValue($this);
+
+        if (is_array($value)) {
+
+            // to many relationship
+            $data = [];
+            foreach ($value as $id) {
+                $data[] = [
+                    'data' => [
+                        'type' => $type,
+                        'id' => $id,
+                    ]
+                ];
+            }
+
+        } else {
+
+            // to one relationship
+            $data = [
+                'data' =>
+                    [
+                        'type' => $type,
+                        'id' => $value,
+                    ]
+            ];
+        }
+
+        return $data;
     }
 }
