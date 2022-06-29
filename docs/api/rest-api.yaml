@@ -67,6 +67,15 @@ components:
           type: string
           example: activity
 
+    CauseBase:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/FieldId'
+        type:
+          type: string
+          example: cause
+
     GroupBase:
       type: object
       properties:
@@ -84,6 +93,15 @@ components:
         type:
           type: string
           example: objective
+
+    RoleBase:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/FieldId'
+        type:
+          type: string
+          example: role
 
     SessionBase:
       type: object
@@ -144,11 +162,11 @@ components:
         type:
           type: string
           enum: [ person, organization ]
-        signatures:
+        _signatures:
           type: integer
           example: 45
           description: Computed. The total amount of signatures of this group.
-        writeable:
+        _writeable:
           description: Computed. Tells if the current user has write permission for this group.
           type: boolean
           example: true
@@ -181,6 +199,13 @@ components:
         updated:
           type: string
           format: date-time
+
+    RoleAttributes:
+      type: object
+      properties:
+        permission:
+          type: string
+          enum: [ r, rw ]
 
     SessionAttributes:
       type: object
@@ -247,7 +272,6 @@ components:
                     data:
                       $ref: '#/components/schemas/GroupBase'
 
-
     Group:
       allOf:
         - $ref: '#/components/schemas/GroupBase'
@@ -261,10 +285,24 @@ components:
               type: object
               properties:
                 objective:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ObjectiveBase'
+                role:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/RoleBase'
+                cause:
                   type: object
                   properties:
                     data:
-                      $ref: '#/components/schemas/ObjectiveBase'
+                      $ref: '#/components/schemas/CauseBase'
 
     Objective:
       allOf:
@@ -276,6 +314,27 @@ components:
             relationships:
               type: object
               properties:
+                group:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/GroupBase'
+
+    Role:
+      allOf:
+        - $ref: '#/components/schemas/RoleBase'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/RoleAttributes'
+            relationships:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserBase'
                 group:
                   type: object
                   properties:
@@ -727,7 +786,9 @@ paths:
                   included:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Objective'
+                      oneOf:
+                        - $ref: '#/components/schemas/Objective'
+                        - $ref: '#/components/schemas/Role'
         '401':
           $ref: '#/components/responses/Unauthorized'
       security:
