@@ -14,10 +14,16 @@ trait SuccessResponseMaker
     {
         try {
             if (is_array($data)) {
-                $data = array_map(static fn($item) => $item->toApiModel(), $data);
+                array_walk_recursive($data, static function (&$value) {
+                    if ($value instanceof ApiConvertible) {
+                        $value = $value->toApiModel();
+                    }
+                });
+            } elseif ($data instanceof ApiConvertible) {
+                $data = $data->toApiModel();
             }
 
-            return new ResponseApiSuccess($statusCode, $data?->toApiModel());
+            return new ResponseApiSuccess($statusCode, $data);
         } catch (CollectmeException|\ReflectionException $e) {
             return new ResponseApiError(
                 500,
