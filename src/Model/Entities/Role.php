@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Model\Entities;
 
+use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Model\Database\DBField;
 use Collectme\Model\Database\DBTable;
 use Collectme\Model\Entity;
@@ -35,6 +36,29 @@ class Role extends Entity
         ?\DateTime $deleted = null
     ) {
         parent::__construct($uuid, $created, $updated, $deleted);
+    }
+
+    /**
+     * @return Role[]
+     * @throws CollectmeDBException
+     */
+    public static function findByGroups(array $groupUuids): array
+    {
+        global $wpdb;
+
+        $rolesTbl = self::getTableName();
+        $placeholders = implode(',', array_fill(0, count($groupUuids), '%s'));
+
+        $query = $wpdb->prepare(
+            <<<SQL
+SELECT * FROM {$rolesTbl}
+WHERE groups_uuid IN ({$placeholders})
+AND deleted_at IS NULL
+SQL,
+            ...$groupUuids
+        );
+
+        return self::findByQuery($query);
     }
 
     protected static function _convertFromPermission(string $permission): EnumPermission

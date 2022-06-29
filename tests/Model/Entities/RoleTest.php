@@ -144,4 +144,84 @@ class RoleTest extends TestCase
         $this->assertSame($apiData['relationships']['user']['data']['id'], $role->userUuid);
         $this->assertSame($apiData['relationships']['group']['data']['id'], $role->groupUuid);
     }
+
+    public function test_findByGroup(): void
+    {
+        $user = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            'user cause test'
+        );
+        $user->save();
+
+        $cause = new Cause(
+            null,
+            'test_'.wp_generate_password(),
+        );
+        $cause->save();
+
+        $group1 = new Group(
+            null,
+            'test_'.wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group1->save();
+
+        $group2 = new Group(
+            null,
+            'test_'.wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group2->save();
+
+        $roleR = new Role(
+            null,
+            $user->uuid,
+            $group1->uuid,
+            EnumPermission::READ
+        );
+        $roleR->save();
+
+        $roleRW = new Role(
+            null,
+            $user->uuid,
+            $group1->uuid,
+            EnumPermission::READ_WRITE
+        );
+        $roleRW->save();
+
+        $roleDeleted = new Role(
+            null,
+            $user->uuid,
+            $group1->uuid,
+            EnumPermission::READ_WRITE,
+        );
+        $roleDeleted->save();
+        $roleDeleted->delete();
+
+        $roleOtherGroup = new Role(
+            null,
+            $user->uuid,
+            $group2->uuid,
+            EnumPermission::READ_WRITE,
+        );
+        $roleOtherGroup->save();
+
+        $roles = Role::findByGroups([$group1->uuid]);
+
+        $this->assertCount(2, $roles);
+
+        $rolesUuids = array_map(static fn(Role $role) => $role->uuid, $roles);
+        $this->assertContains($roleR->uuid, $rolesUuids);
+        $this->assertContains($roleRW->uuid, $rolesUuids);
+        $this->assertNotContains($roleDeleted->uuid, $rolesUuids);
+        $this->assertNotContains($roleOtherGroup->uuid, $rolesUuids);
+    }
 }
