@@ -831,6 +831,11 @@ paths:
                       properties:
                         data:
                           $ref: '#/components/schemas/GroupBase'
+                    activity:
+                      type: object
+                      properties:
+                        data:
+                          $ref: '#/components/schemas/ActivityBase'
       responses:
         '201':
           description: Created
