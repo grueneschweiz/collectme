@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Model\Entities;
 
+use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Model\Database\DBField;
 use Collectme\Model\Database\DBTable;
 use Collectme\Model\Entity;
@@ -15,9 +16,6 @@ use Collectme\Model\JsonApi\ApiModelType;
 #[DBTable('groups')]
 class Group extends Entity
 {
-    #[ApiModelAttribute('_signatures')]
-    private int $signatures;
-
     /**
      * @var Objective[]
      */
@@ -29,6 +27,9 @@ class Group extends Entity
      */
     #[ApiModelRelationship(Role::class)]
     public array $roleUuids;
+
+    #[ApiModelAttribute('_signatures')]
+    private int $signatures;
 
     public function __construct(
         ?string $uuid,
@@ -55,6 +56,38 @@ class Group extends Entity
         parent::__construct($uuid, $created, $updated, $deleted);
     }
 
+    /**
+     * @return Group[]
+     * @throws CollectmeDBException
+     */
+    public static function findByCauseAndReadableByUser(string $causeUuid, string $userUuid): array
+    {
+        global $wpdb;
+
+        $groupsTbl = self::getTableName();
+        $rolesTbl = Role::getTableName();
+
+        return self::findByQuery(
+            $wpdb->prepare(
+                <<<SQL
+SELECT $groupsTbl.* FROM $groupsTbl
+LEFT JOIN $rolesTbl ON $groupsTbl.uuid = $rolesTbl.groups_uuid
+WHERE $groupsTbl.causes_uuid = '%s'
+    AND $groupsTbl.deleted_at IS NULL
+    AND (
+        $groupsTbl.world_readable = 1
+        OR (
+            $rolesTbl.users_uuid = '%s' 
+            AND $rolesTbl.deleted_at IS NULL
+        )
+    )
+SQL,
+                $causeUuid,
+                $userUuid
+            )
+        );
+    }
+
     protected static function _convertFromType(string $type): EnumGroupType
     {
         return EnumGroupType::from($type);
@@ -65,6 +98,27 @@ class Group extends Entity
         return (bool)$worldReadable;
     }
 
+    public function userCanWrite(string $userUuid): bool
+    {
+        global $wpdb;
+
+        $rolesTbl = Role::getTableName();
+
+        return (bool)$wpdb->get_var(
+            $wpdb->prepare(
+                <<<SQL
+SELECT count(*) FROM $rolesTbl
+WHERE groups_uuid = '%s'
+    AND users_uuid = '%s'
+    AND permission = 'rw'
+    AND deleted_at IS NULL
+SQL,
+                $this->uuid,
+                $userUuid,
+            )
+        );
+    }
+
     protected function _convertToType(): string
     {
         return $this->type->value;
@@ -72,36 +126,18 @@ class Group extends Entity
 
     protected function _convertToApiSignatures(): int
     {
-        if (!isset($this->signatures)){
+        if (!isset($this->signatures)) {
             $this->signatures();
         }
-        
+
         return $this->signatures;
-    }
-    
-    protected function _convertToApiObjectiveUuids(): array
-    {
-        if (!isset($this->objectiveUuids)){
-            $this->objectiveUuids();
-        }
-
-        return $this->objectiveUuids;
-    }
-    
-    protected function _convertToApiRoleUuids(): array
-    {
-        if (!isset($this->roleUuids)){
-            $this->roleUuids();
-        }
-
-        return $this->roleUuids;
     }
 
     public function signatures(): int
     {
         global $wpdb;
 
-        $this->signatures = (int) $wpdb->get_var(
+        $this->signatures = (int)$wpdb->get_var(
             $wpdb->prepare(
                 "SELECT SUM(count) FROM " . SignatureEntry::getTableName() .
                 " WHERE collected_by_groups_uuid = '%s'",
@@ -110,6 +146,15 @@ class Group extends Entity
         );
 
         return $this->signatures;
+    }
+
+    protected function _convertToApiObjectiveUuids(): array
+    {
+        if (!isset($this->objectiveUuids)) {
+            $this->objectiveUuids();
+        }
+
+        return $this->objectiveUuids;
     }
 
     public function objectiveUuids(): array
@@ -125,6 +170,15 @@ class Group extends Entity
         );
 
         return $this->objectiveUuids;
+    }
+
+    protected function _convertToApiRoleUuids(): array
+    {
+        if (!isset($this->roleUuids)) {
+            $this->roleUuids();
+        }
+
+        return $this->roleUuids;
     }
 
     public function roleUuids(): array

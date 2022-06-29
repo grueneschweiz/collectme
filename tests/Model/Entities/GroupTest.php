@@ -9,7 +9,9 @@ use Collectme\Model\Entities\Cause;
 use Collectme\Model\Entities\EnumActivityType;
 use Collectme\Model\Entities\EnumGroupType;
 use Collectme\Model\Entities\EnumLang;
+use Collectme\Model\Entities\EnumPermission;
 use Collectme\Model\Entities\Group;
+use Collectme\Model\Entities\Role;
 use Collectme\Model\Entities\SignatureEntry;
 use Collectme\Model\Entities\User;
 use PHPUnit\Framework\TestCase;
@@ -221,5 +223,224 @@ class GroupTest extends TestCase
         $this->assertSame($apiData['attributes']['name'], $group->name);
         $this->assertSame(EnumGroupType::PERSON, $group->type);
         $this->assertSame($apiData['relationships']['cause']['data']['id'], $group->causeUuid);
+    }
+
+    public function test_findByCauseAndReadableByUser(): void
+    {
+        $cause1 = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause1->save();
+
+        $cause2 = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause2->save();
+
+        $groupWorldReadTrue = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            true,
+        );
+        $groupWorldReadTrue->save();
+
+        $groupRoleRead = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            false,
+        );
+        $groupRoleRead->save();
+
+        $groupRoleReadWrite = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            false,
+        );
+        $groupRoleReadWrite->save();
+
+        // not cause
+        $groupOtherCause = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause2->uuid,
+            true,
+        );
+        $groupOtherCause->save();
+
+        // not readable
+        $groupWorldReadFalse = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            false,
+        );
+        $groupWorldReadFalse->save();
+
+        $user1 = new User(
+            null,
+            wp_generate_uuid4().'@example.com',
+            'John',
+            'Doe',
+            EnumLang::DE,
+            'test group'
+        );
+        $user1->save();
+
+        $user2= new User(
+            null,
+            wp_generate_uuid4().'@example.com',
+            'Jane',
+            'Doe',
+            EnumLang::DE,
+            'test group'
+        );
+        $user2->save();
+
+        $roleRead = new Role(
+            null,
+            $user1->uuid,
+            $groupRoleRead->uuid,
+            EnumPermission::READ
+        );
+        $roleRead->save();
+
+        $roleReadWrite = new Role(
+            null,
+            $user1->uuid,
+            $groupRoleReadWrite->uuid,
+            EnumPermission::READ_WRITE
+        );
+        $roleReadWrite->save();
+
+        $roleOtherUser = new Role(
+            null,
+            $user2->uuid,
+            $groupWorldReadFalse->uuid,
+            EnumPermission::READ_WRITE
+        );
+        $roleOtherUser->save();
+
+        $roleDeleted = new Role(
+            null,
+            $user1->uuid,
+            $groupWorldReadFalse->uuid,
+            EnumPermission::READ_WRITE
+        );
+        $roleDeleted->save();
+        $roleDeleted->delete();
+
+        $groups = Group::findByCauseAndReadableByUser($cause1->uuid, $user1->uuid);
+
+        $this->assertCount(3, $groups);
+
+        $groupsUuids = array_map(static fn(Group $group) => $group->uuid, $groups);
+        $this->assertContains($groupWorldReadTrue->uuid, $groupsUuids);
+        $this->assertContains($groupRoleRead->uuid, $groupsUuids);
+        $this->assertContains($groupRoleReadWrite->uuid, $groupsUuids);
+        $this->assertNotContains($groupOtherCause->uuid, $groupsUuids);
+        $this->assertNotContains($groupWorldReadFalse->uuid, $groupsUuids);
+    }
+
+    public function test_userCanWrite(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $groupWorldRead = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            true,
+        );
+        $groupWorldRead->save();
+
+        $groupRoleRead = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $groupRoleRead->save();
+
+        $groupRoleReadWrite = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $groupRoleReadWrite->save();
+
+        $user1 = new User(
+            null,
+            wp_generate_uuid4().'@example.com',
+            'John',
+            'Doe',
+            EnumLang::DE,
+            'test group'
+        );
+        $user1->save();
+
+        $user2= new User(
+            null,
+            wp_generate_uuid4().'@example.com',
+            'Jane',
+            'Doe',
+            EnumLang::DE,
+            'test group'
+        );
+        $user2->save();
+
+        $roleRead = new Role(
+            null,
+            $user1->uuid,
+            $groupRoleRead->uuid,
+            EnumPermission::READ
+        );
+        $roleRead->save();
+
+        $roleReadWrite = new Role(
+            null,
+            $user1->uuid,
+            $groupRoleReadWrite->uuid,
+            EnumPermission::READ_WRITE
+        );
+        $roleReadWrite->save();
+
+        $roleOtherUser = new Role(
+            null,
+            $user2->uuid,
+            $groupWorldRead->uuid,
+            EnumPermission::READ_WRITE
+        );
+        $roleOtherUser->save();
+
+        $roleDeleted = new Role(
+            null,
+            $user1->uuid,
+            $groupWorldRead->uuid,
+            EnumPermission::READ_WRITE
+        );
+        $roleDeleted->save();
+        $roleDeleted->delete();
+
+        $this->assertTrue($groupRoleReadWrite->userCanWrite($user1->uuid));
+        $this->assertFalse($groupRoleRead->userCanWrite($user1->uuid));
+        $this->assertFalse($groupWorldRead->userCanWrite($user1->uuid));
     }
 }
