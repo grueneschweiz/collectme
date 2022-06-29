@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Model\Entities;
 
+use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Model\Database\DBField;
 use Collectme\Model\Database\DBTable;
 use Collectme\Model\Entity;
@@ -36,6 +37,28 @@ class Objective extends Entity
         ?\DateTime $deleted = null
     ) {
         parent::__construct($uuid, $created, $updated, $deleted);
+    }
+
+    /**
+     * @return Objective[]
+     * @throws CollectmeDBException
+     */
+    public static function findByGroups(array $groupUuids): array
+    {
+        global $wpdb;
+
+        $objectivesTbl = self::getTableName();
+        $placeholders = implode(',', array_fill(0, count($groupUuids), '%s'));
+
+        $query = $wpdb->prepare(<<<SQL
+SELECT * FROM {$objectivesTbl}
+WHERE groups_uuid IN ({$placeholders})
+AND deleted_at IS NULL
+SQL,
+            ...$groupUuids
+        );
+
+        return self::findByQuery($query);
     }
 
     protected static function _convertFromObjective(string|int $objective): int

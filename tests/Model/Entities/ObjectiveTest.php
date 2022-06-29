@@ -138,4 +138,60 @@ class ObjectiveTest extends TestCase
         $this->assertSame($apiData['relationships']['group']['data']['id'], $objective->groupUuid);
     }
 
+    public function test_findByGroups(): void {
+        $cause = new Cause(
+            null,
+            'test_'.wp_generate_password(),
+        );
+        $cause->save();
+
+        $group1 = new Group(
+            null,
+            'test_'.wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group1->save();
+
+        $group2 = new Group(
+            null,
+            'test_'.wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group2->save();
+
+        $objectiveGroup1 = new Objective(
+            null,
+            100,
+            $group1->uuid,
+            'Newsletter 220401'
+        );
+        $objectiveGroup1->save();
+
+        $objectiveDeleted = new Objective(
+            null,
+            100,
+            $group1->uuid,
+            'Newsletter 220401'
+        );
+        $objectiveDeleted->save();
+        $objectiveDeleted->delete();
+
+        $objectiveGroup2 = new Objective(
+            null,
+            100,
+            $group2->uuid,
+            'Newsletter 220401'
+        );
+        $objectiveGroup2->save();
+
+        $objectives = Objective::findByGroups([$group1->uuid]);
+
+        $this->assertCount(1, $objectives);
+        $this->assertSame($objectiveGroup1->uuid, $objectives[0]->uuid);
+    }
+
 }
