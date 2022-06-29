@@ -465,7 +465,7 @@ components:
                     example: 422
                   title:
                     type: string
-                    example: Invalid data
+                    example: Unprocessable Entity
                   source:
                     type: object
                     properties:
