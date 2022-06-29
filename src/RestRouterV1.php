@@ -8,6 +8,7 @@ use Collectme\Controller\AuthController;
 use Collectme\Controller\GroupController;
 use Collectme\Controller\Http\UuidValidator;
 use Collectme\Controller\SessionController;
+use Collectme\Controller\SignatureController;
 use Collectme\Controller\UserController;
 use Collectme\Misc\Auth;
 use WP_REST_Server;
@@ -20,6 +21,7 @@ class RestRouterV1
         private readonly UserController $userController,
         private readonly SessionController $sessionController,
         private readonly GroupController $groupController,
+        private readonly SignatureController $signatureController,
     ) {
     }
 
@@ -28,6 +30,7 @@ class RestRouterV1
         $this->registerUserRoutes();
         $this->registerSessionRoutes();
         $this->registerGroupRoutes();
+        $this->registerSignatureRoutes();
     }
 
     private function registerUserRoutes(): void
@@ -107,6 +110,34 @@ class RestRouterV1
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->groupController, 'findByCause'],
+                'permission_callback' => [$this->auth, 'isAuthenticated'],
+                'args' => [
+                    'uuid' => [
+                        'validate_callback' => [UuidValidator::class, 'check']
+                    ]
+                ],
+            ]
+        );
+    }
+
+    public function registerSignatureRoutes(): void
+    {
+        register_rest_route(
+            REST_V1_NAMESPACE,
+            '/signatures',
+            [
+                'methods' => WP_REST_Server::CREATABLE,
+                'callback' => [$this->signatureController, 'add'],
+                'permission_callback' => [$this->auth, 'isAuthenticated'],
+            ]
+        );
+
+        register_rest_route(
+            REST_V1_NAMESPACE,
+            '/signatures/(?P<uuid>[a-zA-Z0-9-]{36})',
+            [
+                'methods' => WP_REST_Server::DELETABLE,
+                'callback' => [$this->signatureController, 'delete'],
                 'permission_callback' => [$this->auth, 'isAuthenticated'],
                 'args' => [
                     'uuid' => [
