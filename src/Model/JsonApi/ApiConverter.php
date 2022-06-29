@@ -280,7 +280,7 @@ trait ApiConverter
             $instanceAttrs = $property->getAttributes(ApiModelAttribute::class);
 
             if (!empty($instanceAttrs)) {
-                $name = $instanceAttrs[0]->newInstance()->attributeName ?? $property->name;
+                $name = $instanceAttrs[0]->newInstance()->name ?? $property->name;
                 $value = $this->getConvertedValueForApi($property->name);
 
                 $attributes[$name] = $value;
