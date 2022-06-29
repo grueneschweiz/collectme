@@ -162,4 +162,15 @@ class Auth
         $this->authCookie->invalidate();
         $this->phpSession->reset();
     }
+
+    public function getUserUuid(): string
+    {
+        $session = $this->getPersistentSession();
+
+        if (! $session) {
+            throw new CollectmeException('Can not get user id if not logged in.');
+        }
+
+        return $session->userUuid;
+    }
 }
