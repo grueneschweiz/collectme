@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Collectme;
 
 use Collectme\Controller\AuthController;
+use Collectme\Controller\GroupController;
 use Collectme\Controller\Http\UuidValidator;
 use Collectme\Controller\SessionController;
 use Collectme\Controller\UserController;
@@ -18,6 +19,7 @@ class RestRouterV1
         private readonly AuthController $authController,
         private readonly UserController $userController,
         private readonly SessionController $sessionController,
+        private readonly GroupController $groupController,
     ) {
     }
 
@@ -25,6 +27,7 @@ class RestRouterV1
     {
         $this->registerUserRoutes();
         $this->registerSessionRoutes();
+        $this->registerGroupRoutes();
     }
 
     private function registerUserRoutes(): void
@@ -86,6 +89,24 @@ class RestRouterV1
             [
                 'methods' => WP_REST_Server::DELETABLE,
                 'callback' => [$this->sessionController, 'logout'],
+                'permission_callback' => [$this->auth, 'isAuthenticated'],
+                'args' => [
+                    'uuid' => [
+                        'validate_callback' => [UuidValidator::class, 'check']
+                    ]
+                ],
+            ]
+        );
+    }
+
+    public function registerGroupRoutes(): void
+    {
+        register_rest_route(
+            REST_V1_NAMESPACE,
+            '/causes/(?P<uuid>[a-zA-Z0-9-]{36})/groups',
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$this->groupController, 'findByCause'],
                 'permission_callback' => [$this->auth, 'isAuthenticated'],
                 'args' => [
                     'uuid' => [
