@@ -158,7 +158,7 @@ class GroupTest extends TestCase
         $this->assertSame('group', $apiModel->type);
 
         $this->assertSame($group->name, $apiModel->attributes['name']);
-        $this->assertSame(0, $apiModel->attributes['signatures']);
+        $this->assertSame(0, $apiModel->attributes['_signatures']);
         $this->assertSame('person', $apiModel->attributes['type']);
         $this->assertArrayHasKey('created', $apiModel->attributes);
         $this->assertArrayHasKey('updated', $apiModel->attributes);
@@ -212,7 +212,7 @@ class GroupTest extends TestCase
         ];
 
         $props = Group::fromApiModelToPropsArray($apiData);
-        unset($props['relationships']['objective']);
+        unset($props['objectiveUuids']);
 
         /** @noinspection PhpParamsInspection */
         $group = new Group(...$props, worldReadable: false);

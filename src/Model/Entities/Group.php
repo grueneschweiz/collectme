@@ -15,7 +15,7 @@ use Collectme\Model\JsonApi\ApiModelType;
 #[DBTable('groups')]
 class Group extends Entity
 {
-    #[ApiModelAttribute]
+    #[ApiModelAttribute('_signatures')]
     private int $signatures;
 
     /**
