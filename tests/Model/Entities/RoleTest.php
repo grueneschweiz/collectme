@@ -94,4 +94,54 @@ class RoleTest extends TestCase
 
         $this->assertNotEmpty($role->uuid);
     }
+
+    public function test_toApiModel(): void
+    {
+        $role = new Role(
+            wp_generate_uuid4(),
+            wp_generate_uuid4(),
+            wp_generate_uuid4(),
+            EnumPermission::READ,
+        );
+
+        $apiModel = $role->toApiModel();
+
+        $this->assertSame($role->uuid, $apiModel->id);
+        $this->assertSame('role', $apiModel->type);
+        $this->assertSame('r', $apiModel->attributes['permission']);
+        $this->assertSame($role->userUuid, $apiModel->relationships['user']['data']['id']);
+        $this->assertSame($role->groupUuid, $apiModel->relationships['group']['data']['id']);
+    }
+
+    public function test_fromApiModelToPropsArray(): void
+    {
+        $apiData = [
+            'id' => wp_generate_uuid4(),
+            'type' => 'role',
+            'attributes' => [
+                'permission' => 'r',
+            ],
+            'relationships' => [
+                'user' => [
+                    'data' => [
+                        'id' => wp_generate_uuid4(),
+                        'type' => 'user',
+                    ],
+                ],
+                'group' => [
+                    'data' => [
+                        'id' => wp_generate_uuid4(),
+                        'type' => 'group',
+                    ],
+                ],
+            ],
+        ];
+
+        $role = new Role(...Role::fromApiModelToPropsArray($apiData));
+
+        $this->assertSame($apiData['id'], $role->uuid);
+        $this->assertSame(EnumPermission::READ, $role->permission);
+        $this->assertSame($apiData['relationships']['user']['data']['id'], $role->userUuid);
+        $this->assertSame($apiData['relationships']['group']['data']['id'], $role->groupUuid);
+    }
 }
