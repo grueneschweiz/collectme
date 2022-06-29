@@ -117,7 +117,7 @@ class SignatureEntryTest extends TestCase
         $this->assertNotEmpty($entry->uuid);
     }
 
-    public function toApiModel(): void
+    public function test_toApiModel(): void
     {
         $entry = new SignatureEntry(
             wp_generate_uuid4(),
@@ -197,17 +197,23 @@ class SignatureEntryTest extends TestCase
                         'type' => 'group'
                     ]
                 ],
+                'activity' => [
+                    'data' => [
+                        'id' => wp_generate_uuid4(),
+                        'type' => 'activity'
+                    ]
+                ],
             ]
         ];
 
         $props = SignatureEntry::fromApiModelToPropsArray($apiData);
 
-        /** @noinspection PhpParamsInspection */
-        $entry = new SignatureEntry(...$props, activityLogUuid: wp_generate_uuid4());
+        $entry = new SignatureEntry(...$props);
 
         $this->assertSame($apiData['id'], $entry->uuid);
         $this->assertSame($apiData['attributes']['count'], $entry->count);
         $this->assertSame($apiData['relationships']['user']['data']['id'], $entry->userUuid);
         $this->assertSame($apiData['relationships']['group']['data']['id'], $entry->groupUuid);
+        $this->assertSame($apiData['relationships']['activity']['data']['id'], $entry->activityLogUuid);
     }
 }

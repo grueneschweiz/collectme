@@ -31,6 +31,7 @@ class SignatureEntry extends Entity
         public int $count,
 
         #[DBField('activity_logs_uuid')]
+        #[ApiModelRelationship(ActivityLog::class)]
         public string $activityLogUuid,
 
         ?\DateTime $created = null,
