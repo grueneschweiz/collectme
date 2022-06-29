@@ -347,7 +347,7 @@ trait ApiConverter
 
     private function getRelationshipData(\ReflectionProperty $property, string $type): array
     {
-        $value = $property->getValue($this);
+        $value = $this->getConvertedValueForApi($property->name);
 
         if (is_array($value)) {
 
