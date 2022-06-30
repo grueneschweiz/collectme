@@ -7,6 +7,7 @@ namespace Collectme;
 use Collectme\Controller\AuthController;
 use Collectme\Controller\GroupController;
 use Collectme\Controller\Http\UuidValidator;
+use Collectme\Controller\ObjectiveController;
 use Collectme\Controller\SessionController;
 use Collectme\Controller\SignatureController;
 use Collectme\Controller\UserController;
@@ -22,6 +23,7 @@ class RestRouterV1
         private readonly SessionController $sessionController,
         private readonly GroupController $groupController,
         private readonly SignatureController $signatureController,
+        private readonly ObjectiveController $objectiveController,
     ) {
     }
 
@@ -31,6 +33,7 @@ class RestRouterV1
         $this->registerSessionRoutes();
         $this->registerGroupRoutes();
         $this->registerSignatureRoutes();
+        $this->registerObjectiveRoutes();
     }
 
     private function registerUserRoutes(): void
@@ -144,6 +147,19 @@ class RestRouterV1
                         'validate_callback' => [UuidValidator::class, 'check']
                     ]
                 ],
+            ]
+        );
+    }
+
+    public function registerObjectiveRoutes(): void
+    {
+        register_rest_route(
+            REST_V1_NAMESPACE,
+            '/signatures',
+            [
+                'methods' => WP_REST_Server::CREATABLE,
+                'callback' => [$this->objectiveController, 'add'],
+                'permission_callback' => [$this->auth, 'isAuthenticated'],
             ]
         );
     }
