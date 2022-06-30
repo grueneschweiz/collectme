@@ -591,7 +591,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Session'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Session'
           headers:
             Location:
               description: /sessions/{uuid}
@@ -646,7 +649,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Session'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Session'
           headers:
             Set-Cookie:
               description: |
@@ -818,24 +824,24 @@ paths:
                         count:
                           type: integer
                           example: 13
-                relationships:
-                  type: object
-                  properties:
-                    user:
+                    relationships:
                       type: object
                       properties:
-                        data:
-                          $ref: '#/components/schemas/UserBase'
-                    group:
-                      type: object
-                      properties:
-                        data:
-                          $ref: '#/components/schemas/GroupBase'
-                    activity:
-                      type: object
-                      properties:
-                        data:
-                          $ref: '#/components/schemas/ActivityBase'
+                        user:
+                          type: object
+                          properties:
+                            data:
+                              $ref: '#/components/schemas/UserBase'
+                        group:
+                          type: object
+                          properties:
+                            data:
+                              $ref: '#/components/schemas/GroupBase'
+                        activity:
+                          type: object
+                          properties:
+                            data:
+                              $ref: '#/components/schemas/ActivityBase'
       responses:
         '201':
           description: Created
@@ -902,14 +908,14 @@ paths:
                         source:
                           type: string
                           example: app
-                relationships:
-                  type: object
-                  properties:
-                    group:
+                    relationships:
                       type: object
                       properties:
-                        data:
-                          $ref: '#/components/schemas/GroupBase'
+                        group:
+                          type: object
+                          properties:
+                            data:
+                              $ref: '#/components/schemas/GroupBase'
       responses:
         '204':
           description: Created
