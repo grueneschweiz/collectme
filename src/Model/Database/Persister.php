@@ -45,7 +45,7 @@ trait Persister
             '%s'
         );
 
-        if (1 !== $count) {
+        if (false === $count) {
             throw new CollectmeDBException('Failed to update ' . static::class . ": $wpdb->last_error");
         }
     }
