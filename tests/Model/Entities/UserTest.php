@@ -165,6 +165,55 @@ class UserTest extends \WP_UnitTestCase
         $this->assertCount(1, $user->causes());
     }
 
+    public function test_hasCause__true(): void
+    {
+        $user = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'John',
+            'Doe',
+            EnumLang::FR,
+            'add cause test'
+        );
+        $user->save();
+
+        $cause = new Cause(
+            null,
+            'user_cause_'.wp_generate_password(),
+        );
+        $cause->save();
+
+        $userCause = new UserCause(
+            null,
+            $user->uuid,
+            $cause->uuid
+        );
+        $userCause->save();
+
+        $this->assertTrue($user->hasCause($cause->uuid));
+    }
+
+    public function test_hasCause__false(): void
+    {
+        $user = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'John',
+            'Doe',
+            EnumLang::FR,
+            'add cause test'
+        );
+        $user->save();
+
+        $cause = new Cause(
+            null,
+            'user_cause_'.wp_generate_password(),
+        );
+        $cause->save();
+
+        $this->assertFalse($user->hasCause($cause->uuid));
+    }
+
     public function test_findByCause(): void
     {
         $user1 = new User(

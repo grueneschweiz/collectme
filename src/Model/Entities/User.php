@@ -86,9 +86,7 @@ class User extends Entity
      */
     public function addCause(string $causeUuid): void
     {
-        $userCauses = UserCause::findByUserAndCause($this->uuid, $causeUuid);
-        if (!empty($userCauses)) {
-            // already linked
+        if ($this->hasCause($causeUuid)) {
             return;
         }
 
@@ -130,6 +128,14 @@ class User extends Entity
         );
 
         return self::findByQuery($query);
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    public function hasCause(string $causeUuid): bool
+    {
+        return !empty(UserCause::findByUserAndCause($this->uuid, $causeUuid));
     }
 
     /**
