@@ -190,6 +190,7 @@ CREATE TABLE IF NOT EXISTS `collectme`.`roles`
 CREATE TABLE IF NOT EXISTS `collectme`.`activity_logs`
 (
     `uuid`        VARCHAR(36)                                                                                                       NOT NULL,
+    `insert_id`   INT                                                                                                               NOT NULL AUTO_INCREMENT,
     `type`        ENUM ('pledge', 'personal signature', 'organization signature', 'personal goal achieved', 'personal goal raised') NOT NULL,
     `count`       INT                                                                                                               NOT NULL,
     `causes_uuid` VARCHAR(36)                                                                                                       NOT NULL,
@@ -200,6 +201,7 @@ CREATE TABLE IF NOT EXISTS `collectme`.`activity_logs`
     PRIMARY KEY (`uuid`),
     INDEX `fk_activity_log_causes1_idx` (`causes_uuid` ASC),
     INDEX `fk_activity_logs_groups1_idx` (`groups_uuid` ASC),
+    INDEX `insert_id_idx` (`insert_id` DESC),
     CONSTRAINT `fk_activity_log_causes1`
         FOREIGN KEY (`causes_uuid`)
             REFERENCES `collectme`.`causes` (`uuid`)
