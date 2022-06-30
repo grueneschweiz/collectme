@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Controller;
 
-use Collectme\Controller\Http\ResponseApiError;
+use Collectme\Controller\Http\InternalServerErrorResponseMaker;
 use Collectme\Controller\Http\SuccessResponseMaker;
 use Collectme\Controller\Http\UnauthorizedResponseMaker;
 use Collectme\Exceptions\CollectmeDBException;
@@ -13,7 +13,6 @@ use Collectme\Misc\Auth;
 use Collectme\Model\Entities\Group;
 use Collectme\Model\Entities\Objective;
 use Collectme\Model\Entities\Role;
-use Collectme\Model\JsonApi\ApiError;
 use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -22,6 +21,7 @@ class GroupController extends WP_REST_Controller
 {
     use SuccessResponseMaker;
     use UnauthorizedResponseMaker;
+    use InternalServerErrorResponseMaker;
 
     public function __construct(
         private readonly Auth $auth
@@ -41,10 +41,7 @@ class GroupController extends WP_REST_Controller
         try {
             $groups = Group::findByCauseAndReadableByUser($causeUuid, $userUuid);
         } catch (CollectmeDBException $e) {
-            return new ResponseApiError(
-                500,
-                [new ApiError(500, 'Internal Server Error', exception: $e)]
-            );
+            return $this->makeInternalServerErrorResponse($e);
         }
 
         $groupUuids = array_map(static fn($group) => $group->uuid, $groups);
@@ -63,10 +60,7 @@ class GroupController extends WP_REST_Controller
                 ...Role::findByGroups($groupUuids),
             ];
         } catch (CollectmeException|CollectmeDBException|\ReflectionException $e) {
-            return new ResponseApiError(
-                500,
-                [new ApiError(500, 'Internal Server Error', exception: $e)]
-            );
+            return $this->makeInternalServerErrorResponse($e);
         }
 
         $jsonApiData = [

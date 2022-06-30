@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Collectme\Controller;
 
+use Collectme\Controller\Http\InternalServerErrorResponseMaker;
 use Collectme\Controller\Http\NotFoundResponseMaker;
-use Collectme\Controller\Http\ResponseApiError;
 use Collectme\Controller\Http\ResponseApiSuccess;
 use Collectme\Controller\Http\SuccessResponseMaker;
 use Collectme\Controller\Http\UnauthorizedResponseMaker;
@@ -31,6 +31,7 @@ class SignatureController extends WP_REST_Controller
     use NotFoundResponseMaker;
     use SuccessResponseMaker;
     use ValidationErrorResponseMaker;
+    use InternalServerErrorResponseMaker;
 
     public function __construct(
         private readonly Auth $auth
@@ -54,10 +55,7 @@ class SignatureController extends WP_REST_Controller
         try {
             $entryProps = SignatureEntry::fromApiModelToPropsArray($apiData['data']);
         } catch (\Exception $e) {
-            return new ResponseApiError(
-                500,
-                [new ApiError(500, 'Internal Server Error', exception: $e)]
-            );
+            return $this->makeInternalServerErrorResponse($e);
         }
 
         $errors = [];
@@ -121,10 +119,7 @@ class SignatureController extends WP_REST_Controller
                 return $entry->save();
             });
         } catch (\Exception $e) {
-            return new ResponseApiError(
-                500,
-                [new ApiError(500, 'Internal Server Error', exception: $e)]
-            );
+            return $this->makeInternalServerErrorResponse($e);
         }
 
         return $this->makeSuccessResponse(201, $entry);
@@ -157,10 +152,7 @@ class SignatureController extends WP_REST_Controller
                 $signatureEntry->delete();
             });
         } catch (\Exception $e) {
-            return new ResponseApiError(
-                500,
-                [new ApiError(500, 'Internal Server Error', exception: $e)]
-            );
+            return $this->makeInternalServerErrorResponse($e);
         }
 
         return new ResponseApiSuccess(204, null);

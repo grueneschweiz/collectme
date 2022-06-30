@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Controller;
 
+use Collectme\Controller\Http\InternalServerErrorResponseMaker;
 use Collectme\Controller\Http\NotFoundResponseMaker;
 use Collectme\Controller\Http\ResponseApiError;
 use Collectme\Controller\Http\SuccessResponseMaker;
@@ -21,6 +22,7 @@ class SessionController extends \WP_REST_Controller
     use UnauthorizedResponseMaker;
     use NotFoundResponseMaker;
     use SuccessResponseMaker;
+    use InternalServerErrorResponseMaker;
 
     public function __construct(
         private readonly Auth $auth
@@ -98,10 +100,7 @@ class SessionController extends \WP_REST_Controller
         try {
             $this->auth->logout();
         } catch (CollectmeDBException|CollectmeException $e) {
-            return new ResponseApiError(
-                500,
-                [new ApiError(500, 'Internal Server Error', exception: $e)]
-            );
+            return $this->makeInternalServerErrorResponse($e);
         }
 
         return new WP_REST_Response(null, 204);

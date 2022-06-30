@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Controller;
 
+use Collectme\Controller\Http\InternalServerErrorResponseMaker;
 use Collectme\Controller\Http\ResponseApiError;
 use Collectme\Controller\Http\SuccessResponseMaker;
 use Collectme\Controller\Http\UuidValidator;
@@ -19,6 +20,7 @@ use WP_REST_Response;
 class AuthController extends WP_REST_Controller
 {
     use SuccessResponseMaker;
+    use InternalServerErrorResponseMaker;
 
     public function __construct(
         private readonly Auth $auth
@@ -53,6 +55,8 @@ class AuthController extends WP_REST_Controller
             $this->auth->createPersistentSession($user, true);
         } catch (CollectmeDBException $e) {
             // token is not valid
+        } catch (\Exception $e) {
+            return $this->makeInternalServerErrorResponse($e);
         }
 
         $session = $this->auth->getPersistentSession();
