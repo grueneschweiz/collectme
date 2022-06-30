@@ -917,7 +917,21 @@ paths:
                             data:
                               $ref: '#/components/schemas/GroupBase'
       responses:
-        '204':
+        '200':
+          description: An objective with the same objective value already exists. See response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Objective'
+          headers:
+            Location:
+              description: /objectives/{uuid}
+              schema:
+                type: string
+        '201':
           description: Created
           content:
             application/json:
