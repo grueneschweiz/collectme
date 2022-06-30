@@ -443,4 +443,33 @@ class GroupTest extends TestCase
         $this->assertFalse($groupRoleRead->userCanWrite($user1->uuid));
         $this->assertFalse($groupWorldRead->userCanWrite($user1->uuid));
     }
+
+    public function test_getMany(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $uuidsEven = [];
+        for ($i = 0; $i < 10; $i++) {
+            $group = (new Group(
+                null,
+                'test_' . wp_generate_password(),
+                EnumGroupType::PERSON,
+                $cause->uuid,
+                true,
+            ))->save();
+
+            if ($i % 2 === 0) {
+                $uuidsEven[] = $group->uuid;
+            }
+        }
+
+        $dbGroups = Group::getMany($uuidsEven);
+        $uuids = array_map(static fn(Group $group) => $group->uuid, $dbGroups);
+
+        $this->assertEqualsCanonicalizing($uuidsEven, $uuids);
+    }
 }

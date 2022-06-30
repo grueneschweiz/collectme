@@ -222,6 +222,33 @@ trait Persister
     }
 
     /**
+     * @return static[]
+     * @throws CollectmeDBException
+     */
+    public static function getMany(array $uuids): array {
+        global $wpdb;
+
+        $uuids = array_unique($uuids);
+        $count = count($uuids);
+
+        $groupsTbl = self::getTableName();
+        $placeholders = implode(',', array_fill(0, $count, '%s'));
+
+        $entities = self::findByQuery(
+            $wpdb->prepare(
+                "SELECT * FROM $groupsTbl WHERE uuid IN ($placeholders) AND deleted_at IS NULL",
+                ...$uuids
+            )
+        );
+
+        if ($count !== count($entities)) {
+            throw new CollectmeDBException('Failed to getMany ' . static::class . ": Cannot find entities for all given uuids.");
+        }
+
+        return $entities;
+    }
+
+    /**
      * @param string $query
      * @return static[]
      * @throws CollectmeDBException
