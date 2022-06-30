@@ -8,7 +8,11 @@ use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Exceptions\CollectmeException;
 use Collectme\Model\AuthCookie;
 use Collectme\Model\Entities\AccountToken;
+use Collectme\Model\Entities\EnumGroupType;
+use Collectme\Model\Entities\EnumPermission;
+use Collectme\Model\Entities\Group;
 use Collectme\Model\Entities\PersistentSession;
+use Collectme\Model\Entities\Role;
 use Collectme\Model\Entities\User;
 use Collectme\Model\PhpSession;
 
@@ -118,16 +122,66 @@ class Auth
 
     /**
      * @throws CollectmeDBException
+     * @throws \Exception
      */
-    public function getOrCreateUserFromAccountToken(AccountToken $accountToken): User
+    public function getOrSetupUserFromAccountToken(AccountToken $accountToken, string $causeUuid): User
     {
         if ($accountToken->userUuid) {
-            return User::get($accountToken->userUuid);
+            $user = User::get($accountToken->userUuid);
+            if (!$user->hasCause($causeUuid)) {
+                $this->setupUserForCause($user, $causeUuid);
+            }
+            return $user;
         }
 
         try {
             $user = User::getByEmail($accountToken->email);
         } catch (CollectmeDBException) {
+            return $this->createUserFromAccountToken($accountToken, $causeUuid);
+        }
+
+        $user->addCause($causeUuid);
+        $accountToken->userUuid = $user->uuid;
+        $accountToken->save();
+
+        return $user;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function setupUserForCause(User $user, string $causeUuid): void
+    {
+        DB::transactional(static function () use ($user, $causeUuid) {
+            $group = new Group(
+                null,
+                $user->firstName,
+                EnumGroupType::PERSON,
+                $causeUuid,
+                false
+            );
+            $group->save();
+
+            $role = new Role(
+                null,
+                $user->uuid,
+                $group->uuid,
+                EnumPermission::READ_WRITE
+            );
+            $role->save();
+
+            $user->addCause($causeUuid);
+
+            return $user;
+        });
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function createUserFromAccountToken(AccountToken $accountToken, string $causeUuid): User
+    {
+        return DB::transactional(static function () use ($accountToken, $causeUuid) {
             $user = new User(
                 null,
                 $accountToken->email,
@@ -137,22 +191,41 @@ class Auth
                 'Account Token'
             );
             $user->save();
-        }
 
-        $accountToken->userUuid = $user->uuid;
-        $accountToken->save();
+            $group = new Group(
+                null,
+                $accountToken->firstName,
+                EnumGroupType::PERSON,
+                $causeUuid,
+                false
+            );
+            $group->save();
 
-        return $user;
+            $role = new Role(
+                null,
+                $user->uuid,
+                $group->uuid,
+                EnumPermission::READ_WRITE
+            );
+            $role->save();
+
+            $user->addCause($causeUuid);
+            $accountToken->userUuid = $user->uuid;
+            $accountToken->save();
+
+            return $user;
+        });
     }
 
     /**
      * @throws CollectmeDBException
      * @throws CollectmeException
      */
-    public function logout(): void {
+    public function logout(): void
+    {
         $session = $this->getPersistentSession();
 
-        if (! $session) {
+        if (!$session) {
             throw new CollectmeException('Can not logout from session if not logged in.');
         }
 
@@ -167,7 +240,7 @@ class Auth
     {
         $session = $this->getPersistentSession();
 
-        if (! $session) {
+        if (!$session) {
             throw new CollectmeException('Can not get user id if not logged in.');
         }
 

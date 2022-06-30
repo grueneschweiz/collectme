@@ -126,9 +126,6 @@ class AuthControllerTest extends TestCase
         $request->set_param('cause', $cause->uuid);
 
         $authMock = $this->createMock(Auth::class);
-        $authMock->expects($this->once())
-            ->method('getPersistentSession')
-            ->willReturn(null);
 
         $controller = new AuthController($authMock);
 
@@ -241,7 +238,7 @@ class AuthControllerTest extends TestCase
 
         $authMock = $this->createMock(Auth::class);
         $authMock->expects($this->once())
-            ->method('getOrCreateUserFromAccountToken')
+            ->method('getOrSetupUserFromAccountToken')
             ->with($accountToken)
             ->willReturn($user);
         $authMock->expects($this->once())
@@ -257,6 +254,5 @@ class AuthControllerTest extends TestCase
 
         $this->assertEquals(200, $resp->get_status());
         $this->assertJsonStringEqualsJsonString($expectedJson, wp_json_encode($resp->jsonSerialize()));
-        $this->assertCount(1, $user->causes());
     }
 }

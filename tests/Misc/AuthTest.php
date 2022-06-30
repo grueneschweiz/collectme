@@ -9,7 +9,10 @@ use Collectme\Misc\Auth;
 use Collectme\Misc\Cookie;
 use Collectme\Model\AuthCookie;
 use Collectme\Model\Entities\AccountToken;
+use Collectme\Model\Entities\Cause;
+use Collectme\Model\Entities\EnumGroupType;
 use Collectme\Model\Entities\EnumLang;
+use Collectme\Model\Entities\Group;
 use Collectme\Model\Entities\PersistentSession;
 use Collectme\Model\Entities\User;
 use Collectme\Model\PhpSession;
@@ -288,8 +291,14 @@ class AuthTest extends TestCase
         $this->assertFalse($auth->isAuthenticated());
     }
 
-    public function test_getOrCreateUserFromAccountToken__linkedUser(): void
+    public function test_getOrSetupUserFromAccountToken__linkedUser(): void
     {
+        $cause = new Cause(
+            null,
+            'test_'. wp_generate_password(),
+        );
+        $cause->save();
+
         $userUuid = $this->insertTestUserIntoDB($this->uniqueEmail(), 'first', 'last', 'e', 'test');
 
         $token = wp_generate_password(64, false, false);
@@ -311,7 +320,7 @@ class AuthTest extends TestCase
 
         $auth = new Auth($phpSession, $authCookie);
 
-        $user = $auth->getOrCreateUserFromAccountToken($accountToken);
+        $user = $auth->getOrSetupUserFromAccountToken($accountToken, $cause->uuid);
 
         $this->assertSame($userUuid, $user->uuid);
     }
@@ -343,8 +352,14 @@ class AuthTest extends TestCase
         return $uuid;
     }
 
-    public function test_getOrCreateUserFromAccountToken__getByEmail(): void
+    public function test_getOrSetupUserFromAccountToken__getByEmail(): void
     {
+        $cause = new Cause(
+            null,
+            'test_'. wp_generate_password(),
+        );
+        $cause->save();
+
         $email = $this->uniqueEmail();
         $userUuid = $this->insertTestUserIntoDB($email, 'first', 'last', 'e', 'test');
 
@@ -359,14 +374,20 @@ class AuthTest extends TestCase
 
         $auth = new Auth($phpSession, $authCookie);
 
-        $user = $auth->getOrCreateUserFromAccountToken($accountToken);
+        $user = $auth->getOrSetupUserFromAccountToken($accountToken, $cause->uuid);
 
         // test correct user
         $this->assertSame($userUuid, $user->uuid);
     }
 
-    public function test_getOrCreateUserFromAccountToken__createUser(): void
+    public function test_getOrSetupUserFromAccountToken__createUser(): void
     {
+        $cause = new Cause(
+            null,
+            'test_'. wp_generate_password(),
+        );
+        $cause->save();
+
         $email = $this->uniqueEmail();
         $token = wp_generate_password(64, false, false);
         $validUntil = date_create('+5 years')->format(DATE_ATOM);
@@ -379,14 +400,32 @@ class AuthTest extends TestCase
 
         $auth = new Auth($phpSession, $authCookie);
 
-        $user = $auth->getOrCreateUserFromAccountToken($accountToken);
+        $user = $auth->getOrSetupUserFromAccountToken($accountToken, $cause->uuid);
 
         // test correct user
         $this->assertSame($email, $user->email);
+
+        // test linked objects
+        $causeUuid = $user->causes()[0]->uuid;
+        $this->assertSame($cause->uuid, $causeUuid);
+
+        $groups = Group::findByCauseAndReadableByUser($cause->uuid, $user->uuid);
+        $this->assertCount(1, $groups);
+        $this->assertSame($user->firstName, $groups[0]->name);
+        $this->assertSame(EnumGroupType::PERSON, $groups[0]->type);
+        $this->assertFalse($groups[0]->worldReadable);
+
+        $this->assertTrue($groups[0]->userCanWrite($user->uuid));
     }
 
-    public function test_getOrCreateUserFromAccountToken__autolinking(): void
+    public function test_getOrSetupUserFromAccountToken__autolinking(): void
     {
+        $cause = new Cause(
+            null,
+            'test_'. wp_generate_password(),
+        );
+        $cause->save();
+
         $email = $this->uniqueEmail();
         $userUuid = $this->insertTestUserIntoDB($email, 'first', 'last', 'e', 'test');
 
@@ -401,10 +440,48 @@ class AuthTest extends TestCase
 
         $auth = new Auth($phpSession, $authCookie);
 
-        $auth->getOrCreateUserFromAccountToken($accountToken);
+        $auth->getOrSetupUserFromAccountToken($accountToken, $cause->uuid);
 
         $accountToken = AccountToken::get($uuid);
         $this->assertSame($userUuid, $accountToken->userUuid);
+    }
+
+    public function test_getOrSetupUserFromAccountToken__autosetup(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_'. wp_generate_password(),
+        );
+        $cause->save();
+
+        $email = $this->uniqueEmail();
+        $userUuid = $this->insertTestUserIntoDB($email, 'first', 'last', 'e', 'test');
+
+        $token = wp_generate_password(64, false, false);
+        $validUntil = date_create('+5 years')->format(DATE_ATOM);
+        $tokenUuid = $this->insertTestTokenIntoDB($token, $email, 'Jane', 'Doe', 'd', $validUntil, $userUuid);
+
+        $accountToken = AccountToken::get($tokenUuid);
+
+        $phpSession = $this->createMock(PhpSession::class);
+        $authCookie = $this->createMock(AuthCookie::class);
+
+        $auth = new Auth($phpSession, $authCookie);
+
+        $auth->getOrSetupUserFromAccountToken($accountToken, $cause->uuid);
+
+        // test linked objects
+        $user = User::get($userUuid);
+        $causeUuid = $user->causes()[0]->uuid;
+        $this->assertSame($cause->uuid, $causeUuid);
+
+        $groups = Group::findByCauseAndReadableByUser($cause->uuid, $user->uuid);
+        $this->assertCount(1, $groups);
+        $this->assertSame($user->firstName, $groups[0]->name);
+        $this->assertSame(EnumGroupType::PERSON, $groups[0]->type);
+        $this->assertFalse($groups[0]->worldReadable);
+
+        $this->assertTrue($groups[0]->userCanWrite($user->uuid));
     }
 
     public function test_logout__success(): void

@@ -50,11 +50,14 @@ class AuthController extends WP_REST_Controller
 
         try {
             $accountToken = AccountToken::getByEmailAndToken($email, $token);
-            $user = $this->auth->getOrCreateUserFromAccountToken($accountToken);
-            $user->addCause($causeUuid);
-            $this->auth->createPersistentSession($user, true);
         } catch (CollectmeDBException $e) {
-            // token is not valid
+            // token not found / invalid
+            return $this->makeInvalidTokenResponse();
+        }
+
+        try {
+            $user = $this->auth->getOrSetupUserFromAccountToken($accountToken, $causeUuid);
+            $this->auth->createPersistentSession($user, true);
         } catch (\Exception $e) {
             return $this->makeInternalServerErrorResponse($e);
         }
