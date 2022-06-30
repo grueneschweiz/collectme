@@ -950,7 +950,7 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /causes/{uuid}/activities:
+  /causes/{uuid}/activity:
     parameters:
       - $ref: '#/components/parameters/uuid'
 
@@ -967,6 +967,28 @@ paths:
             type: string
             minLength: 36
             maxLength: 36
+        - name: page[points]
+          description: |
+            Indicates if the cursor points to the first or the last entry of the page.
+            If the last is given, the server will respond with the next entries, for
+            the first, the server will respond with the previous entries.
+          in: query
+          schema:
+            type: string
+            enum:
+              - first
+              - last
+            default: last
+        - name: filter
+          description: |
+            Filter expression. Currently the only implemented filter is
+            `filter[count]=gt(x)`, where `x` denotes the number of signatures
+            and `gt()` the greater than function.
+          in: query
+          schema:
+            type: string
+            example: filter[count]=gt(0)
+          required: false
 
       summary: Get activities
       description: Paginated list of activities, sorted by creation date, newest first.
@@ -984,6 +1006,10 @@ paths:
                       $ref: '#/components/schemas/Activity'
                   links:
                     $ref: '#/components/schemas/PaginationLinks'
+                  included:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
         '401':
           $ref: '#/components/responses/Unauthorized'
       security:
