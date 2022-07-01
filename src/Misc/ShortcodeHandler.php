@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Collectme\Misc;
 
-use Collectme\Controller\AppController;
+use Collectme\Controller\HtmlController;
 
 class ShortcodeHandler
 {
     public function __construct(
-        private readonly AppController $appController
+        private readonly HtmlController $appController
     ) {
     }
 

@@ -9,7 +9,7 @@ use Collectme\Misc\AssetLoader;
 use const Collectme\PATH_APP_STRINGS;
 
 
-class AppController
+class HtmlController
 {
     public function __construct(
         private readonly AssetLoader $assetLoader
