@@ -17,6 +17,10 @@ info:
     While `WP_COLLECTME_AUTH` keeps the user logged in (for 5 years), the session cookie has a short ttl (default 
     session duration) but better performance. The session cookie therefore takes precedence over the `WP_COLLECTME_AUTH`
     cookie. Both cookies must be deleted, to log the user out.
+    
+    All protected functions do also need a nonce for CSRF protection. The nonce must be sent in the 
+    `X-WP-Collectme-Nonce` header. It can be obtained from the global JS variable `collectme.nonce`, which is set by the 
+    `HtmlController`.
 
   version: 1.0.0
   title: Collectme V2

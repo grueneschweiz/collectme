@@ -47,7 +47,7 @@ class RestRouterV1
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->userController, 'getCurrent'],
-                'permission_callback' => [$this->auth, 'isAuthenticated'],
+                'permission_callback' => [$this->auth, 'isAuthenticatedAndHasValidNonce'],
             ]
         );
 
@@ -98,7 +98,7 @@ class RestRouterV1
             [
                 'methods' => WP_REST_Server::DELETABLE,
                 'callback' => [$this->sessionController, 'logout'],
-                'permission_callback' => [$this->auth, 'isAuthenticated'],
+                'permission_callback' => [$this->auth, 'isAuthenticatedAndHasValidNonce'],
                 'args' => [
                     'uuid' => [
                         'validate_callback' => [UuidValidator::class, 'check']
@@ -116,7 +116,7 @@ class RestRouterV1
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->groupController, 'findByCause'],
-                'permission_callback' => [$this->auth, 'isAuthenticated'],
+                'permission_callback' => [$this->auth, 'isAuthenticatedAndHasValidNonce'],
                 'args' => [
                     'uuid' => [
                         'validate_callback' => [UuidValidator::class, 'check']
@@ -134,7 +134,7 @@ class RestRouterV1
             [
                 'methods' => WP_REST_Server::CREATABLE,
                 'callback' => [$this->signatureController, 'add'],
-                'permission_callback' => [$this->auth, 'isAuthenticated'],
+                'permission_callback' => [$this->auth, 'isAuthenticatedAndHasValidNonce'],
             ]
         );
 
@@ -144,7 +144,7 @@ class RestRouterV1
             [
                 'methods' => WP_REST_Server::DELETABLE,
                 'callback' => [$this->signatureController, 'delete'],
-                'permission_callback' => [$this->auth, 'isAuthenticated'],
+                'permission_callback' => [$this->auth, 'isAuthenticatedAndHasValidNonce'],
                 'args' => [
                     'uuid' => [
                         'validate_callback' => [UuidValidator::class, 'check']
@@ -162,7 +162,7 @@ class RestRouterV1
             [
                 'methods' => WP_REST_Server::CREATABLE,
                 'callback' => [$this->objectiveController, 'add'],
-                'permission_callback' => [$this->auth, 'isAuthenticated'],
+                'permission_callback' => [$this->auth, 'isAuthenticatedAndHasValidNonce'],
             ]
         );
     }
@@ -175,7 +175,7 @@ class RestRouterV1
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->activityLogController, 'index'],
-                'permission_callback' => [$this->auth, 'isAuthenticated'],
+                'permission_callback' => [$this->auth, 'isAuthenticatedAndHasValidNonce'],
                 'args' => [
                     'uuid' => [
                         'validate_callback' => [UuidValidator::class, 'check']

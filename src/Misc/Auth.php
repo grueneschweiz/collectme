@@ -16,6 +16,11 @@ use Collectme\Model\Entities\Role;
 use Collectme\Model\Entities\User;
 use Collectme\Model\PhpSession;
 
+use WP_REST_Request;
+
+use const Collectme\NONCE_HEADER_KEY;
+use const Collectme\REST_V1_NAMESPACE;
+
 class Auth
 {
     private PersistentSession $persistentSession;
@@ -245,5 +250,25 @@ class Auth
         }
 
         return $session->userUuid;
+    }
+
+    public function isAuthenticatedAndHasValidNonce(WP_REST_Request $request): bool {
+        return $this->check($request, [$this, 'isNonceValid'], [$this, 'isAuthenticated']);
+    }
+
+    public function isNonceValid(WP_REST_Request $request): bool
+    {
+        $nonce = $request->get_header(NONCE_HEADER_KEY);
+        return 1 === wp_verify_nonce($nonce, REST_V1_NAMESPACE);
+    }
+
+    public function check(WP_REST_Request $request, callable ...$checks): bool
+    {
+        foreach($checks as $check) {
+            if (!$check($request)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

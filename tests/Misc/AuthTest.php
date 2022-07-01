@@ -18,6 +18,9 @@ use Collectme\Model\Entities\User;
 use Collectme\Model\PhpSession;
 use PHPUnit\Framework\TestCase;
 
+use const Collectme\NONCE_HEADER_KEY;
+use const Collectme\REST_V1_NAMESPACE;
+
 class AuthTest extends TestCase
 {
 
@@ -534,5 +537,55 @@ class AuthTest extends TestCase
 
         $this->expectException(CollectmeException::class);
         $auth->logout();
+    }
+
+    public function test_isAuthenticatedAndHasValidNonce__valid(): void
+    {
+        $session = new PersistentSession(
+            null,
+            wp_generate_uuid4(),
+            5,
+            date_create('2022-06-26T20:30:00+00:00'),
+            wp_generate_password(64, false, false),
+            'asdf',
+            date_create('2022-06-26T21:00:00+00:00'),
+            null,
+        );
+
+        $phpSession = $this->createMock(PhpSession::class);
+        $authCookie = $this->createMock(AuthCookie::class);
+
+        $auth = new Auth($phpSession, $authCookie);
+        $auth->setPersistentSession($session);
+
+        $request = new \WP_REST_Request();
+        $request->set_header(NONCE_HEADER_KEY, wp_create_nonce(REST_V1_NAMESPACE));
+
+        $this->assertTrue($auth->isAuthenticatedAndHasValidNonce($request));
+    }
+
+    public function test_isAuthenticatedAndHasValidNonce__invalid(): void
+    {
+        $session = new PersistentSession(
+            null,
+            wp_generate_uuid4(),
+            5,
+            date_create('2022-06-26T20:30:00+00:00'),
+            wp_generate_password(64, false, false),
+            'asdf',
+            date_create('2022-06-26T21:00:00+00:00'),
+            null,
+        );
+
+        $phpSession = $this->createMock(PhpSession::class);
+        $authCookie = $this->createMock(AuthCookie::class);
+
+        $auth = new Auth($phpSession, $authCookie);
+        $auth->setPersistentSession($session);
+
+        $request = new \WP_REST_Request();
+        $request->set_header(NONCE_HEADER_KEY, wp_create_nonce('something else'));
+
+        $this->assertFalse($auth->isAuthenticatedAndHasValidNonce($request));
     }
 }

@@ -7,6 +7,7 @@ namespace Collectme\Controller;
 use Collectme\Misc\AssetLoader;
 
 use const Collectme\PATH_APP_STRINGS;
+use const Collectme\REST_V1_NAMESPACE;
 
 
 class HtmlController
@@ -25,7 +26,9 @@ class HtmlController
 
         $data = [
             'cause' => $causeUuid,
-            't' => array_replace_recursive($translations, $stringOverwrites)
+            't' => array_replace_recursive($translations, $stringOverwrites),
+            'apiBaseUrl' => rest_url(REST_V1_NAMESPACE),
+            'nonce' => wp_create_nonce(REST_V1_NAMESPACE),
         ];
 
         return '<div id="collectme-app"></div>'
