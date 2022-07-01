@@ -149,6 +149,29 @@ class ActivityLogTest extends TestCase
         );
         $group->save();
 
+        $cause2 = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause2->save();
+
+        $group2 = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group2->save();
+
+        (new ActivityLog(
+            null,
+            EnumActivityType::PLEDGE,
+            99,
+            $cause2->uuid,
+            $group2->uuid,
+        ))->save();
+
         for ($i = 10; $i > -5; $i--) {
             $log = new ActivityLog(
                 null,
@@ -159,6 +182,14 @@ class ActivityLogTest extends TestCase
             );
             $log->save();
         }
+
+        (new ActivityLog(
+            null,
+            EnumActivityType::PLEDGE,
+            101,
+            $cause2->uuid,
+            $group2->uuid,
+        ))->save();
 
         $filter = new Filter('count', 0, '>');
 
