@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme;
 
+use Collectme\Controller\ActivityLogController;
 use Collectme\Controller\AuthController;
 use Collectme\Controller\GroupController;
 use Collectme\Controller\Http\UuidValidator;
@@ -24,6 +25,7 @@ class RestRouterV1
         private readonly GroupController $groupController,
         private readonly SignatureController $signatureController,
         private readonly ObjectiveController $objectiveController,
+        private readonly ActivityLogController $activityLogController,
     ) {
     }
 
@@ -34,6 +36,7 @@ class RestRouterV1
         $this->registerGroupRoutes();
         $this->registerSignatureRoutes();
         $this->registerObjectiveRoutes();
+        $this->registerActivityLogRoutes();
     }
 
     private function registerUserRoutes(): void
@@ -160,6 +163,24 @@ class RestRouterV1
                 'methods' => WP_REST_Server::CREATABLE,
                 'callback' => [$this->objectiveController, 'add'],
                 'permission_callback' => [$this->auth, 'isAuthenticated'],
+            ]
+        );
+    }
+
+    public function registerActivityLogRoutes()
+    {
+        register_rest_route(
+            REST_V1_NAMESPACE,
+            '/causes/(?P<uuid>[a-zA-Z0-9-]{36})/activity',
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$this->activityLogController, 'index'],
+                'permission_callback' => [$this->auth, 'isAuthenticated'],
+                'args' => [
+                    'uuid' => [
+                        'validate_callback' => [UuidValidator::class, 'check']
+                    ]
+                ],
             ]
         );
     }
