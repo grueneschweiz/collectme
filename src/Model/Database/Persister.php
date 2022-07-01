@@ -231,6 +231,10 @@ trait Persister
         $uuids = array_unique($uuids);
         $count = count($uuids);
 
+        if ($count === 0) {
+            return [];
+        }
+
         $groupsTbl = self::getTableName();
         $placeholders = implode(',', array_fill(0, $count, '%s'));
 
