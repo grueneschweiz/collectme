@@ -31,7 +31,7 @@ class Paginator
         $query .= " ORDER BY $paginatorField {$this->getSqlOrder()}";
         $query .= " LIMIT {$this->perPage}";
 
-        return "SELECT * FROM ({$query}) ORDER BY $paginatorField {$this->order->value}";
+        return "SELECT * FROM ({$query}) AS collectme_paginator_base_tbl ORDER BY $paginatorField {$this->order->value}";
     }
 
     private function getWhereOperator(): string
