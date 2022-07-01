@@ -28,7 +28,7 @@ class HtmlController
             'cause' => $causeUuid,
             't' => array_replace_recursive($translations, $stringOverwrites),
             'apiBaseUrl' => rest_url(REST_V1_NAMESPACE),
-            'nonce' => wp_create_nonce(REST_V1_NAMESPACE),
+            'nonce' => wp_create_nonce('wp_rest'),
         ];
 
         return '<div id="collectme-app"></div>'

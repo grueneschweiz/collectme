@@ -52,8 +52,6 @@ const AUTH_COOKIE_KEY = 'wp-collectme-auth';
 const AUTH_COOKIE_TTL = '5 years';
 const AUTH_SESSION_KEY = 'WP_COLLECTME_AUTH';
 
-const NONCE_HEADER_KEY = 'X-WP-Collectme-Nonce';
-
 class Collectme
 {
     public function __construct(

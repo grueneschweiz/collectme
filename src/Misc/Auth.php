@@ -18,8 +18,6 @@ use Collectme\Model\PhpSession;
 
 use WP_REST_Request;
 
-use const Collectme\NONCE_HEADER_KEY;
-use const Collectme\REST_V1_NAMESPACE;
 
 class Auth
 {
@@ -258,8 +256,8 @@ class Auth
 
     public function isNonceValid(WP_REST_Request $request): bool
     {
-        $nonce = $request->get_header(NONCE_HEADER_KEY);
-        return 1 === wp_verify_nonce($nonce, REST_V1_NAMESPACE);
+        $nonce = $request->get_header('X-WP-Nonce');
+        return 1 === wp_verify_nonce($nonce, 'wp_rest');
     }
 
     public function check(WP_REST_Request $request, callable ...$checks): bool
