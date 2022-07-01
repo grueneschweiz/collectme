@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Model;
 
+use Collectme\Controller\Http\UuidValidator;
 use Collectme\Misc\Cookie;
 
 use const Collectme\AUTH_COOKIE_KEY;
@@ -60,10 +61,10 @@ class AuthCookie
 
     private function authCookieFormatIsValid(): bool
     {
-        return preg_match(
-            '/[[[:alnum:]]-]{36} [[:alnum:]]{64}/',
-            $this->cookie->get(AUTH_COOKIE_KEY)
-        );
+        [$uuid, $token] = explode(' ', $this->cookie->get(AUTH_COOKIE_KEY));
+
+        return UuidValidator::check($uuid)
+            && 1 === preg_match('/[[:alnum:]]{64}/', $token);
     }
 
     public function getSessionUuid(): string
