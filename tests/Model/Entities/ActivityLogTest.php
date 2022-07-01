@@ -164,7 +164,7 @@ class ActivityLogTest extends TestCase
 
         // DESC
 
-        $paginatorStart = new Paginator(2, null, EnumPaginationCursorPointsTo::LAST, EnumPaginationOrder::DESC);
+        $paginatorStart = new Paginator(2, null, null, EnumPaginationOrder::DESC);
         $page1 = ActivityLog::findByCause($cause->uuid, $paginatorStart, $filter);
         $this->assertCount(2, $page1);
         $this->assertSame(1, $page1[0]->count);
@@ -188,7 +188,7 @@ class ActivityLogTest extends TestCase
 
         // ASC
 
-        $paginatorStart = new Paginator(2, null, EnumPaginationCursorPointsTo::LAST, EnumPaginationOrder::ASC);
+        $paginatorStart = new Paginator(2, null, null, null);
         $page1 = ActivityLog::findByCause($cause->uuid, $paginatorStart, $filter);
         $this->assertCount(2, $page1);
         $this->assertSame(10, $page1[0]->count);

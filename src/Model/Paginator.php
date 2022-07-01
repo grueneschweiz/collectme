@@ -9,9 +9,15 @@ class Paginator
     public function __construct(
         public int $perPage = 10,
         public ?string $cursor = null,
-        public EnumPaginationCursorPointsTo $cursorPointsTo = EnumPaginationCursorPointsTo::LAST,
-        public EnumPaginationOrder $order = EnumPaginationOrder::ASC,
+        public ?EnumPaginationCursorPointsTo $cursorPointsTo = EnumPaginationCursorPointsTo::LAST,
+        public ?EnumPaginationOrder $order = EnumPaginationOrder::ASC,
     ) {
+        if ($this->cursorPointsTo === null) {
+            $this->cursorPointsTo = EnumPaginationCursorPointsTo::LAST;
+        }
+        if ($this->order === null) {
+            $this->order = EnumPaginationOrder::ASC;
+        }
     }
 
     public function addToQuery(string $query, array &$args, string $paginatorField, string $table): string
