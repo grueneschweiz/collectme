@@ -25,10 +25,11 @@ class HtmlController
         $translations = require PATH_APP_STRINGS;
 
         $data = [
-            'cause' => $causeUuid,
-            't' => array_replace_recursive($translations, $stringOverwrites),
             'apiBaseUrl' => rest_url(REST_V1_NAMESPACE),
+            'cause' => $causeUuid,
+            'locale' => get_locale(),
             'nonce' => wp_create_nonce('wp_rest'),
+            't' => array_replace_recursive($translations, $stringOverwrites),
         ];
 
         return '<div id="collectme-app"></div>'

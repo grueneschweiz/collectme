@@ -1,6 +1,7 @@
 declare namespace collectme {
-    const cause: string;
-    const t: any;
     const apiBaseUrl: string;
+    const cause: string;
+    const locale: string;
     const nonce: string;
+    const t: any;
 }
