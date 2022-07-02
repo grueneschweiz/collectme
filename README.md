@@ -97,14 +97,19 @@ Helpful resources:
 
 #### Swagger-Codegen
 
-- Generate stubs in [/gen](/gen)
+- Generate type definitions in [/app/src/models/generated](/app/src/models/generated)
+  ```bash
+  docker-compose run swagger-codegen generate -i /tmp/swagger/input/rest-api.yaml -o /tmp/swagger/output -l typescript-axios
+  sudo chown -R $(id -u):$(id -g) gen
+  sed -i '/import type/! s/import /import type /g' gen/models/*.ts
+  rsync -av --delete gen/models/ app/src/models/generated
+  ```
 - Generate API docs in [/docs/api/index.html](/docs/api/index.html)
-
-```
-docker-compose run swagger-codegen generate -i /tmp/swagger/input/rest-api.yaml -o /tmp/swagger/output -l php
-docker-compose run swagger-codegen generate -i /tmp/swagger/input/rest-api.yaml -o /tmp/swagger/output -l typescript-axios
-docker-compose run swagger-codegen generate -i /tmp/swagger/input/rest-api.yaml -o /tmp/swagger/output -l html2 && mv -f gen/index.html docs/api/index.html 
-```
+  ```bash
+  docker-compose run swagger-codegen generate -i /tmp/swagger/input/rest-api.yaml -o /tmp/swagger/output -l html2 
+  sudo chown -R $(id -u):$(id -g) gen
+  cp gen/index.html docs/api/index.html 
+  ```
 
 Helpful resources:
 
