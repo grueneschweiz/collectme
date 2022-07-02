@@ -64,75 +64,99 @@ components:
 
     ActivityBase:
       type: object
+      required: [id, type]
       properties:
         id:
-          $ref: '#/components/schemas/FieldId'
+          type: string
+          format: uuid
         type:
           type: string
           example: activity
+          readOnly: true
 
     CauseBase:
       type: object
+      required: [id, type]
       properties:
         id:
-          $ref: '#/components/schemas/FieldId'
+          type: string
+          format: uuid
         type:
           type: string
           example: cause
+          readOnly: true
 
     GroupBase:
       type: object
+      required: [id, type]
       properties:
         id:
-          $ref: '#/components/schemas/FieldId'
+          type: string
+          format: uuid
         type:
           type: string
           example: group
+          readOnly: true
 
     ObjectiveBase:
       type: object
+      required: [id, type]
       properties:
         id:
-          $ref: '#/components/schemas/FieldId'
+          type: string
+          format: uuid
         type:
           type: string
           example: objective
+          readOnly: true
 
     RoleBase:
       type: object
+      required: [id, type]
       properties:
         id:
-          $ref: '#/components/schemas/FieldId'
+          type: string
+          format: uuid
         type:
           type: string
           example: role
+          readOnly: true
 
     SessionBase:
       type: object
+      required: [id, type]
       properties:
         id:
-          $ref: '#/components/schemas/FieldId'
+          type: string
+          format: uuid
         type:
           type: string
           example: session
+          readOnly: true
 
     SignatureBase:
       type: object
+      required: [id, type]
       properties:
         id:
-          $ref: '#/components/schemas/FieldId'
+          type: string
+          format: uuid
         type:
           type: string
           example: signature
+          readOnly: true
 
     UserBase:
       type: object
+      required: [id, type]
       properties:
         id:
-          $ref: '#/components/schemas/FieldId'
+          type: string
+          format: uuid
         type:
           type: string
           example: user
+          readOnly: true
 
 
     # --------------------------------------------------------------------------
@@ -141,6 +165,11 @@ components:
 
     ActivityAttributes:
       type: object
+      required:
+        - type
+        - count
+        - created
+        - updated
       properties:
         type:
           type: string
@@ -156,9 +185,23 @@ components:
         created:
           type: string
           format: date-time
+          nullable: true
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
 
     GroupAttributes:
       type: object
+      required:
+        - name
+        - type
+        - _signatures
+        - _writeable
+        - created
+        - updated
       properties:
         name:
           type: string
@@ -170,13 +213,31 @@ components:
           type: integer
           example: 45
           description: Computed. The total amount of signatures of this group.
+          readOnly: true
         _writeable:
           description: Computed. Tells if the current user has write permission for this group.
           type: boolean
           example: true
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
 
     LoginAttributes:
       type: object
+      required:
+        - email
+        - firstName
+        - lastName
+        - created
+        - updated
       properties:
         email:
           type: string
@@ -187,9 +248,24 @@ components:
         lastName:
           type: string
           example: Muster
+        created:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
 
     ObjectiveAttributes:
       type: object
+      required:
+        - objective
+        - source
+        - created
+        - updated
       properties:
         objective:
           type: integer
@@ -200,19 +276,43 @@ components:
         created:
           type: string
           format: date-time
+          nullable: true
+          readOnly: true
         updated:
           type: string
           format: date-time
+          nullable: true
+          readOnly: true
 
     RoleAttributes:
       type: object
+      required:
+        - permission
+        - created
+        - updated
       properties:
         permission:
           type: string
           enum: [ r, rw ]
+        created:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
 
     SessionAttributes:
       type: object
+      required:
+        - loginCounter
+        - lastLogin
+        - activated
+        - created
+        - updated
       properties:
         loginCounter:
           type: integer
@@ -220,25 +320,54 @@ components:
         lastLogin:
           type: string
           format: date-time
+          nullable: true
+          readOnly: true
         activated:
           type: string
           format: date-time
+          nullable: true
+          readOnly: true
         created:
           type: string
           format: date-time
+          nullable: true
+          readOnly: true
         updated:
           type: string
           format: date-time
+          nullable: true
+          readOnly: true
 
     SignatureAttributes:
       type: object
+      required:
+        - count
+        - created
+        - updated
       properties:
         count:
           type: integer
           example: 13
+        created:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
 
     UserAttributes:
       type: object
+      required:
+        - email
+        - firstName
+        - lastName
+        - lang
+        - created
+        - updated
       properties:
         email:
           type: string
@@ -252,6 +381,16 @@ components:
         lang:
           type: string
           enum: [ d, f, e ]
+        created:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
 
 
     # --------------------------------------------------------------------------
@@ -259,154 +398,378 @@ components:
     # --------------------------------------------------------------------------
 
     Activity:
-      allOf:
-        - $ref: '#/components/schemas/ActivityBase'
-        - type: object
-          properties:
-            attributes:
-              $ref: '#/components/schemas/ActivityAttributes'
-        - type: object
-          properties:
-            relationships:
-              type: object
-              properties:
-                group:
-                  type: object
-                  properties:
-                    data:
-                      $ref: '#/components/schemas/GroupBase'
+      required:
+        - id
+        - type
+        - attributes
+        - relationships
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+          example: activity
+        attributes:
+          $ref: '#/components/schemas/ActivityAttributes'
+        relationships:
+          $ref: '#/components/schemas/RelatedGroup'
 
     Group:
-      allOf:
-        - $ref: '#/components/schemas/GroupBase'
-        - type: object
-          properties:
-            attributes:
-              $ref: '#/components/schemas/GroupAttributes'
-        - type: object
-          properties:
-            relationships:
-              type: object
-              properties:
-                objective:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ObjectiveBase'
-                role:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/RoleBase'
-                cause:
-                  type: object
-                  properties:
-                    data:
-                      $ref: '#/components/schemas/CauseBase'
+      required:
+        - id
+        - type
+        - attributes
+        - relationships
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+          example: group
+        attributes:
+          $ref: '#/components/schemas/GroupAttributes'
+        relationships:
+          allOf:
+            - $ref: '#/components/schemas/RelatedObjectives'
+            - $ref: '#/components/schemas/RelatedRoles'
+            - $ref: '#/components/schemas/RelatedCause'
+
+    Login:
+      required:
+        - type
+        - attributes
+      type: object
+      properties:
+        type:
+          type: string
+          readOnly: true
+          example: login
+        attributes:
+          $ref: '#/components/schemas/LoginAttributes'
 
     Objective:
-      allOf:
-        - $ref: '#/components/schemas/ObjectiveBase'
-        - type: object
-          properties:
-            attributes:
-              $ref: '#/components/schemas/ObjectiveAttributes'
-            relationships:
-              type: object
-              properties:
-                group:
-                  type: object
-                  properties:
-                    data:
-                      $ref: '#/components/schemas/GroupBase'
+      required:
+        - id
+        - type
+        - attributes
+        - relationships
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+          example: objective
+        attributes:
+          $ref: '#/components/schemas/ObjectiveAttributes'
+        relationships:
+          $ref: '#/components/schemas/RelatedGroup'
 
     Role:
-      allOf:
-        - $ref: '#/components/schemas/RoleBase'
-        - type: object
-          properties:
-            attributes:
-              $ref: '#/components/schemas/RoleAttributes'
-            relationships:
-              type: object
-              properties:
-                user:
-                  type: object
-                  properties:
-                    data:
-                      $ref: '#/components/schemas/UserBase'
-                group:
-                  type: object
-                  properties:
-                    data:
-                      $ref: '#/components/schemas/GroupBase'
+      required:
+        - id
+        - type
+        - attributes
+        - relationships
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+          example: role
+        attributes:
+          $ref: '#/components/schemas/RoleAttributes'
+        relationships:
+          allOf:
+            - $ref: '#/components/schemas/RelatedUser'
+            - $ref: '#/components/schemas/RelatedGroup'
 
     Session:
-      allOf:
-        - $ref: '#/components/schemas/SessionBase'
-        - type: object
-          properties:
-            attributes:
-              $ref: '#/components/schemas/SessionAttributes'
-        - type: object
-          properties:
-            relationships:
-              type: object
-              properties:
-                user:
-                  type: object
-                  properties:
-                    data:
-                      $ref: '#/components/schemas/UserBase'
+      required:
+        - id
+        - type
+        - attributes
+        - relationships
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+          example: session
+        attributes:
+          $ref: '#/components/schemas/SessionAttributes'
+        relationships:
+          $ref: '#/components/schemas/RelatedUser'
 
     Signature:
-      allOf:
-        - $ref: '#/components/schemas/SignatureBase'
-        - type: object
-          properties:
-            attributes:
-              $ref: '#/components/schemas/SignatureAttributes'
-        - type: object
-          properties:
-            relationships:
-              type: object
-              properties:
-                user:
-                  type: object
-                  properties:
-                    data:
-                      $ref: '#/components/schemas/UserBase'
-                group:
-                  type: object
-                  properties:
-                    data:
-                      $ref: '#/components/schemas/GroupBase'
-                activity:
-                  type: object
-                  properties:
-                    data:
-                      $ref: '#/components/schemas/ActivityBase'
+      required:
+        - id
+        - type
+        - attributes
+        - relationships
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+          example: signature
+        attributes:
+          $ref: '#/components/schemas/SignatureAttributes'
+        relationships:
+          allOf:
+            - $ref: '#/components/schemas/RelatedUser'
+            - $ref: '#/components/schemas/RelatedGroup'
+            - $ref: '#/components/schemas/RelatedActivity'
 
     User:
-      allOf:
-        - $ref: '#/components/schemas/UserBase'
-        - type: object
-          properties:
-            attributes:
-              $ref: '#/components/schemas/UserAttributes'
+      required:
+        - id
+        - type
+        - attributes
+        - relationships
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+          example: user
+        attributes:
+          $ref: '#/components/schemas/UserAttributes'
 
+
+    # --------------------------------------------------------------------------
+    # Related Models
+    # --------------------------------------------------------------------------
+
+    RelatedActivity:
+      type: object
+      required: [activity]
+      properties:
+        activity:
+          type: object
+          required: [data]
+          properties:
+            data:
+              $ref: '#/components/schemas/ActivityBase'
+
+    RelatedActivities:
+      type: object
+      required: [ activity ]
+      properties:
+        activity:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/ActivityBase'
+    
+    RelatedCause:
+      type: object
+      required: [ cause ]
+      properties:
+        cause:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              $ref: '#/components/schemas/CauseBase'
+    
+    RelatedCauses:
+      type: object
+      required: [ cause ]
+      properties:
+        cause:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/CauseBase'
+    
+    RelatedGroup:
+      type: object
+      required: [ group ]
+      properties:
+        group:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              $ref: '#/components/schemas/GroupBase'
+      
+    RelatedGroups:
+      type: object
+      required: [ group ]
+      properties:
+        group:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/GroupBase'
+
+    RelatedObjective:
+      type: object
+      required: [ objective ]
+      properties:
+        objective:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              $ref: '#/components/schemas/ObjectiveBase'
+    
+    RelatedObjectives:
+      type: object
+      required: [ objective ]
+      properties:
+        objective:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/ObjectiveBase'
+    
+    RelatedRole:
+      type: object
+      required: [ role ]
+      properties:
+        role:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              $ref: '#/components/schemas/RoleBase'
+    
+    RelatedRoles:
+      type: object
+      required: [ role ]
+      properties:
+        role:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/RoleBase'
+
+    RelatedSession:
+      type: object
+      required: [ session ]
+      properties:
+        session:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              $ref: '#/components/schemas/SessionBase'
+    
+    RelatedSessions:
+      type: object
+      required: [ session ]
+      properties:
+        session:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/SessionBase'
+    
+    RelatedSignature:
+      type: object
+      required: [ signature ]
+      properties:
+        signature:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              $ref: '#/components/schemas/SignatureBase'
+      
+    RelatedSignatures:
+      type: object
+      required: [ signature ]
+      properties:
+        signature:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/SignatureBase'
+
+    RelatedUser:
+      type: object
+      required: [ user ]
+      properties:
+        user:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              $ref: '#/components/schemas/UserBase'
+
+    RelatedUsers:
+      type: object
+      required: [ user ]
+      properties:
+        user:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/UserBase'
 
     # --------------------------------------------------------------------------
     # Misc
     # --------------------------------------------------------------------------
-
-    FieldId:
-      type: string
-      format: uuid
 
     PaginationLinks:
       type: object
@@ -416,21 +779,25 @@ components:
           format: url
           example: "/causes/e3c9f7c1-3fc6-4e71-9cf5-dd09b93cd771/activities"
           nullable: true
+          readOnly: true
         last:
           type: string
           format: url
           nullable: true
           example: null
+          readOnly: true
         prev:
           type: string
           format: url
           nullable: true
           example: "/causes/e3c9f7c1-3fc6-4e71-9cf5-dd09b93cd771/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          readOnly: true
         next:
           type: string
           format: url
           nullable: true
           example: "/causes/e3c9f7c1-3fc6-4e71-9cf5-dd09b93cd771/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          readOnly: true
 
     # --------------------------------------------------------------------------
     # Errors
@@ -442,9 +809,33 @@ components:
         status:
           type: integer
           example: 400
+          readOnly: true
         title:
           type: string
           example: Bad Request
+          readOnly: true
+        detail:
+          type: string
+          example: The request was malformed.
+          readOnly: true
+        source:
+          type: object
+          properties:
+            pointer:
+              type: string
+              example: /data/attributes/name
+              readOnly: true
+            parameter:
+              type: string
+              example: token
+              readOnly: true
+        meta:
+          type: object
+          properties:
+            exception:
+              type: string
+              example: CollectmeDbException
+              readOnly: true
 
     Errors:
       type: object
@@ -455,75 +846,71 @@ components:
             $ref: '#/components/schemas/ErrorModel'
 
     InvalidEmail:
-      allOf:
-        - $ref: '#/components/schemas/Errors'
-        - type: object
-          properties:
-            errors:
-              type: array
-              items:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 422
+              title:
+                type: string
+                example: Unprocessable Entity
+              source:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 422
-                  title:
+                  pointer:
                     type: string
-                    example: Unprocessable Entity
-                  source:
-                    type: object
-                    properties:
-                      pointer:
-                        type: string
-                        example: "/data/attributes/email"
+                    example: "/data/attributes/email"
 
     InvalidToken:
-      allOf:
-        - $ref: '#/components/schemas/Errors'
-        - type: object
-          properties:
-            errors:
-              type: array
-              items:
-                type: object
-                properties:
-                  status:
-                    example: 404
-                  title:
-                    example: Invalid Token
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 404
+              title:
+                type: string
+                example: Invalid Token
 
     NotFound:
-      allOf:
-        - $ref: '#/components/schemas/Errors'
-        - type: object
-          properties:
-            errors:
-              type: array
-              items:
-                type: object
-                properties:
-                  status:
-                    example: 404
-                  title:
-                    example: Not Found
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 404
+              title:
+                type: string
+                example: Not Found
 
 
     Unauthorized:
-      allOf:
-        - $ref: '#/components/schemas/Errors'
-        - type: object
-          properties:
-            errors:
-              type: array
-              items:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 401
-                  title:
-                    type: string
-                    example: Unauthorized
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 401
+              title:
+                type: string
+                example: Unauthorized
 
   securitySchemes:
     cookieAuth:
@@ -581,14 +968,7 @@ paths:
               type: object
               properties:
                 data:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                      example: login
-                    attributes:
-                      $ref: '#/components/schemas/LoginAttributes'
-
+                  $ref: '#/components/schemas/Login'
       responses:
         '201':
           description: OK
@@ -817,35 +1197,7 @@ paths:
               type: object
               properties:
                 data:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                      example: signature
-                    attributes:
-                      type: object
-                      properties:
-                        count:
-                          type: integer
-                          example: 13
-                    relationships:
-                      type: object
-                      properties:
-                        user:
-                          type: object
-                          properties:
-                            data:
-                              $ref: '#/components/schemas/UserBase'
-                        group:
-                          type: object
-                          properties:
-                            data:
-                              $ref: '#/components/schemas/GroupBase'
-                        activity:
-                          type: object
-                          properties:
-                            data:
-                              $ref: '#/components/schemas/ActivityBase'
+                  $ref: '#/components/schemas/Signature'
       responses:
         '201':
           description: Created
@@ -898,28 +1250,7 @@ paths:
               type: object
               properties:
                 data:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                      example: objective
-                    attributes:
-                      type: object
-                      properties:
-                        objective:
-                          type: integer
-                          example: 200
-                        source:
-                          type: string
-                          example: app
-                    relationships:
-                      type: object
-                      properties:
-                        group:
-                          type: object
-                          properties:
-                            data:
-                              $ref: '#/components/schemas/GroupBase'
+                  $ref: '#/components/schemas/Objective'
       responses:
         '200':
           description: An objective with the same objective value already exists. See response.
