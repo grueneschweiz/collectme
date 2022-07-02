@@ -11,7 +11,7 @@
     <input
         v-model="currentValue"
         ref="input"
-        @input="event => $emit('update:modelValue', event.target.value)"
+        @input="onInput"
         :id="id"
         :name="id"
         :required="required"
@@ -43,12 +43,12 @@
 </template>
 
 <script setup lang="ts">
-
-import {computed, onBeforeUnmount, onMounted, PropType, ref} from "vue";
+import type {PropType} from 'vue';
+import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import type {ValidationStatus} from "@/components/base/BaseInput/BaseInputTypes";
 import TransitionAppearFade from '@/components/transition/TransitionAppearFade.vue'
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'update:modelValue', value: string | number): void
 }>();
 
@@ -96,6 +96,11 @@ const inputFocused = ref(false);
 
 const currentValue = ref(props.modelValue)
 
+const onInput = (e: Event) => {
+  const input = e.target as HTMLInputElement;
+  emit('update:modelValue', input.value);
+}
+
 const showLabelAbove = computed(() => {
   return (currentValue.value || inputFocused.value);
 })
@@ -116,17 +121,13 @@ const setFocus = () => inputFocused.value = true;
 const removeFocus = () => inputFocused.value = false;
 
 onMounted(() => {
-  // noinspection TypeScriptUnresolvedFunction
-  input.value.addEventListener('focus', setFocus);
-  // noinspection TypeScriptUnresolvedFunction
-  input.value.addEventListener('blur', removeFocus);
+  input.value?.addEventListener('focus', setFocus);
+  input.value?.addEventListener('blur', removeFocus);
 })
 
 onBeforeUnmount(() => {
-  // noinspection TypeScriptUnresolvedFunction
-  input.value.removeEventListener('focus', setFocus)
-  // noinspection TypeScriptUnresolvedFunction
-  input.value.removeEventListener('blur', removeFocus);
+  input.value?.removeEventListener('focus', setFocus)
+  input.value?.removeEventListener('blur', removeFocus);
 })
 
 </script>
@@ -151,6 +152,7 @@ onBeforeUnmount(() => {
   transition-property: font-size, top, font-weight;
 }
 
+/*noinspection CssUnusedSymbol*/
 .collectme-base-input__label--above {
   font-size: 0.625rem;
   font-weight: bold;
@@ -172,10 +174,12 @@ onBeforeUnmount(() => {
   border-radius: 2px;
 }
 
+/*noinspection CssUnusedSymbol*/
 .collectme-base-input__field--valid {
   border-bottom-color: var(--color-primary);
 }
 
+/*noinspection CssUnusedSymbol*/
 .collectme-base-input__field--invalid {
   border-bottom-color: var(--color-red);
 }
