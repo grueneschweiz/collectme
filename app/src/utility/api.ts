@@ -9,3 +9,8 @@ export default () => {
         xsrfHeaderName: 'X-WP-Nonce',
     });
 }
+
+export function handleUnexpectedError(error: any) {
+    console.log(error);
+    alert('Unexpected Error. Please try again later.');
+}
