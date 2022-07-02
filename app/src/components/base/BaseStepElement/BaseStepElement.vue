@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import type {PropType} from 'vue';
 import {computed} from "vue";
-import type {StepStatus} from "@/components/base/BaseStepElement/BaseStepElementTypes";
+import type {StepStatus} from "@/components/base/BaseStepElement/BaseStepElement";
 
 const props = defineProps({
   status: {

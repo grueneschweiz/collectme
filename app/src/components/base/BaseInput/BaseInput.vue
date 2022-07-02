@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import type {PropType} from 'vue';
 import {computed, onBeforeUnmount, onMounted, ref} from "vue";
-import type {ValidationStatus} from "@/components/base/BaseInput/BaseInputTypes";
+import type {ValidationStatus} from "@/components/base/BaseInput/BaseInput";
 import TransitionAppearFade from '@/components/transition/TransitionAppearFade.vue'
 
 const emit = defineEmits<{

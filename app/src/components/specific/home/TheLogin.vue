@@ -72,7 +72,7 @@ import BaseInput from '@/components/base/BaseInput/BaseInput.vue'
 import {computed, ref} from "vue";
 import isEmail from 'validator/es/lib/isEmail';
 import isLength from 'validator/es/lib/isLength';
-import type {ValidationStatus} from "@/components/base/BaseInput/BaseInputTypes";
+import type {ValidationStatus} from "@/components/base/BaseInput/BaseInput";
 import TransitionAppearFade from '@/components/transition/TransitionAppearFade.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
 
