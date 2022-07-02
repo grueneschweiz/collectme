@@ -28,13 +28,13 @@ export interface RoleAttributes {
      * @type {Date}
      * @memberof RoleAttributes
      */
-    created: Date | null;
+    created: string | null;
     /**
      * 
      * @type {Date}
      * @memberof RoleAttributes
      */
-    updated: Date | null;
+    updated: string | null;
 }
 
 /**

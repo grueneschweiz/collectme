@@ -34,11 +34,11 @@ export interface ObjectiveAttributes {
      * @type {Date}
      * @memberof ObjectiveAttributes
      */
-    created: Date | null;
+    created: string | null;
     /**
      * 
      * @type {Date}
      * @memberof ObjectiveAttributes
      */
-    updated: Date | null;
+    updated: string | null;
 }

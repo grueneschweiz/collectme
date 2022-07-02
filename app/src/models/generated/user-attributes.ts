@@ -46,13 +46,13 @@ export interface UserAttributes {
      * @type {Date}
      * @memberof UserAttributes
      */
-    created: Date | null;
+    created: string | null;
     /**
      * 
      * @type {Date}
      * @memberof UserAttributes
      */
-    updated: Date | null;
+    updated: string | null;
 }
 
 /**

@@ -28,11 +28,11 @@ export interface SignatureAttributes {
      * @type {Date}
      * @memberof SignatureAttributes
      */
-    created: Date | null;
+    created: string | null;
     /**
      * 
      * @type {Date}
      * @memberof SignatureAttributes
      */
-    updated: Date | null;
+    updated: string | null;
 }

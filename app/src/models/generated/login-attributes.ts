@@ -40,11 +40,11 @@ export interface LoginAttributes {
      * @type {Date}
      * @memberof LoginAttributes
      */
-    created: Date | null;
+    created: string | null;
     /**
      * 
      * @type {Date}
      * @memberof LoginAttributes
      */
-    updated: Date | null;
+    updated: string | null;
 }

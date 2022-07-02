@@ -46,13 +46,13 @@ export interface GroupAttributes {
      * @type {Date}
      * @memberof GroupAttributes
      */
-    created: Date | null;
+    created: string | null;
     /**
      * 
      * @type {Date}
      * @memberof GroupAttributes
      */
-    updated: Date | null;
+    updated: string | null;
 }
 
 /**

@@ -34,13 +34,13 @@ export interface ActivityAttributes {
      * @type {Date}
      * @memberof ActivityAttributes
      */
-    created: Date | null;
+    created: string | null;
     /**
      * 
      * @type {Date}
      * @memberof ActivityAttributes
      */
-    updated: Date | null;
+    updated: string | null;
 }
 
 /**

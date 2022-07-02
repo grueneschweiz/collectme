@@ -28,23 +28,23 @@ export interface SessionAttributes {
      * @type {Date}
      * @memberof SessionAttributes
      */
-    lastLogin: Date | null;
+    lastLogin: string | null;
     /**
      * 
      * @type {Date}
      * @memberof SessionAttributes
      */
-    activated: Date | null;
+    activated: string | null;
     /**
      * 
      * @type {Date}
      * @memberof SessionAttributes
      */
-    created: Date | null;
+    created: string | null;
     /**
      * 
      * @type {Date}
      * @memberof SessionAttributes
      */
-    updated: Date | null;
+    updated: string | null;
 }
