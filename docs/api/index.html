@@ -690,25 +690,30 @@
     // Script section to load models into a JS Var
     var defs = {}
             defs["Activity"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/ActivityBase"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "attributes" : {
-        "$ref" : "#/components/schemas/ActivityAttributes"
-      }
+  "required" : [ "attributes", "id", "relationships", "type" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "format" : "uuid",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "activity"
+    },
+    "attributes" : {
+      "$ref" : "#/components/schemas/ActivityAttributes"
+    },
+    "relationships" : {
+      "$ref" : "#/components/schemas/RelatedGroup"
     }
-  }, {
-    "type" : "object",
-    "properties" : {
-      "relationships" : {
-        "$ref" : "#/components/schemas/Activity_relationships"
-      }
-    }
-  } ]
+  }
 };
             defs["ActivityAttributes"] = {
+  "required" : [ "count", "created", "type", "updated" ],
   "type" : "object",
   "properties" : {
     "type" : {
@@ -721,46 +726,125 @@
     },
     "created" : {
       "type" : "string",
-      "format" : "date-time"
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "updated" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
     }
   }
 };
             defs["ActivityBase"] = {
+  "required" : [ "id", "type" ],
   "type" : "object",
   "properties" : {
     "id" : {
-      "$ref" : "#/components/schemas/FieldId"
+      "type" : "string",
+      "format" : "uuid"
     },
     "type" : {
       "type" : "string",
+      "readOnly" : true,
       "example" : "activity"
     }
   }
 };
-            defs["Activity_relationships"] = {
+            defs["AllOfGroupRelationships"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/RelatedObjectives"
+  }, {
+    "$ref" : "#/components/schemas/RelatedRoles"
+  }, {
+    "$ref" : "#/components/schemas/RelatedCause"
+  } ]
+};
+            defs["AllOfRoleRelationships"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/RelatedUser"
+  }, {
+    "$ref" : "#/components/schemas/RelatedGroup"
+  } ]
+};
+            defs["AllOfSignatureRelationships"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/RelatedUser"
+  }, {
+    "$ref" : "#/components/schemas/RelatedGroup"
+  }, {
+    "$ref" : "#/components/schemas/RelatedActivity"
+  } ]
+};
+            defs["CauseBase"] = {
+  "required" : [ "id", "type" ],
   "type" : "object",
   "properties" : {
-    "group" : {
-      "$ref" : "#/components/schemas/signatures_relationships_group"
+    "id" : {
+      "type" : "string",
+      "format" : "uuid"
     },
-    "user" : {
-      "$ref" : "#/components/schemas/signatures_relationships_user"
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "cause"
     }
-  },
-  "example" : null
+  }
 };
             defs["ErrorModel"] = {
   "type" : "object",
   "properties" : {
     "status" : {
       "type" : "integer",
+      "readOnly" : true,
       "example" : 400
     },
     "title" : {
       "type" : "string",
+      "readOnly" : true,
       "example" : "Bad Request"
+    },
+    "detail" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "The request was malformed."
+    },
+    "source" : {
+      "$ref" : "#/components/schemas/ErrorModel_source"
+    },
+    "meta" : {
+      "$ref" : "#/components/schemas/ErrorModel_meta"
     }
   }
+};
+            defs["ErrorModel_meta"] = {
+  "type" : "object",
+  "properties" : {
+    "exception" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "CollectmeDbException"
+    }
+  },
+  "example" : null
+};
+            defs["ErrorModel_source"] = {
+  "type" : "object",
+  "properties" : {
+    "pointer" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "/data/attributes/name"
+    },
+    "parameter" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "token"
+    }
+  },
+  "example" : null
 };
             defs["Errors"] = {
   "type" : "object",
@@ -773,30 +857,37 @@
     }
   }
 };
-            defs["FieldId"] = {
-  "type" : "string",
-  "format" : "uuid"
-};
             defs["Group"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/GroupBase"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "attributes" : {
-        "$ref" : "#/components/schemas/GroupAttributes"
-      }
+  "required" : [ "attributes", "id", "relationships", "type" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "format" : "uuid",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "group"
+    },
+    "attributes" : {
+      "$ref" : "#/components/schemas/GroupAttributes"
+    },
+    "relationships" : {
+      "allOf" : [ {
+        "$ref" : "#/components/schemas/RelatedObjectives"
+      }, {
+        "$ref" : "#/components/schemas/RelatedRoles"
+      }, {
+        "$ref" : "#/components/schemas/RelatedCause"
+      } ]
     }
-  }, {
-    "type" : "object",
-    "properties" : {
-      "relationships" : {
-        "$ref" : "#/components/schemas/Group_relationships"
-      }
-    }
-  } ]
+  }
 };
             defs["GroupAttributes"] = {
+  "required" : [ "_signatures", "_writeable", "created", "name", "type", "updated" ],
   "type" : "object",
   "properties" : {
     "name" : {
@@ -807,47 +898,46 @@
       "type" : "string",
       "enum" : [ "person", "organization" ]
     },
-    "signatures" : {
+    "_signatures" : {
       "type" : "integer",
       "description" : "Computed. The total amount of signatures of this group.",
+      "readOnly" : true,
       "example" : 45
     },
-    "writeable" : {
+    "_writeable" : {
       "type" : "boolean",
       "description" : "Computed. Tells if the current user has write permission for this group.",
+      "readOnly" : true,
       "example" : true
+    },
+    "created" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "updated" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
     }
   }
 };
             defs["GroupBase"] = {
+  "required" : [ "id", "type" ],
   "type" : "object",
   "properties" : {
     "id" : {
-      "$ref" : "#/components/schemas/FieldId"
+      "type" : "string",
+      "format" : "uuid"
     },
     "type" : {
       "type" : "string",
+      "readOnly" : true,
       "example" : "group"
     }
   }
-};
-            defs["Group_relationships"] = {
-  "type" : "object",
-  "properties" : {
-    "objective" : {
-      "$ref" : "#/components/schemas/Group_relationships_objective"
-    }
-  },
-  "example" : null
-};
-            defs["Group_relationships_objective"] = {
-  "type" : "object",
-  "properties" : {
-    "data" : {
-      "$ref" : "#/components/schemas/ObjectiveBase"
-    }
-  },
-  "example" : null
 };
             defs["inline_response_200"] = {
   "type" : "object",
@@ -869,7 +959,11 @@
     "included" : {
       "type" : "array",
       "items" : {
-        "$ref" : "#/components/schemas/Objective"
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/Objective"
+        }, {
+          "$ref" : "#/components/schemas/Role"
+        } ]
       }
     }
   }
@@ -885,6 +979,12 @@
     },
     "links" : {
       "$ref" : "#/components/schemas/PaginationLinks"
+    },
+    "included" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/Group"
+      }
     }
   }
 };
@@ -892,32 +992,20 @@
   "type" : "object",
   "properties" : {
     "data" : {
-      "$ref" : "#/components/schemas/Signature"
-    }
-  }
-};
-            defs["inline_response_204"] = {
-  "type" : "object",
-  "properties" : {
-    "data" : {
-      "$ref" : "#/components/schemas/Objective"
+      "$ref" : "#/components/schemas/Session"
     }
   }
 };
             defs["InvalidEmail"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Errors"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "errors" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/InvalidEmail_errors"
-        }
+  "type" : "object",
+  "properties" : {
+    "errors" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/InvalidEmail_errors"
       }
     }
-  } ]
+  }
 };
             defs["InvalidEmail_errors"] = {
   "type" : "object",
@@ -928,7 +1016,7 @@
     },
     "title" : {
       "type" : "string",
-      "example" : "Invalid data"
+      "example" : "Unprocessable Entity"
     },
     "source" : {
       "$ref" : "#/components/schemas/InvalidEmail_source"
@@ -947,33 +1035,46 @@
   "example" : null
 };
             defs["InvalidToken"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Errors"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "errors" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/InvalidToken_errors"
-        }
+  "type" : "object",
+  "properties" : {
+    "errors" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/InvalidToken_errors"
       }
     }
-  } ]
+  }
 };
             defs["InvalidToken_errors"] = {
   "type" : "object",
   "properties" : {
     "status" : {
-      "example" : 403
+      "type" : "integer",
+      "example" : 404
     },
     "title" : {
+      "type" : "string",
       "example" : "Invalid Token"
     }
   },
   "example" : null
 };
+            defs["Login"] = {
+  "required" : [ "attributes", "type" ],
+  "type" : "object",
+  "properties" : {
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "login"
+    },
+    "attributes" : {
+      "$ref" : "#/components/schemas/LoginAttributes"
+    }
+  }
+};
             defs["LoginAttributes"] = {
+  "required" : [ "created", "email", "firstName", "lastName", "updated" ],
   "type" : "object",
   "properties" : {
     "email" : {
@@ -987,49 +1088,71 @@
     "lastName" : {
       "type" : "string",
       "example" : "Muster"
+    },
+    "created" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "updated" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
     }
   }
 };
             defs["NotFound"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Errors"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "errors" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/NotFound_errors"
-        }
+  "type" : "object",
+  "properties" : {
+    "errors" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/NotFound_errors"
       }
     }
-  } ]
+  }
 };
             defs["NotFound_errors"] = {
   "type" : "object",
   "properties" : {
     "status" : {
+      "type" : "integer",
       "example" : 404
     },
     "title" : {
+      "type" : "string",
       "example" : "Not Found"
     }
   },
   "example" : null
 };
             defs["Objective"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/ObjectiveBase"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "attributes" : {
-        "$ref" : "#/components/schemas/ObjectiveAttributes"
-      }
+  "required" : [ "attributes", "id", "relationships", "type" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "format" : "uuid",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "objective"
+    },
+    "attributes" : {
+      "$ref" : "#/components/schemas/ObjectiveAttributes"
+    },
+    "relationships" : {
+      "$ref" : "#/components/schemas/RelatedGroup"
     }
-  } ]
+  }
 };
             defs["ObjectiveAttributes"] = {
+  "required" : [ "created", "objective", "source", "updated" ],
   "type" : "object",
   "properties" : {
     "objective" : {
@@ -1042,22 +1165,29 @@
     },
     "created" : {
       "type" : "string",
-      "format" : "date-time"
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
     },
     "updated" : {
       "type" : "string",
-      "format" : "date-time"
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
     }
   }
 };
             defs["ObjectiveBase"] = {
+  "required" : [ "id", "type" ],
   "type" : "object",
   "properties" : {
     "id" : {
-      "$ref" : "#/components/schemas/FieldId"
+      "type" : "string",
+      "format" : "uuid"
     },
     "type" : {
       "type" : "string",
+      "readOnly" : true,
       "example" : "objective"
     }
   }
@@ -1066,40 +1196,11 @@
   "type" : "object",
   "properties" : {
     "data" : {
-      "$ref" : "#/components/schemas/objectives_data"
-    },
-    "relationships" : {
-      "$ref" : "#/components/schemas/signatures_relationships"
+      "$ref" : "#/components/schemas/Objective"
     }
   }
 };
-            defs["objectives_data"] = {
-  "type" : "object",
-  "properties" : {
-    "type" : {
-      "type" : "string",
-      "example" : "objective"
-    },
-    "attributes" : {
-      "$ref" : "#/components/schemas/objectives_data_attributes"
-    }
-  },
-  "example" : null
-};
-            defs["objectives_data_attributes"] = {
-  "type" : "object",
-  "properties" : {
-    "objective" : {
-      "type" : "integer",
-      "example" : 200
-    },
-    "source" : {
-      "type" : "string",
-      "example" : "app"
-    }
-  },
-  "example" : null
-};
+            defs["OneOfinline_response_200_1IncludedItems"] = {};
             defs["PaginationLinks"] = {
   "type" : "object",
   "properties" : {
@@ -1107,149 +1208,65 @@
       "type" : "string",
       "format" : "url",
       "nullable" : true,
-      "example" : "/activities"
+      "readOnly" : true,
+      "example" : "/causes/e3c9f7c1-3fc6-4e71-9cf5-dd09b93cd771/activities"
     },
     "last" : {
       "type" : "string",
       "format" : "url",
       "nullable" : true,
+      "readOnly" : true,
       "example" : null
     },
     "prev" : {
       "type" : "string",
       "format" : "url",
       "nullable" : true,
-      "example" : "/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      "readOnly" : true,
+      "example" : "/causes/e3c9f7c1-3fc6-4e71-9cf5-dd09b93cd771/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
     },
     "next" : {
       "type" : "string",
       "format" : "url",
       "nullable" : true,
-      "example" : "/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      "readOnly" : true,
+      "example" : "/causes/e3c9f7c1-3fc6-4e71-9cf5-dd09b93cd771/activities?page[cursor]=3fa85f64-5717-4562-b3fc-2c963f66afa6"
     }
   }
 };
-            defs["Session"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/SessionBase"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "attributes" : {
-        "$ref" : "#/components/schemas/SessionAttributes"
-      }
-    }
-  }, {
-    "type" : "object",
-    "properties" : {
-      "relationships" : {
-        "$ref" : "#/components/schemas/Session_relationships"
-      }
-    }
-  } ]
-};
-            defs["SessionAttributes"] = {
+            defs["RelatedActivities"] = {
+  "required" : [ "activity" ],
   "type" : "object",
   "properties" : {
-    "login_counter" : {
-      "type" : "integer",
-      "example" : 0
-    },
-    "last_login" : {
-      "type" : "string",
-      "format" : "date-time"
-    },
-    "activated" : {
-      "type" : "string",
-      "format" : "date-time"
-    },
-    "created" : {
-      "type" : "string",
-      "format" : "date-time"
-    },
-    "updated" : {
-      "type" : "string",
-      "format" : "date-time"
-    }
-  }
-};
-            defs["SessionBase"] = {
-  "type" : "object",
-  "properties" : {
-    "id" : {
-      "$ref" : "#/components/schemas/FieldId"
-    },
-    "type" : {
-      "type" : "string",
-      "example" : "session"
-    }
-  }
-};
-            defs["Session_relationships"] = {
-  "type" : "object",
-  "properties" : {
-    "user" : {
-      "$ref" : "#/components/schemas/signatures_relationships_user"
-    }
-  },
-  "example" : null
-};
-            defs["Signature"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/SignatureBase"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "attributes" : {
-        "$ref" : "#/components/schemas/SignatureAttributes"
-      }
-    }
-  }, {
-    "type" : "object",
-    "properties" : {
-      "relationships" : {
-        "$ref" : "#/components/schemas/Signature_relationships"
-      }
-    }
-  } ]
-};
-            defs["SignatureAttributes"] = {
-  "type" : "object",
-  "properties" : {
-    "count" : {
-      "type" : "integer",
-      "example" : 13
-    }
-  }
-};
-            defs["SignatureBase"] = {
-  "type" : "object",
-  "properties" : {
-    "id" : {
-      "$ref" : "#/components/schemas/FieldId"
-    },
-    "type" : {
-      "type" : "string",
-      "example" : "signature"
-    }
-  }
-};
-            defs["Signature_relationships"] = {
-  "type" : "object",
-  "properties" : {
-    "user" : {
-      "$ref" : "#/components/schemas/signatures_relationships_user"
-    },
-    "group" : {
-      "$ref" : "#/components/schemas/signatures_relationships_group"
-    },
     "activity" : {
-      "$ref" : "#/components/schemas/Signature_relationships_activity"
+      "$ref" : "#/components/schemas/RelatedActivities_activity"
+    }
+  }
+};
+            defs["RelatedActivities_activity"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/ActivityBase"
+      }
     }
   },
   "example" : null
 };
-            defs["Signature_relationships_activity"] = {
+            defs["RelatedActivity"] = {
+  "required" : [ "activity" ],
+  "type" : "object",
+  "properties" : {
+    "activity" : {
+      "$ref" : "#/components/schemas/RelatedActivity_activity"
+    }
+  }
+};
+            defs["RelatedActivity_activity"] = {
+  "required" : [ "data" ],
   "type" : "object",
   "properties" : {
     "data" : {
@@ -1258,53 +1275,58 @@
   },
   "example" : null
 };
-            defs["signatures_body"] = {
+            defs["RelatedCause"] = {
+  "required" : [ "cause" ],
   "type" : "object",
   "properties" : {
-    "data" : {
-      "$ref" : "#/components/schemas/signatures_data"
-    },
-    "relationships" : {
-      "$ref" : "#/components/schemas/signatures_relationships"
+    "cause" : {
+      "$ref" : "#/components/schemas/RelatedCause_cause"
     }
   }
 };
-            defs["signatures_data"] = {
+            defs["RelatedCause_cause"] = {
+  "required" : [ "data" ],
   "type" : "object",
   "properties" : {
-    "type" : {
-      "type" : "string",
-      "example" : "signature"
-    },
-    "attributes" : {
-      "$ref" : "#/components/schemas/signatures_data_attributes"
+    "data" : {
+      "$ref" : "#/components/schemas/CauseBase"
     }
   },
   "example" : null
 };
-            defs["signatures_data_attributes"] = {
+            defs["RelatedCauses"] = {
+  "required" : [ "cause" ],
   "type" : "object",
   "properties" : {
-    "count" : {
-      "type" : "integer",
-      "example" : 13
+    "cause" : {
+      "$ref" : "#/components/schemas/RelatedCauses_cause"
+    }
+  }
+};
+            defs["RelatedCauses_cause"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/CauseBase"
+      }
     }
   },
   "example" : null
 };
-            defs["signatures_relationships"] = {
+            defs["RelatedGroup"] = {
+  "required" : [ "group" ],
   "type" : "object",
   "properties" : {
-    "user" : {
-      "$ref" : "#/components/schemas/signatures_relationships_user"
-    },
     "group" : {
-      "$ref" : "#/components/schemas/signatures_relationships_group"
+      "$ref" : "#/components/schemas/RelatedGroup_group"
     }
-  },
-  "example" : null
+  }
 };
-            defs["signatures_relationships_group"] = {
+            defs["RelatedGroup_group"] = {
+  "required" : [ "data" ],
   "type" : "object",
   "properties" : {
     "data" : {
@@ -1313,7 +1335,203 @@
   },
   "example" : null
 };
-            defs["signatures_relationships_user"] = {
+            defs["RelatedGroups"] = {
+  "required" : [ "group" ],
+  "type" : "object",
+  "properties" : {
+    "group" : {
+      "$ref" : "#/components/schemas/RelatedGroups_group"
+    }
+  }
+};
+            defs["RelatedGroups_group"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/GroupBase"
+      }
+    }
+  },
+  "example" : null
+};
+            defs["RelatedObjective"] = {
+  "required" : [ "objective" ],
+  "type" : "object",
+  "properties" : {
+    "objective" : {
+      "$ref" : "#/components/schemas/RelatedObjective_objective"
+    }
+  }
+};
+            defs["RelatedObjective_objective"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "$ref" : "#/components/schemas/ObjectiveBase"
+    }
+  },
+  "example" : null
+};
+            defs["RelatedObjectives"] = {
+  "required" : [ "objective" ],
+  "type" : "object",
+  "properties" : {
+    "objective" : {
+      "$ref" : "#/components/schemas/RelatedObjectives_objective"
+    }
+  }
+};
+            defs["RelatedObjectives_objective"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/ObjectiveBase"
+      }
+    }
+  },
+  "example" : null
+};
+            defs["RelatedRole"] = {
+  "required" : [ "role" ],
+  "type" : "object",
+  "properties" : {
+    "role" : {
+      "$ref" : "#/components/schemas/RelatedRole_role"
+    }
+  }
+};
+            defs["RelatedRole_role"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "$ref" : "#/components/schemas/RoleBase"
+    }
+  },
+  "example" : null
+};
+            defs["RelatedRoles"] = {
+  "required" : [ "role" ],
+  "type" : "object",
+  "properties" : {
+    "role" : {
+      "$ref" : "#/components/schemas/RelatedRoles_role"
+    }
+  }
+};
+            defs["RelatedRoles_role"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/RoleBase"
+      }
+    }
+  },
+  "example" : null
+};
+            defs["RelatedSession"] = {
+  "required" : [ "session" ],
+  "type" : "object",
+  "properties" : {
+    "session" : {
+      "$ref" : "#/components/schemas/RelatedSession_session"
+    }
+  }
+};
+            defs["RelatedSession_session"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "$ref" : "#/components/schemas/SessionBase"
+    }
+  },
+  "example" : null
+};
+            defs["RelatedSessions"] = {
+  "required" : [ "session" ],
+  "type" : "object",
+  "properties" : {
+    "session" : {
+      "$ref" : "#/components/schemas/RelatedSessions_session"
+    }
+  }
+};
+            defs["RelatedSessions_session"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/SessionBase"
+      }
+    }
+  },
+  "example" : null
+};
+            defs["RelatedSignature"] = {
+  "required" : [ "signature" ],
+  "type" : "object",
+  "properties" : {
+    "signature" : {
+      "$ref" : "#/components/schemas/RelatedSignature_signature"
+    }
+  }
+};
+            defs["RelatedSignature_signature"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "$ref" : "#/components/schemas/SignatureBase"
+    }
+  },
+  "example" : null
+};
+            defs["RelatedSignatures"] = {
+  "required" : [ "signature" ],
+  "type" : "object",
+  "properties" : {
+    "signature" : {
+      "$ref" : "#/components/schemas/RelatedSignatures_signature"
+    }
+  }
+};
+            defs["RelatedSignatures_signature"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/SignatureBase"
+      }
+    }
+  },
+  "example" : null
+};
+            defs["RelatedUser"] = {
+  "required" : [ "user" ],
+  "type" : "object",
+  "properties" : {
+    "user" : {
+      "$ref" : "#/components/schemas/RelatedUser_user"
+    }
+  }
+};
+            defs["RelatedUser_user"] = {
+  "required" : [ "data" ],
   "type" : "object",
   "properties" : {
     "data" : {
@@ -1322,20 +1540,248 @@
   },
   "example" : null
 };
-            defs["Unauthorized"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/Errors"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "errors" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/Unauthorized_errors"
-        }
+            defs["RelatedUsers"] = {
+  "required" : [ "user" ],
+  "type" : "object",
+  "properties" : {
+    "user" : {
+      "$ref" : "#/components/schemas/RelatedUsers_user"
+    }
+  }
+};
+            defs["RelatedUsers_user"] = {
+  "required" : [ "data" ],
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/UserBase"
       }
     }
-  } ]
+  },
+  "example" : null
+};
+            defs["Role"] = {
+  "required" : [ "attributes", "id", "relationships", "type" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "format" : "uuid",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "role"
+    },
+    "attributes" : {
+      "$ref" : "#/components/schemas/RoleAttributes"
+    },
+    "relationships" : {
+      "allOf" : [ {
+        "$ref" : "#/components/schemas/RelatedUser"
+      }, {
+        "$ref" : "#/components/schemas/RelatedGroup"
+      } ]
+    }
+  }
+};
+            defs["RoleAttributes"] = {
+  "required" : [ "created", "permission", "updated" ],
+  "type" : "object",
+  "properties" : {
+    "permission" : {
+      "type" : "string",
+      "enum" : [ "r", "rw" ]
+    },
+    "created" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "updated" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    }
+  }
+};
+            defs["RoleBase"] = {
+  "required" : [ "id", "type" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "format" : "uuid"
+    },
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "role"
+    }
+  }
+};
+            defs["Session"] = {
+  "required" : [ "attributes", "id", "relationships", "type" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "format" : "uuid",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "session"
+    },
+    "attributes" : {
+      "$ref" : "#/components/schemas/SessionAttributes"
+    },
+    "relationships" : {
+      "$ref" : "#/components/schemas/RelatedUser"
+    }
+  }
+};
+            defs["SessionAttributes"] = {
+  "required" : [ "activated", "created", "lastLogin", "loginCounter", "updated" ],
+  "type" : "object",
+  "properties" : {
+    "loginCounter" : {
+      "type" : "integer",
+      "example" : 0
+    },
+    "lastLogin" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "activated" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "created" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "updated" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    }
+  }
+};
+            defs["SessionBase"] = {
+  "required" : [ "id", "type" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "format" : "uuid"
+    },
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "session"
+    }
+  }
+};
+            defs["Signature"] = {
+  "required" : [ "attributes", "id", "relationships", "type" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "format" : "uuid",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "signature"
+    },
+    "attributes" : {
+      "$ref" : "#/components/schemas/SignatureAttributes"
+    },
+    "relationships" : {
+      "allOf" : [ {
+        "$ref" : "#/components/schemas/RelatedUser"
+      }, {
+        "$ref" : "#/components/schemas/RelatedGroup"
+      }, {
+        "$ref" : "#/components/schemas/RelatedActivity"
+      } ]
+    }
+  }
+};
+            defs["SignatureAttributes"] = {
+  "required" : [ "count", "created", "updated" ],
+  "type" : "object",
+  "properties" : {
+    "count" : {
+      "type" : "integer",
+      "example" : 13
+    },
+    "created" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "updated" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    }
+  }
+};
+            defs["SignatureBase"] = {
+  "required" : [ "id", "type" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "format" : "uuid"
+    },
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "signature"
+    }
+  }
+};
+            defs["signatures_body"] = {
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "$ref" : "#/components/schemas/Signature"
+    }
+  }
+};
+            defs["Unauthorized"] = {
+  "type" : "object",
+  "properties" : {
+    "errors" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/Unauthorized_errors"
+      }
+    }
+  }
 };
             defs["Unauthorized_errors"] = {
   "type" : "object",
@@ -1352,18 +1798,27 @@
   "example" : null
 };
             defs["User"] = {
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/UserBase"
-  }, {
-    "type" : "object",
-    "properties" : {
-      "attributes" : {
-        "$ref" : "#/components/schemas/UserAttributes"
-      }
+  "required" : [ "attributes", "id", "relationships", "type" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "format" : "uuid",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "type" : {
+      "type" : "string",
+      "readOnly" : true,
+      "example" : "user"
+    },
+    "attributes" : {
+      "$ref" : "#/components/schemas/UserAttributes"
     }
-  } ]
+  }
 };
             defs["UserAttributes"] = {
+  "required" : [ "created", "email", "firstName", "lang", "lastName", "updated" ],
   "type" : "object",
   "properties" : {
     "email" : {
@@ -1381,17 +1836,32 @@
     "lang" : {
       "type" : "string",
       "enum" : [ "d", "f", "e" ]
+    },
+    "created" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
+    },
+    "updated" : {
+      "type" : "string",
+      "format" : "date-time",
+      "nullable" : true,
+      "readOnly" : true
     }
   }
 };
             defs["UserBase"] = {
+  "required" : [ "id", "type" ],
   "type" : "object",
   "properties" : {
     "id" : {
-      "$ref" : "#/components/schemas/FieldId"
+      "type" : "string",
+      "format" : "uuid"
     },
     "type" : {
       "type" : "string",
+      "readOnly" : true,
       "example" : "user"
     }
   }
@@ -1400,22 +1870,9 @@
   "type" : "object",
   "properties" : {
     "data" : {
-      "$ref" : "#/components/schemas/usersformauth_data"
+      "$ref" : "#/components/schemas/Login"
     }
   }
-};
-            defs["usersformauth_data"] = {
-  "type" : "object",
-  "properties" : {
-    "type" : {
-      "type" : "string",
-      "example" : "login"
-    },
-    "attributes" : {
-      "$ref" : "#/components/schemas/LoginAttributes"
-    }
-  },
-  "example" : null
 };
   </script>
 
@@ -1434,8 +1891,8 @@
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
                   <li class="nav-header" data-group="Activities"><a href="#api-Activities">API Methods - Activities</a></li>
-                    <li data-group="Activities" data-name="activitiesGet" class="">
-                      <a href="#api-Activities-activitiesGet">activitiesGet</a>
+                    <li data-group="Activities" data-name="causesUuidActivityGet" class="">
+                      <a href="#api-Activities-causesUuidActivityGet">causesUuidActivityGet</a>
                     </li>
                   <li class="nav-header" data-group="Groups"><a href="#api-Groups">API Methods - Groups</a></li>
                     <li data-group="Groups" data-name="causesUuidGroupsGet" class="">
@@ -1446,11 +1903,14 @@
                       <a href="#api-Objectives-objectivesPost">objectivesPost</a>
                     </li>
                   <li class="nav-header" data-group="Sessions"><a href="#api-Sessions">API Methods - Sessions</a></li>
+                    <li data-group="Sessions" data-name="sessionsCurrentGet" class="">
+                      <a href="#api-Sessions-sessionsCurrentGet">sessionsCurrentGet</a>
+                    </li>
+                    <li data-group="Sessions" data-name="sessionsUuidActivateGet" class="">
+                      <a href="#api-Sessions-sessionsUuidActivateGet">sessionsUuidActivateGet</a>
+                    </li>
                     <li data-group="Sessions" data-name="sessionsUuidDelete" class="">
                       <a href="#api-Sessions-sessionsUuidDelete">sessionsUuidDelete</a>
-                    </li>
-                    <li data-group="Sessions" data-name="sessionsUuidGet" class="">
-                      <a href="#api-Sessions-sessionsUuidGet">sessionsUuidGet</a>
                     </li>
                   <li class="nav-header" data-group="Signatures"><a href="#api-Signatures">API Methods - Signatures</a></li>
                     <li data-group="Signatures" data-name="signaturesPost" class="">
@@ -1469,9 +1929,6 @@
                     <li data-group="Users" data-name="usersLinkAuthGet" class="">
                       <a href="#api-Users-usersLinkAuthGet">usersLinkAuthGet</a>
                     </li>
-                    <li data-group="Users" data-name="usersSessionGet" class="">
-                      <a href="#api-Users-usersSessionGet">usersSessionGet</a>
-                    </li>
           </ul>
         </nav>
       </div>
@@ -1487,16 +1944,31 @@
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
               <div class="app-desc">Version: 1.0.0</div>
             <hr>
-            <div>API specification for the Collectme V2 WordPress plugin.</div>
+            <div><p>API specification for the Collectme V2 WordPress plugin.</p>
+<p><strong>Authentication</strong></p>
+<p>Users may authenticate themselves using the <code>/users/form-auth</code> or <code>/users/link-auth</code> endpoints. Authentication works
+with the following two cookies:</p>
+<ul>
+<li><code>WP_COLLECTME_AUTH</code>: Persistent login. Cookie contains the persistent session's <code>uuid</code> and a secret that
+corresponds to the <code>session_hash</code>.</li>
+<li><code>PHPSESSID</code>: Session login. Cookie contains the PHP session id.</li>
+</ul>
+<p>While <code>WP_COLLECTME_AUTH</code> keeps the user logged in (for 5 years), the session cookie has a short ttl (default
+session duration) but better performance. The session cookie therefore takes precedence over the <code>WP_COLLECTME_AUTH</code>
+cookie. Both cookies must be deleted, to log the user out.</p>
+<p>All protected functions do also need a nonce for CSRF protection. The nonce must be sent in the
+<code>X-WP-Collectme-Nonce</code> header. It can be obtained from the global JS variable <code>collectme.nonce</code>, which is set by the
+<code>HtmlController</code>.</p>
+</div>
           </div>
         </div>
         <div id="sections">
                 <section id="api-Activities">
                   <h1>Activities</h1>
-                    <div id="api-Activities-activitiesGet">
-                      <article id="api-Activities-activitiesGet-0" data-group="User" data-name="activitiesGet" data-version="0">
+                    <div id="api-Activities-causesUuidActivityGet">
+                      <article id="api-Activities-causesUuidActivityGet-0" data-group="User" data-name="causesUuidActivityGet" data-version="0">
                         <div class="pull-left">
-                          <h1>activitiesGet</h1>
+                          <h1>causesUuidActivityGet</h1>
                           <p>Get activities</p>
                         </div>
                         <div class="pull-right"></div>
@@ -1505,32 +1977,32 @@
                         <p class="marked">Paginated list of activities, sorted by creation date, newest first.</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/activities</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/causes/{uuid}/activity</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Activities-activitiesGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Activities-activitiesGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Activities-activitiesGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Activities-activitiesGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Activities-activitiesGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Activities-activitiesGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Activities-activitiesGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Activities-activitiesGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Activities-activitiesGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Activities-activitiesGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Activities-activitiesGet-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Activities-causesUuidActivityGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Activities-causesUuidActivityGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Activities-causesUuidActivityGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Activities-causesUuidActivityGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Activities-causesUuidActivityGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Activities-causesUuidActivityGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Activities-causesUuidActivityGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Activities-causesUuidActivityGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Activities-causesUuidActivityGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Activities-causesUuidActivityGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Activities-causesUuidActivityGet-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Activities-activitiesGet-0-curl">
+                          <div class="tab-pane active" id="examples-Activities-causesUuidActivityGet-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 \
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/cyrillbolliger/collectme_v2/1.0.0/activities?page[cursor]="</code></pre>
+"http://localhost:8040//causes/{uuid}/activity?page[cursor]=&page[points]=&filter="</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Activities-activitiesGet-0-java">
+                          <div class="tab-pane" id="examples-Activities-causesUuidActivityGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -1551,58 +2023,88 @@ public class ActivitiesApiExample {
         //cookieAuth.setApiKeyPrefix("Token");
 
         ActivitiesApi apiInstance = new ActivitiesApi();
+        UUID uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | Uuid of the previous element in the path
         String page[cursor] = page[cursor]_example; // String | The uuid of the latest activity of the page to retrieve or null to
 get the page with the latest activities.
 
+        String page[points] = page[points]_example; // String | Indicates if the cursor points to the first or the last entry of the page.
+If the last is given, the server will respond with the next entries, for
+the first, the server will respond with the previous entries.
+
+        String filter = filter_example; // String | Filter expression. Currently the only implemented filter is
+`filter[count]=gt(x)`, where `x` denotes the number of signatures
+and `gt()` the greater than function.
+
         try {
-            inline_response_200_2 result = apiInstance.activitiesGet(page[cursor]);
+            inline_response_200_2 result = apiInstance.causesUuidActivityGet(uuid, page[cursor], page[points], filter);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ActivitiesApi#activitiesGet");
+            System.err.println("Exception when calling ActivitiesApi#causesUuidActivityGet");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Activities-activitiesGet-0-android">
+                          <div class="tab-pane" id="examples-Activities-causesUuidActivityGet-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ActivitiesApi;
 
 public class ActivitiesApiExample {
 
     public static void main(String[] args) {
         ActivitiesApi apiInstance = new ActivitiesApi();
+        UUID uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | Uuid of the previous element in the path
         String page[cursor] = page[cursor]_example; // String | The uuid of the latest activity of the page to retrieve or null to
 get the page with the latest activities.
 
+        String page[points] = page[points]_example; // String | Indicates if the cursor points to the first or the last entry of the page.
+If the last is given, the server will respond with the next entries, for
+the first, the server will respond with the previous entries.
+
+        String filter = filter_example; // String | Filter expression. Currently the only implemented filter is
+`filter[count]=gt(x)`, where `x` denotes the number of signatures
+and `gt()` the greater than function.
+
         try {
-            inline_response_200_2 result = apiInstance.activitiesGet(page[cursor]);
+            inline_response_200_2 result = apiInstance.causesUuidActivityGet(uuid, page[cursor], page[points], filter);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ActivitiesApi#activitiesGet");
+            System.err.println("Exception when calling ActivitiesApi#causesUuidActivityGet");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Activities-activitiesGet-0-groovy">
+  <div class="tab-pane" id="examples-Activities-causesUuidActivityGet-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Activities-activitiesGet-0-objc">
+                            <div class="tab-pane" id="examples-Activities-causesUuidActivityGet-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
 // Configure API key authorization: (authentication scheme: cookieAuth)
 [apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"PHPSESSID"];
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"PHPSESSID"];
+UUID *uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // Uuid of the previous element in the path
 String *page[cursor] = page[cursor]_example; // The uuid of the latest activity of the page to retrieve or null to
 get the page with the latest activities.
+ (optional)
+String *page[points] = page[points]_example; // Indicates if the cursor points to the first or the last entry of the page.
+If the last is given, the server will respond with the next entries, for
+the first, the server will respond with the previous entries.
+ (optional) (default to last)
+String *filter = filter_example; // Filter expression. Currently the only implemented filter is
+`filter[count]=gt(x)`, where `x` denotes the number of signatures
+and `gt()` the greater than function.
  (optional)
 
 ActivitiesApi *apiInstance = [[ActivitiesApi alloc] init];
 
 // Get activities
-[apiInstance activitiesGetWith:page[cursor]
+[apiInstance causesUuidActivityGetWith:uuid
+    page[cursor]:page[cursor]
+    page[points]:page[points]
+    filter:filter
               completionHandler: ^(inline_response_200_2 output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -1614,7 +2116,7 @@ ActivitiesApi *apiInstance = [[ActivitiesApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Activities-activitiesGet-0-javascript">
+                            <div class="tab-pane" id="examples-Activities-causesUuidActivityGet-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var CollectmeV2 = require('collectme_v2');
 var defaultClient = CollectmeV2.ApiClient.instance;
 
@@ -1625,9 +2127,18 @@ cookieAuth.apiKey = "YOUR API KEY"
 //cookieAuth.apiKeyPrefix['PHPSESSID'] = "Token"
 
 var api = new CollectmeV2.ActivitiesApi()
+var uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // {{UUID}} Uuid of the previous element in the path
 var opts = { 
-  'page[cursor]': page[cursor]_example // {{String}} The uuid of the latest activity of the page to retrieve or null to
+  'page[cursor]': page[cursor]_example, // {{String}} The uuid of the latest activity of the page to retrieve or null to
 get the page with the latest activities.
+
+  'page[points]': page[points]_example, // {{String}} Indicates if the cursor points to the first or the last entry of the page.
+If the last is given, the server will respond with the next entries, for
+the first, the server will respond with the previous entries.
+
+  'filter': filter_example // {{String}} Filter expression. Currently the only implemented filter is
+`filter[count]=gt(x)`, where `x` denotes the number of signatures
+and `gt()` the greater than function.
 
 };
 var callback = function(error, data, response) {
@@ -1637,14 +2148,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.activitiesGet(opts, callback);
+api.causesUuidActivityGet(uuid, opts, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Activities-activitiesGet-0-angular">
+                            <!--<div class="tab-pane" id="examples-Activities-causesUuidActivityGet-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Activities-activitiesGet-0-csharp">
+                            <div class="tab-pane" id="examples-Activities-causesUuidActivityGet-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -1653,7 +2164,7 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class activitiesGetExample
+    public class causesUuidActivityGetExample
     {
         public void main()
         {
@@ -1664,19 +2175,28 @@ namespace Example
             // Configuration.Default.ApiKeyPrefix.Add("PHPSESSID", "Bearer");
 
             var apiInstance = new ActivitiesApi();
+            var uuid = new UUID(); // UUID | Uuid of the previous element in the path
             var page[cursor] = page[cursor]_example;  // String | The uuid of the latest activity of the page to retrieve or null to
 get the page with the latest activities.
+ (optional) 
+            var page[points] = page[points]_example;  // String | Indicates if the cursor points to the first or the last entry of the page.
+If the last is given, the server will respond with the next entries, for
+the first, the server will respond with the previous entries.
+ (optional)  (default to last)
+            var filter = filter_example;  // String | Filter expression. Currently the only implemented filter is
+`filter[count]=gt(x)`, where `x` denotes the number of signatures
+and `gt()` the greater than function.
  (optional) 
 
             try
             {
                 // Get activities
-                inline_response_200_2 result = apiInstance.activitiesGet(page[cursor]);
+                inline_response_200_2 result = apiInstance.causesUuidActivityGet(uuid, page[cursor], page[points], filter);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling ActivitiesApi.activitiesGet: " + e.Message );
+                Debug.Print("Exception when calling ActivitiesApi.causesUuidActivityGet: " + e.Message );
             }
         }
     }
@@ -1684,7 +2204,7 @@ get the page with the latest activities.
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Activities-activitiesGet-0-php">
+                            <div class="tab-pane" id="examples-Activities-causesUuidActivityGet-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
@@ -1694,20 +2214,29 @@ Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('PHPSESSID', 
 // Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('PHPSESSID', 'Bearer');
 
 $api_instance = new Swagger\Client\ApiActivitiesApi();
+$uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | Uuid of the previous element in the path
 $page[cursor] = page[cursor]_example; // String | The uuid of the latest activity of the page to retrieve or null to
 get the page with the latest activities.
 
+$page[points] = page[points]_example; // String | Indicates if the cursor points to the first or the last entry of the page.
+If the last is given, the server will respond with the next entries, for
+the first, the server will respond with the previous entries.
+
+$filter = filter_example; // String | Filter expression. Currently the only implemented filter is
+`filter[count]=gt(x)`, where `x` denotes the number of signatures
+and `gt()` the greater than function.
+
 
 try {
-    $result = $api_instance->activitiesGet($page[cursor]);
+    $result = $api_instance->causesUuidActivityGet($uuid, $page[cursor], $page[points], $filter);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling ActivitiesApi->activitiesGet: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling ActivitiesApi->causesUuidActivityGet: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Activities-activitiesGet-0-perl">
+                            <div class="tab-pane" id="examples-Activities-causesUuidActivityGet-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ActivitiesApi;
@@ -1718,20 +2247,29 @@ $WWW::SwaggerClient::Configuration::api_key->{'PHPSESSID'} = 'YOUR_API_KEY';
 #$WWW::SwaggerClient::Configuration::api_key_prefix->{'PHPSESSID'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ActivitiesApi->new();
+my $uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; # UUID | Uuid of the previous element in the path
 my $page[cursor] = page[cursor]_example; # String | The uuid of the latest activity of the page to retrieve or null to
 get the page with the latest activities.
 
+my $page[points] = page[points]_example; # String | Indicates if the cursor points to the first or the last entry of the page.
+If the last is given, the server will respond with the next entries, for
+the first, the server will respond with the previous entries.
+
+my $filter = filter_example; # String | Filter expression. Currently the only implemented filter is
+`filter[count]=gt(x)`, where `x` denotes the number of signatures
+and `gt()` the greater than function.
+
 
 eval { 
-    my $result = $api_instance->activitiesGet(page[cursor] => $page[cursor]);
+    my $result = $api_instance->causesUuidActivityGet(uuid => $uuid, page[cursor] => $page[cursor], page[points] => $page[points], filter => $filter);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling ActivitiesApi->activitiesGet: $@\n";
+    warn "Exception when calling ActivitiesApi->causesUuidActivityGet: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Activities-activitiesGet-0-python">
+                            <div class="tab-pane" id="examples-Activities-causesUuidActivityGet-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -1745,21 +2283,62 @@ swagger_client.configuration.api_key['PHPSESSID'] = 'YOUR_API_KEY'
 
 # create an instance of the API class
 api_instance = swagger_client.ActivitiesApi()
+uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d # UUID | Uuid of the previous element in the path
 page[cursor] = page[cursor]_example # String | The uuid of the latest activity of the page to retrieve or null to
 get the page with the latest activities.
+ (optional)
+page[points] = page[points]_example # String | Indicates if the cursor points to the first or the last entry of the page.
+If the last is given, the server will respond with the next entries, for
+the first, the server will respond with the previous entries.
+ (optional) (default to last)
+filter = filter_example # String | Filter expression. Currently the only implemented filter is
+`filter[count]=gt(x)`, where `x` denotes the number of signatures
+and `gt()` the greater than function.
  (optional)
 
 try: 
     # Get activities
-    api_response = api_instance.activities_get(page[cursor]=page[cursor])
+    api_response = api_instance.causes_uuid_activity_get(uuid, page[cursor]=page[cursor], page[points]=page[points], filter=filter)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ActivitiesApi->activitiesGet: %s\n" % e)</code></pre>
+    print("Exception when calling ActivitiesApi->causesUuidActivityGet: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
                           <h2>Parameters</h2>
 
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">uuid*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_causesUuidActivityGet_uuid">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      UUID
+                                                  </span>
+                                                      <span class="format">
+                                                          (uuid)
+                                                      </span>
+                                  
+                                                      <div class="inner description">
+                                                          Uuid of the previous element in the path
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
 
 
 
@@ -1774,7 +2353,7 @@ except ApiException as e:
                                 <td>
                                 
                                 
-                                    <div id="d2e199_activitiesGet_page[cursor]">
+                                    <div id="d2e199_causesUuidActivityGet_page[cursor]">
                                         <div class="json-schema-view">
                                             <div class="primitive">
                                                 <span class="type">
@@ -1791,6 +2370,50 @@ get the page with the latest activities.
                                     </div>
                                 </td>
                                 </tr>
+                                <tr><td style="width:150px;">page[points]</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_causesUuidActivityGet_page[points]">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                                    <div class="inner description">
+                                                        Indicates if the cursor points to the first or the last entry of the page.
+If the last is given, the server will respond with the next entries, for
+the first, the server will respond with the previous entries.
+
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">filter</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_causesUuidActivityGet_filter">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                                    <div class="inner description">
+                                                        Filter expression. Currently the only implemented filter is
+&#x60;filter[count]&#x3D;gt(x)&#x60;, where &#x60;x&#x60; denotes the number of signatures
+and &#x60;gt()&#x60; the greater than function.
+
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
                             </table>
 
                           <h2>Responses</h2>
@@ -1798,14 +2421,14 @@ get the page with the latest activities.
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-activitiesGet-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-causesUuidActivityGet-200-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-activitiesGet-200-schema">
-                                  <div id='responses-activitiesGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-causesUuidActivityGet-200-schema">
+                                  <div id='responses-causesUuidActivityGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
@@ -1831,14 +2454,14 @@ get the page with the latest activities.
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-activitiesGet-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-activitiesGet-200-schema-200');
+                                        $('#responses-causesUuidActivityGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-causesUuidActivityGet-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-activitiesGet-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-causesUuidActivityGet-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
@@ -1846,14 +2469,14 @@ get the page with the latest activities.
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-activitiesGet-401-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-causesUuidActivityGet-401-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-activitiesGet-401-schema">
-                                  <div id='responses-activitiesGet-401-schema-401' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-causesUuidActivityGet-401-schema">
+                                  <div id='responses-causesUuidActivityGet-401-schema-401' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
@@ -1879,14 +2502,14 @@ get the page with the latest activities.
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-activitiesGet-401-schema-data').val(stringify(schema));
-                                        var result = $('#responses-activitiesGet-401-schema-401');
+                                        $('#responses-causesUuidActivityGet-401-schema-data').val(stringify(schema));
+                                        var result = $('#responses-causesUuidActivityGet-401-schema-401');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-activitiesGet-401-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-causesUuidActivityGet-401-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
@@ -1934,7 +2557,7 @@ Using a non-existing cause uuid returns an empty array.
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 \
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/cyrillbolliger/collectme_v2/1.0.0/causes/{uuid}/groups?"</code></pre>
+"http://localhost:8040//causes/{uuid}/groups?"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Groups-causesUuidGroupsGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -2334,7 +2957,7 @@ authorative one.
 \
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"https://virtserver.swaggerhub.com/cyrillbolliger/collectme_v2/1.0.0/objectives?"</code></pre>
+"http://localhost:8040//objectives?"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Objectives-objectivesPost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -2359,7 +2982,7 @@ public class ObjectivesApiExample {
         ObjectivesApi apiInstance = new ObjectivesApi();
         Objectives_body body = ; // Objectives_body | 
         try {
-            inline_response_204 result = apiInstance.objectivesPost(body);
+            objectives_body result = apiInstance.objectivesPost(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ObjectivesApi#objectivesPost");
@@ -2378,7 +3001,7 @@ public class ObjectivesApiExample {
         ObjectivesApi apiInstance = new ObjectivesApi();
         Objectives_body body = ; // Objectives_body | 
         try {
-            inline_response_204 result = apiInstance.objectivesPost(body);
+            objectives_body result = apiInstance.objectivesPost(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ObjectivesApi#objectivesPost");
@@ -2403,7 +3026,7 @@ ObjectivesApi *apiInstance = [[ObjectivesApi alloc] init];
 
 // Add objective
 [apiInstance objectivesPostWith:body
-              completionHandler: ^(inline_response_204 output, NSError* error) {
+              completionHandler: ^(objectives_body output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -2466,7 +3089,7 @@ namespace Example
             try
             {
                 // Add objective
-                inline_response_204 result = apiInstance.objectivesPost(body);
+                objectives_body result = apiInstance.objectivesPost(body);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -2605,25 +3228,25 @@ except ApiException as e:
                             </table>
 
                           <h2>Responses</h2>
-                            <h3> Status: 204 - Created </h3>
+                            <h3> Status: 200 - An objective with the same objective value already exists. See response. </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-objectivesPost-204-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-objectivesPost-200-schema">Schema</a>
                                 </li>
 
                                 <li class="">
-                                  <a data-toggle="tab" href="#responses-objectivesPost-204-headers">Headers</a>
+                                  <a data-toggle="tab" href="#responses-objectivesPost-200-headers">Headers</a>
                                 </li>
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-objectivesPost-204-schema">
-                                  <div id='responses-objectivesPost-204-schema-204' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-objectivesPost-200-schema">
+                                  <div id='responses-objectivesPost-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "Created",
+  "description" : "An objective with the same objective value already exists. See response.",
   "headers" : {
     "Location" : {
       "description" : "/objectives/{uuid}",
@@ -2637,7 +3260,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_response_204"
+        "$ref" : "#/components/schemas/objectives_body"
       }
     }
   }
@@ -2655,16 +3278,93 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-objectivesPost-204-schema-data').val(stringify(schema));
-                                        var result = $('#responses-objectivesPost-204-schema-204');
+                                        $('#responses-objectivesPost-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-objectivesPost-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-objectivesPost-204-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-objectivesPost-200-schema-data' type='hidden' value=''></input>
                                 </div>
-                                <div class="tab-pane" id="responses-objectivesPost-204-headers">
+                                <div class="tab-pane" id="responses-objectivesPost-200-headers">
+                                    <table>
+                                        <tr>
+                                            <th width="150px">Name</th>
+                                            <th width="100px">Type</th>
+                                            <th width="100px">Format</th>
+                                            <th>Description</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Location</td>
+                                            <td>String</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <h3> Status: 201 - Created </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-objectivesPost-201-schema">Schema</a>
+                                </li>
+
+                                <li class="">
+                                  <a data-toggle="tab" href="#responses-objectivesPost-201-headers">Headers</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-objectivesPost-201-schema">
+                                  <div id='responses-objectivesPost-201-schema-201' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Created",
+  "headers" : {
+    "Location" : {
+      "description" : "/objectives/{uuid}",
+      "style" : "simple",
+      "explode" : false,
+      "schema" : {
+        "type" : "string"
+      }
+    }
+  },
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/objectives_body"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-objectivesPost-201-schema-data').val(stringify(schema));
+                                        var result = $('#responses-objectivesPost-201-schema-201');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-objectivesPost-201-schema-data' type='hidden' value=''></input>
+                                </div>
+                                <div class="tab-pane" id="responses-objectivesPost-201-headers">
                                     <table>
                                         <tr>
                                             <th width="150px">Name</th>
@@ -2736,6 +3436,778 @@ except ApiException as e:
                   </section>
                 <section id="api-Sessions">
                   <h1>Sessions</h1>
+                    <div id="api-Sessions-sessionsCurrentGet">
+                      <article id="api-Sessions-sessionsCurrentGet-0" data-group="User" data-name="sessionsCurrentGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>sessionsCurrentGet</h1>
+                          <p>Get current user&#x27;s persistent session</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">May be used to check the user&#x27;s login state if &#x60;WP_COLLECTME_AUTH&#x60; cookie is set. If the persistent session 
+exists but waits for activation, a &#x60;401&#x60; is returned. It the persistent session was not found, deleted or 
+closed, the api responds with a &#x60;404&#x60;.
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/sessions/current</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Sessions-sessionsCurrentGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsCurrentGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsCurrentGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Sessions-sessionsCurrentGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Sessions-sessionsCurrentGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsCurrentGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Sessions-sessionsCurrentGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Sessions-sessionsCurrentGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsCurrentGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsCurrentGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsCurrentGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Sessions-sessionsCurrentGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+\
+-H "Accept: application/json"\
+"http://localhost:8040//sessions/current?"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Sessions-sessionsCurrentGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.SessionsApi;
+
+import java.io.File;
+import java.util.*;
+
+public class SessionsApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+        // Configure API key authorization: cookieAuth
+        ApiKeyAuth cookieAuth = (ApiKeyAuth) defaultClient.getAuthentication("cookieAuth");
+        cookieAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //cookieAuth.setApiKeyPrefix("Token");
+
+        SessionsApi apiInstance = new SessionsApi();
+        try {
+            inline_response_201 result = apiInstance.sessionsCurrentGet();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling SessionsApi#sessionsCurrentGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Sessions-sessionsCurrentGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.SessionsApi;
+
+public class SessionsApiExample {
+
+    public static void main(String[] args) {
+        SessionsApi apiInstance = new SessionsApi();
+        try {
+            inline_response_201 result = apiInstance.sessionsCurrentGet();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling SessionsApi#sessionsCurrentGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Sessions-sessionsCurrentGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Sessions-sessionsCurrentGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+// Configure API key authorization: (authentication scheme: cookieAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"PHPSESSID"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"PHPSESSID"];
+
+SessionsApi *apiInstance = [[SessionsApi alloc] init];
+
+// Get current user's persistent session
+[apiInstance sessionsCurrentGetWithCompletionHandler: 
+              ^(inline_response_201 output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Sessions-sessionsCurrentGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var CollectmeV2 = require('collectme_v2');
+var defaultClient = CollectmeV2.ApiClient.instance;
+
+// Configure API key authorization: cookieAuth
+var cookieAuth = defaultClient.authentications['cookieAuth'];
+cookieAuth.apiKey = "YOUR API KEY"
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//cookieAuth.apiKeyPrefix['PHPSESSID'] = "Token"
+
+var api = new CollectmeV2.SessionsApi()
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.sessionsCurrentGet(callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Sessions-sessionsCurrentGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Sessions-sessionsCurrentGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class sessionsCurrentGetExample
+    {
+        public void main()
+        {
+
+            // Configure API key authorization: cookieAuth
+            Configuration.Default.ApiKey.Add("PHPSESSID", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("PHPSESSID", "Bearer");
+
+            var apiInstance = new SessionsApi();
+
+            try
+            {
+                // Get current user's persistent session
+                inline_response_201 result = apiInstance.sessionsCurrentGet();
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling SessionsApi.sessionsCurrentGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Sessions-sessionsCurrentGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: cookieAuth
+Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('PHPSESSID', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('PHPSESSID', 'Bearer');
+
+$api_instance = new Swagger\Client\ApiSessionsApi();
+
+try {
+    $result = $api_instance->sessionsCurrentGet();
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling SessionsApi->sessionsCurrentGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Sessions-sessionsCurrentGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::SessionsApi;
+
+# Configure API key authorization: cookieAuth
+$WWW::SwaggerClient::Configuration::api_key->{'PHPSESSID'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::SwaggerClient::Configuration::api_key_prefix->{'PHPSESSID'} = "Bearer";
+
+my $api_instance = WWW::SwaggerClient::SessionsApi->new();
+
+eval { 
+    my $result = $api_instance->sessionsCurrentGet();
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling SessionsApi->sessionsCurrentGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Sessions-sessionsCurrentGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: cookieAuth
+swagger_client.configuration.api_key['PHPSESSID'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# swagger_client.configuration.api_key_prefix['PHPSESSID'] = 'Bearer'
+
+# create an instance of the API class
+api_instance = swagger_client.SessionsApi()
+
+try: 
+    # Get current user's persistent session
+    api_response = api_instance.sessions_current_get()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling SessionsApi->sessionsCurrentGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-sessionsCurrentGet-200-schema">Schema</a>
+                                </li>
+
+                                <li class="">
+                                  <a data-toggle="tab" href="#responses-sessionsCurrentGet-200-headers">Headers</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-sessionsCurrentGet-200-schema">
+                                  <div id='responses-sessionsCurrentGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "headers" : {
+    "Set-Cookie" : {
+      "description" : "PHPSESSID",
+      "style" : "simple",
+      "explode" : false,
+      "schema" : {
+        "type" : "string"
+      }
+    }
+  },
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/inline_response_201"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-sessionsCurrentGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-sessionsCurrentGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-sessionsCurrentGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                                <div class="tab-pane" id="responses-sessionsCurrentGet-200-headers">
+                                    <table>
+                                        <tr>
+                                            <th width="150px">Name</th>
+                                            <th width="100px">Type</th>
+                                            <th width="100px">Format</th>
+                                            <th>Description</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Set-Cookie</td>
+                                            <td>String</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <h3> Status: 401 - The permanent session was not yet activated. Keep polling. </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-sessionsCurrentGet-401-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-sessionsCurrentGet-401-schema">
+                                  <div id='responses-sessionsCurrentGet-401-schema-401' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "The permanent session was not yet activated. Keep polling.",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Unauthorized"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-sessionsCurrentGet-401-schema-data').val(stringify(schema));
+                                        var result = $('#responses-sessionsCurrentGet-401-schema-401');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-sessionsCurrentGet-401-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 404 - The permanent session was closed or not found. Please log in again. </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-sessionsCurrentGet-404-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-sessionsCurrentGet-404-schema">
+                                  <div id='responses-sessionsCurrentGet-404-schema-404' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "The permanent session was closed or not found. Please log in again.",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/NotFound"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-sessionsCurrentGet-404-schema-data').val(stringify(schema));
+                                        var result = $('#responses-sessionsCurrentGet-404-schema-404');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-sessionsCurrentGet-404-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Sessions-sessionsUuidActivateGet">
+                      <article id="api-Sessions-sessionsUuidActivateGet-0" data-group="User" data-name="sessionsUuidActivateGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>sessionsUuidActivateGet</h1>
+                          <p>Activate persistent session</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Activate a persistent session object in the database. 
+
+Uses a get request so we can generate a link that is distributable by email.
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/sessions/{uuid}/activate</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Sessions-sessionsUuidActivateGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsUuidActivateGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsUuidActivateGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Sessions-sessionsUuidActivateGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Sessions-sessionsUuidActivateGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsUuidActivateGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Sessions-sessionsUuidActivateGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Sessions-sessionsUuidActivateGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsUuidActivateGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsUuidActivateGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Sessions-sessionsUuidActivateGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Sessions-sessionsUuidActivateGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:8040//sessions/{uuid}/activate?token="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Sessions-sessionsUuidActivateGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.SessionsApi;
+
+import java.io.File;
+import java.util.*;
+
+public class SessionsApiExample {
+
+    public static void main(String[] args) {
+        
+        SessionsApi apiInstance = new SessionsApi();
+        UUID uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | Uuid of the previous element in the path
+        String token = token_example; // String | The `activation_secret` of the persistent session
+        try {
+            apiInstance.sessionsUuidActivateGet(uuid, token);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling SessionsApi#sessionsUuidActivateGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Sessions-sessionsUuidActivateGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.SessionsApi;
+
+public class SessionsApiExample {
+
+    public static void main(String[] args) {
+        SessionsApi apiInstance = new SessionsApi();
+        UUID uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | Uuid of the previous element in the path
+        String token = token_example; // String | The `activation_secret` of the persistent session
+        try {
+            apiInstance.sessionsUuidActivateGet(uuid, token);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling SessionsApi#sessionsUuidActivateGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Sessions-sessionsUuidActivateGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Sessions-sessionsUuidActivateGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">UUID *uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // Uuid of the previous element in the path
+String *token = token_example; // The `activation_secret` of the persistent session
+
+SessionsApi *apiInstance = [[SessionsApi alloc] init];
+
+// Activate persistent session
+[apiInstance sessionsUuidActivateGetWith:uuid
+    token:token
+              completionHandler: ^(NSError* error) {
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Sessions-sessionsUuidActivateGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var CollectmeV2 = require('collectme_v2');
+
+var api = new CollectmeV2.SessionsApi()
+var uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // {{UUID}} Uuid of the previous element in the path
+var token = token_example; // {{String}} The `activation_secret` of the persistent session
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.sessionsUuidActivateGet(uuid, token, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Sessions-sessionsUuidActivateGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Sessions-sessionsUuidActivateGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class sessionsUuidActivateGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new SessionsApi();
+            var uuid = new UUID(); // UUID | Uuid of the previous element in the path
+            var token = token_example;  // String | The `activation_secret` of the persistent session
+
+            try
+            {
+                // Activate persistent session
+                apiInstance.sessionsUuidActivateGet(uuid, token);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling SessionsApi.sessionsUuidActivateGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Sessions-sessionsUuidActivateGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiSessionsApi();
+$uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | Uuid of the previous element in the path
+$token = token_example; // String | The `activation_secret` of the persistent session
+
+try {
+    $api_instance->sessionsUuidActivateGet($uuid, $token);
+} catch (Exception $e) {
+    echo 'Exception when calling SessionsApi->sessionsUuidActivateGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Sessions-sessionsUuidActivateGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::SessionsApi;
+
+my $api_instance = WWW::SwaggerClient::SessionsApi->new();
+my $uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; # UUID | Uuid of the previous element in the path
+my $token = token_example; # String | The `activation_secret` of the persistent session
+
+eval { 
+    $api_instance->sessionsUuidActivateGet(uuid => $uuid, token => $token);
+};
+if ($@) {
+    warn "Exception when calling SessionsApi->sessionsUuidActivateGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Sessions-sessionsUuidActivateGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.SessionsApi()
+uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d # UUID | Uuid of the previous element in the path
+token = token_example # String | The `activation_secret` of the persistent session
+
+try: 
+    # Activate persistent session
+    api_instance.sessions_uuid_activate_get(uuid, token)
+except ApiException as e:
+    print("Exception when calling SessionsApi->sessionsUuidActivateGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">uuid*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_sessionsUuidActivateGet_uuid">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      UUID
+                                                  </span>
+                                                      <span class="format">
+                                                          (uuid)
+                                                      </span>
+                                  
+                                                      <div class="inner description">
+                                                          Uuid of the previous element in the path
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">token*</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_sessionsUuidActivateGet_token">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                                    <div class="inner description">
+                                                        The &#x60;activation_secret&#x60; of the persistent session
+                                                    </div>
+                                            </div>
+                                                <div class="inner required">
+                                                    Required
+                                                </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 204 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                            <h3> Status: 404 - Activation failed </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-sessionsUuidActivateGet-404-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-sessionsUuidActivateGet-404-schema">
+                                  <div id='responses-sessionsUuidActivateGet-404-schema-404' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Activation failed",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/InvalidToken"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-sessionsUuidActivateGet-404-schema-data').val(stringify(schema));
+                                        var result = $('#responses-sessionsUuidActivateGet-404-schema-404');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-sessionsUuidActivateGet-404-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-Sessions-sessionsUuidDelete">
                       <article id="api-Sessions-sessionsUuidDelete-0" data-group="User" data-name="sessionsUuidDelete" data-version="0">
                         <div class="pull-left">
@@ -2772,7 +4244,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X DELETE\
 \
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/cyrillbolliger/collectme_v2/1.0.0/sessions/{uuid}?"</code></pre>
+"http://localhost:8040//sessions/{uuid}?"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Sessions-sessionsUuidDelete-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -3107,345 +4579,6 @@ except ApiException as e:
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Sessions-sessionsUuidGet">
-                      <article id="api-Sessions-sessionsUuidGet-0" data-group="User" data-name="sessionsUuidGet" data-version="0">
-                        <div class="pull-left">
-                          <h1>sessionsUuidGet</h1>
-                          <p>Activate persistent session</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Activate a persistent session object in the database. 
-
-Uses a get request so we can generate a link that is distributable by email.
-</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/sessions/{uuid}</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Sessions-sessionsUuidGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Sessions-sessionsUuidGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Sessions-sessionsUuidGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Sessions-sessionsUuidGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Sessions-sessionsUuidGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Sessions-sessionsUuidGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Sessions-sessionsUuidGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Sessions-sessionsUuidGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Sessions-sessionsUuidGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Sessions-sessionsUuidGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Sessions-sessionsUuidGet-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Sessions-sessionsUuidGet-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/cyrillbolliger/collectme_v2/1.0.0/sessions/{uuid}?token="</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Sessions-sessionsUuidGet-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.SessionsApi;
-
-import java.io.File;
-import java.util.*;
-
-public class SessionsApiExample {
-
-    public static void main(String[] args) {
-        
-        SessionsApi apiInstance = new SessionsApi();
-        UUID uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | Uuid of the previous element in the path
-        String token = token_example; // String | The `activation_secret` of the persistent session
-        try {
-            apiInstance.sessionsUuidGet(uuid, token);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SessionsApi#sessionsUuidGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Sessions-sessionsUuidGet-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.SessionsApi;
-
-public class SessionsApiExample {
-
-    public static void main(String[] args) {
-        SessionsApi apiInstance = new SessionsApi();
-        UUID uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | Uuid of the previous element in the path
-        String token = token_example; // String | The `activation_secret` of the persistent session
-        try {
-            apiInstance.sessionsUuidGet(uuid, token);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SessionsApi#sessionsUuidGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Sessions-sessionsUuidGet-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Sessions-sessionsUuidGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">UUID *uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // Uuid of the previous element in the path
-String *token = token_example; // The `activation_secret` of the persistent session
-
-SessionsApi *apiInstance = [[SessionsApi alloc] init];
-
-// Activate persistent session
-[apiInstance sessionsUuidGetWith:uuid
-    token:token
-              completionHandler: ^(NSError* error) {
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Sessions-sessionsUuidGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var CollectmeV2 = require('collectme_v2');
-
-var api = new CollectmeV2.SessionsApi()
-var uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // {{UUID}} Uuid of the previous element in the path
-var token = token_example; // {{String}} The `activation_secret` of the persistent session
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully.');
-  }
-};
-api.sessionsUuidGet(uuid, token, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Sessions-sessionsUuidGet-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Sessions-sessionsUuidGet-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class sessionsUuidGetExample
-    {
-        public void main()
-        {
-
-            var apiInstance = new SessionsApi();
-            var uuid = new UUID(); // UUID | Uuid of the previous element in the path
-            var token = token_example;  // String | The `activation_secret` of the persistent session
-
-            try
-            {
-                // Activate persistent session
-                apiInstance.sessionsUuidGet(uuid, token);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling SessionsApi.sessionsUuidGet: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Sessions-sessionsUuidGet-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$api_instance = new Swagger\Client\ApiSessionsApi();
-$uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | Uuid of the previous element in the path
-$token = token_example; // String | The `activation_secret` of the persistent session
-
-try {
-    $api_instance->sessionsUuidGet($uuid, $token);
-} catch (Exception $e) {
-    echo 'Exception when calling SessionsApi->sessionsUuidGet: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Sessions-sessionsUuidGet-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::SessionsApi;
-
-my $api_instance = WWW::SwaggerClient::SessionsApi->new();
-my $uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d; # UUID | Uuid of the previous element in the path
-my $token = token_example; # String | The `activation_secret` of the persistent session
-
-eval { 
-    $api_instance->sessionsUuidGet(uuid => $uuid, token => $token);
-};
-if ($@) {
-    warn "Exception when calling SessionsApi->sessionsUuidGet: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Sessions-sessionsUuidGet-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = swagger_client.SessionsApi()
-uuid = 38400000-8cf0-11bd-b23e-10b96e4ef00d # UUID | Uuid of the previous element in the path
-token = token_example # String | The `activation_secret` of the persistent session
-
-try: 
-    # Activate persistent session
-    api_instance.sessions_uuid_get(uuid, token)
-except ApiException as e:
-    print("Exception when calling SessionsApi->sessionsUuidGet: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">uuid*</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_sessionsUuidGet_uuid">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      UUID
-                                                  </span>
-                                                      <span class="format">
-                                                          (uuid)
-                                                      </span>
-                                  
-                                                      <div class="inner description">
-                                                          Uuid of the previous element in the path
-                                                      </div>
-                                              </div>
-                                                  <div class="inner required">
-                                                      Required
-                                                  </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                            </table>
-
-
-
-
-                            <div class="methodsubtabletitle">Query parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">token*</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_sessionsUuidGet_token">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    String
-                                                </span>
-                                
-                                                    <div class="inner description">
-                                                        The &#x60;activation_secret&#x60; of the persistent session
-                                                    </div>
-                                            </div>
-                                                <div class="inner required">
-                                                    Required
-                                                </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                            </table>
-
-                          <h2>Responses</h2>
-                            <h3> Status: 204 - OK </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                            </div>
-
-                            <h3> Status: 404 - Activation failed </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-sessionsUuidGet-404-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-sessionsUuidGet-404-schema">
-                                  <div id='responses-sessionsUuidGet-404-schema-404' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "Activation failed",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/InvalidToken"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-sessionsUuidGet-404-schema-data').val(stringify(schema));
-                                        var result = $('#responses-sessionsUuidGet-404-schema-404');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-sessionsUuidGet-404-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
                   </section>
                 <section id="api-Signatures">
                   <h1>Signatures</h1>
@@ -3485,7 +4618,7 @@ except ApiException as e:
 \
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"https://virtserver.swaggerhub.com/cyrillbolliger/collectme_v2/1.0.0/signatures?"</code></pre>
+"http://localhost:8040//signatures?"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Signatures-signaturesPost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -3510,7 +4643,7 @@ public class SignaturesApiExample {
         SignaturesApi apiInstance = new SignaturesApi();
         Signatures_body body = ; // Signatures_body | 
         try {
-            inline_response_201 result = apiInstance.signaturesPost(body);
+            signatures_body result = apiInstance.signaturesPost(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SignaturesApi#signaturesPost");
@@ -3529,7 +4662,7 @@ public class SignaturesApiExample {
         SignaturesApi apiInstance = new SignaturesApi();
         Signatures_body body = ; // Signatures_body | 
         try {
-            inline_response_201 result = apiInstance.signaturesPost(body);
+            signatures_body result = apiInstance.signaturesPost(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling SignaturesApi#signaturesPost");
@@ -3554,7 +4687,7 @@ SignaturesApi *apiInstance = [[SignaturesApi alloc] init];
 
 // Add signature entry
 [apiInstance signaturesPostWith:body
-              completionHandler: ^(inline_response_201 output, NSError* error) {
+              completionHandler: ^(signatures_body output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -3617,7 +4750,7 @@ namespace Example
             try
             {
                 // Add signature entry
-                inline_response_201 result = apiInstance.signaturesPost(body);
+                signatures_body result = apiInstance.signaturesPost(body);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -3788,7 +4921,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_response_201"
+        "$ref" : "#/components/schemas/signatures_body"
       }
     }
   }
@@ -3919,7 +5052,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X DELETE\
 \
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/cyrillbolliger/collectme_v2/1.0.0/signatures/{uuid}?"</code></pre>
+"http://localhost:8040//signatures/{uuid}?"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Signatures-signaturesUuidDelete-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -4268,7 +5401,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 \
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/cyrillbolliger/collectme_v2/1.0.0/users/current?"</code></pre>
+"http://localhost:8040//users/current?"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Users-usersCurrentGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -4624,7 +5757,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"https://virtserver.swaggerhub.com/cyrillbolliger/collectme_v2/1.0.0/users/form-auth"</code></pre>
+"http://localhost:8040//users/form-auth"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Users-usersFormAuthPost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -4642,7 +5775,7 @@ public class UsersApiExample {
         UsersApi apiInstance = new UsersApi();
         Users_formauth_body body = ; // Users_formauth_body | 
         try {
-            Session result = apiInstance.usersFormAuthPost(body);
+            inline_response_201 result = apiInstance.usersFormAuthPost(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UsersApi#usersFormAuthPost");
@@ -4661,7 +5794,7 @@ public class UsersApiExample {
         UsersApi apiInstance = new UsersApi();
         Users_formauth_body body = ; // Users_formauth_body | 
         try {
-            Session result = apiInstance.usersFormAuthPost(body);
+            inline_response_201 result = apiInstance.usersFormAuthPost(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UsersApi#usersFormAuthPost");
@@ -4681,7 +5814,7 @@ UsersApi *apiInstance = [[UsersApi alloc] init];
 
 // Authenticate user by email
 [apiInstance usersFormAuthPostWith:body
-              completionHandler: ^(Session output, NSError* error) {
+              completionHandler: ^(inline_response_201 output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -4732,7 +5865,7 @@ namespace Example
             try
             {
                 // Authenticate user by email
-                Session result = apiInstance.usersFormAuthPost(body);
+                inline_response_201 result = apiInstance.usersFormAuthPost(body);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -4878,7 +6011,7 @@ except ApiException as e:
       }
     },
     "Set-Cookie" : {
-      "description" : "WP_COLLECTME_AUTH='{enc_sessions_uuid}'; Secure; HttpOnly; SameSite=Strict; Expires=Tue, 01 Jan 2030 00:00:00 GMT\n",
+      "description" : "WP_COLLECTME_AUTH='{sessionUuid sessionSecret}'; Secure; HttpOnly; SameSite=Strict; Expires=Tue, 01 Jan 2030 00:00:00 GMT\n",
       "style" : "simple",
       "explode" : false,
       "schema" : {
@@ -4889,7 +6022,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/Session"
+        "$ref" : "#/components/schemas/inline_response_201"
       }
     }
   }
@@ -5028,7 +6161,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-Users-usersLinkAuthGet-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/cyrillbolliger/collectme_v2/1.0.0/users/link-auth?token="</code></pre>
+"http://localhost:8040//users/link-auth?token=&email=&cause="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Users-usersLinkAuthGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -5044,9 +6177,11 @@ public class UsersApiExample {
     public static void main(String[] args) {
         
         UsersApi apiInstance = new UsersApi();
-        String token = token_example; // String | The `login_token`
+        String token = token_example; // String | The `token`
+        String email = email_example; // String | 
+        UUID cause = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | 
         try {
-            Session result = apiInstance.usersLinkAuthGet(token);
+            inline_response_201 result = apiInstance.usersLinkAuthGet(token, email, cause);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UsersApi#usersLinkAuthGet");
@@ -5063,9 +6198,11 @@ public class UsersApiExample {
 
     public static void main(String[] args) {
         UsersApi apiInstance = new UsersApi();
-        String token = token_example; // String | The `login_token`
+        String token = token_example; // String | The `token`
+        String email = email_example; // String | 
+        UUID cause = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | 
         try {
-            Session result = apiInstance.usersLinkAuthGet(token);
+            inline_response_201 result = apiInstance.usersLinkAuthGet(token, email, cause);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UsersApi#usersLinkAuthGet");
@@ -5079,13 +6216,17 @@ public class UsersApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Users-usersLinkAuthGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *token = token_example; // The `login_token`
+                              <pre class="prettyprint"><code class="language-cpp">String *token = token_example; // The `token`
+String *email = email_example; // 
+UUID *cause = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // 
 
 UsersApi *apiInstance = [[UsersApi alloc] init];
 
 // Authenticate user by secret link
 [apiInstance usersLinkAuthGetWith:token
-              completionHandler: ^(Session output, NSError* error) {
+    email:email
+    cause:cause
+              completionHandler: ^(inline_response_201 output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -5100,7 +6241,9 @@ UsersApi *apiInstance = [[UsersApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var CollectmeV2 = require('collectme_v2');
 
 var api = new CollectmeV2.UsersApi()
-var token = token_example; // {{String}} The `login_token`
+var token = token_example; // {{String}} The `token`
+var email = email_example; // {{String}} 
+var cause = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // {{UUID}} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -5109,7 +6252,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.usersLinkAuthGet(token, callback);
+api.usersLinkAuthGet(token, email, cause, callback);
 </code></pre>
                             </div>
 
@@ -5131,12 +6274,14 @@ namespace Example
         {
 
             var apiInstance = new UsersApi();
-            var token = token_example;  // String | The `login_token`
+            var token = token_example;  // String | The `token`
+            var email = email_example;  // String | 
+            var cause = new UUID(); // UUID | 
 
             try
             {
                 // Authenticate user by secret link
-                Session result = apiInstance.usersLinkAuthGet(token);
+                inline_response_201 result = apiInstance.usersLinkAuthGet(token, email, cause);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -5154,10 +6299,12 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiUsersApi();
-$token = token_example; // String | The `login_token`
+$token = token_example; // String | The `token`
+$email = email_example; // String | 
+$cause = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // UUID | 
 
 try {
-    $result = $api_instance->usersLinkAuthGet($token);
+    $result = $api_instance->usersLinkAuthGet($token, $email, $cause);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling UsersApi->usersLinkAuthGet: ', $e->getMessage(), PHP_EOL;
@@ -5171,10 +6318,12 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::UsersApi;
 
 my $api_instance = WWW::SwaggerClient::UsersApi->new();
-my $token = token_example; # String | The `login_token`
+my $token = token_example; # String | The `token`
+my $email = email_example; # String | 
+my $cause = 38400000-8cf0-11bd-b23e-10b96e4ef00d; # UUID | 
 
 eval { 
-    my $result = $api_instance->usersLinkAuthGet(token => $token);
+    my $result = $api_instance->usersLinkAuthGet(token => $token, email => $email, cause => $cause);
     print Dumper($result);
 };
 if ($@) {
@@ -5191,11 +6340,13 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.UsersApi()
-token = token_example # String | The `login_token`
+token = token_example # String | The `token`
+email = email_example # String | 
+cause = 38400000-8cf0-11bd-b23e-10b96e4ef00d # UUID | 
 
 try: 
     # Authenticate user by secret link
-    api_response = api_instance.users_link_auth_get(token)
+    api_response = api_instance.users_link_auth_get(token, email, cause)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling UsersApi->usersLinkAuthGet: %s\n" % e)</code></pre>
@@ -5226,8 +6377,52 @@ except ApiException as e:
                                                 </span>
                                 
                                                     <div class="inner description">
-                                                        The &#x60;login_token&#x60;
+                                                        The &#x60;token&#x60;
                                                     </div>
+                                            </div>
+                                                <div class="inner required">
+                                                    Required
+                                                </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">email*</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_usersLinkAuthGet_email">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                                    <span class="format">
+                                                        (email)
+                                                    </span>
+                                
+                                            </div>
+                                                <div class="inner required">
+                                                    Required
+                                                </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">cause*</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_usersLinkAuthGet_cause">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    UUID
+                                                </span>
+                                                    <span class="format">
+                                                        (uuid)
+                                                    </span>
+                                
                                             </div>
                                                 <div class="inner required">
                                                     Required
@@ -5260,7 +6455,7 @@ except ApiException as e:
   "description" : "OK",
   "headers" : {
     "Set-Cookie" : {
-      "description" : "WP_COLLECTME_AUTH='{enc_sessions_uuid}'; Secure; HttpOnly; SameSite=Strict; Expires=Tue, 01 Jan 2030 00:00:00 GMT\n",
+      "description" : "WP_COLLECTME_AUTH='{sessionUuid sessionSecret}'; Secure; HttpOnly; SameSite=Strict; Expires=Tue, 01 Jan 2030 00:00:00 GMT\n",
       "style" : "simple",
       "explode" : false,
       "schema" : {
@@ -5271,7 +6466,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/Session"
+        "$ref" : "#/components/schemas/inline_response_201"
       }
     }
   }
@@ -5361,399 +6556,6 @@ except ApiException as e:
                                     </script>
                                   </div>
                                   <input id='responses-usersLinkAuthGet-404-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-Users-usersSessionGet">
-                      <article id="api-Users-usersSessionGet-0" data-group="User" data-name="usersSessionGet" data-version="0">
-                        <div class="pull-left">
-                          <h1>usersSessionGet</h1>
-                          <p>Login user with existing authentication cookie</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Get a PHP session from the &#x60;WP_COLLECTME_AUTH&#x60; cookie, which references to a persistent session.
-</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/users/session</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Users-usersSessionGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Users-usersSessionGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Users-usersSessionGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Users-usersSessionGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Users-usersSessionGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Users-usersSessionGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Users-usersSessionGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Users-usersSessionGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Users-usersSessionGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Users-usersSessionGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Users-usersSessionGet-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Users-usersSessionGet-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/cyrillbolliger/collectme_v2/1.0.0/users/session"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Users-usersSessionGet-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.UsersApi;
-
-import java.io.File;
-import java.util.*;
-
-public class UsersApiExample {
-
-    public static void main(String[] args) {
-        
-        UsersApi apiInstance = new UsersApi();
-        String wPCOLLECTMEAUTH = wPCOLLECTMEAUTH_example; // String | The encrypted uuid of the persistent session
-        try {
-            inline_response_200 result = apiInstance.usersSessionGet(wPCOLLECTMEAUTH);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling UsersApi#usersSessionGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Users-usersSessionGet-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.UsersApi;
-
-public class UsersApiExample {
-
-    public static void main(String[] args) {
-        UsersApi apiInstance = new UsersApi();
-        String wPCOLLECTMEAUTH = wPCOLLECTMEAUTH_example; // String | The encrypted uuid of the persistent session
-        try {
-            inline_response_200 result = apiInstance.usersSessionGet(wPCOLLECTMEAUTH);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling UsersApi#usersSessionGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Users-usersSessionGet-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Users-usersSessionGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *wPCOLLECTMEAUTH = wPCOLLECTMEAUTH_example; // The encrypted uuid of the persistent session
-
-UsersApi *apiInstance = [[UsersApi alloc] init];
-
-// Login user with existing authentication cookie
-[apiInstance usersSessionGetWith:wPCOLLECTMEAUTH
-              completionHandler: ^(inline_response_200 output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Users-usersSessionGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var CollectmeV2 = require('collectme_v2');
-
-var api = new CollectmeV2.UsersApi()
-var wPCOLLECTMEAUTH = wPCOLLECTMEAUTH_example; // {{String}} The encrypted uuid of the persistent session
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.usersSessionGet(wPCOLLECTMEAUTH, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Users-usersSessionGet-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Users-usersSessionGet-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class usersSessionGetExample
-    {
-        public void main()
-        {
-
-            var apiInstance = new UsersApi();
-            var wPCOLLECTMEAUTH = wPCOLLECTMEAUTH_example;  // String | The encrypted uuid of the persistent session
-
-            try
-            {
-                // Login user with existing authentication cookie
-                inline_response_200 result = apiInstance.usersSessionGet(wPCOLLECTMEAUTH);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling UsersApi.usersSessionGet: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Users-usersSessionGet-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$api_instance = new Swagger\Client\ApiUsersApi();
-$wPCOLLECTMEAUTH = wPCOLLECTMEAUTH_example; // String | The encrypted uuid of the persistent session
-
-try {
-    $result = $api_instance->usersSessionGet($wPCOLLECTMEAUTH);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling UsersApi->usersSessionGet: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Users-usersSessionGet-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::UsersApi;
-
-my $api_instance = WWW::SwaggerClient::UsersApi->new();
-my $wPCOLLECTMEAUTH = wPCOLLECTMEAUTH_example; # String | The encrypted uuid of the persistent session
-
-eval { 
-    my $result = $api_instance->usersSessionGet(wPCOLLECTMEAUTH => $wPCOLLECTMEAUTH);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling UsersApi->usersSessionGet: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Users-usersSessionGet-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = swagger_client.UsersApi()
-wPCOLLECTMEAUTH = wPCOLLECTMEAUTH_example # String | The encrypted uuid of the persistent session
-
-try: 
-    # Login user with existing authentication cookie
-    api_response = api_instance.users_session_get(wPCOLLECTMEAUTH)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UsersApi->usersSessionGet: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-
-
-
-
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - OK </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-usersSessionGet-200-schema">Schema</a>
-                                </li>
-
-                                <li class="">
-                                  <a data-toggle="tab" href="#responses-usersSessionGet-200-headers">Headers</a>
-                                </li>
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-usersSessionGet-200-schema">
-                                  <div id='responses-usersSessionGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "OK",
-  "headers" : {
-    "Set-Cookie" : {
-      "description" : "PHPSESSID",
-      "style" : "simple",
-      "explode" : false,
-      "schema" : {
-        "type" : "string"
-      }
-    }
-  },
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/inline_response_200"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-usersSessionGet-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-usersSessionGet-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-usersSessionGet-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                                <div class="tab-pane" id="responses-usersSessionGet-200-headers">
-                                    <table>
-                                        <tr>
-                                            <th width="150px">Name</th>
-                                            <th width="100px">Type</th>
-                                            <th width="100px">Format</th>
-                                            <th>Description</th>
-                                        </tr>
-                                        <tr>
-                                            <td>Set-Cookie</td>
-                                            <td>String</td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <h3> Status: 401 - The permanent session was not yet activated. Keep polling. </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-usersSessionGet-401-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-usersSessionGet-401-schema">
-                                  <div id='responses-usersSessionGet-401-schema-401' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "The permanent session was not yet activated. Keep polling.",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/Unauthorized"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-usersSessionGet-401-schema-data').val(stringify(schema));
-                                        var result = $('#responses-usersSessionGet-401-schema-401');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-usersSessionGet-401-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                            <h3> Status: 404 - The permanent session was closed or not found. Please log in again. </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-usersSessionGet-404-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-usersSessionGet-404-schema">
-                                  <div id='responses-usersSessionGet-404-schema-404' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "The permanent session was closed or not found. Please log in again.",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/NotFound"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-usersSessionGet-404-schema-data').val(stringify(schema));
-                                        var result = $('#responses-usersSessionGet-404-schema-404');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-usersSessionGet-404-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
