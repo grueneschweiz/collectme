@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
 import api from '@/utility/api';
-import type {AxiosError, AxiosResponse} from "axios";
+import type {AxiosResponse} from "axios";
 import type {Activity, Group, PaginationLinks} from "@/models/generated";
 import {useGroupStore} from "@/stores/GroupStore";
 
@@ -17,7 +17,7 @@ interface ActivityResponseSuccess extends AxiosResponse {
 interface ActivityStoreState {
     activities: Activity[];
     isLoading: boolean;
-    error: AxiosError | null;
+    error: any | null;
     next: string | null;
     first: string | null;
 }
@@ -43,11 +43,14 @@ export const useActivityStore = defineStore('ActivityStore', {
     actions: {
         async fetchFirst() {
             this.isLoading = true;
+            this.error = null;
 
             try {
-                await api(true, true)
+                await api(false, true)
                     .get(endpointUrl, {params: {'filter[count]': 'gt(0)'}})
                     .then((resp: ActivityResponseSuccess) => addResponseData(resp))
+            } catch (error: any) {
+                this.error = error;
             } finally {
                 this.isLoading = false;
             }
@@ -59,11 +62,14 @@ export const useActivityStore = defineStore('ActivityStore', {
             }
 
             this.isLoading = true;
+            this.error = null;
 
             try {
-                await api(true, true)
+                await api(false, true)
                     .get(this.next)
                     .then((resp: ActivityResponseSuccess) => addResponseData(resp))
+            } catch (error: any) {
+                this.error = error;
             } finally {
                 this.isLoading = false;
             }

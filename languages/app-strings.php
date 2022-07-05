@@ -3,6 +3,13 @@
 declare(strict_types=1);
 
 return [
+    'General' => [
+        'Error' => [
+            'unspecificTitle' => __('Nooo... 🙈', 'collectme'),
+            'blameTheGoblins' => __('Some goblins blocked the data flow. Please try again.', 'collectme'),
+            'tryAgain' => __('Try again', 'collectme'),
+        ],
+    ],
     'HomeView' => [
         'MyContribution' => [
             'title' => __('My contribution to the cause', 'collectme'),
@@ -23,6 +30,16 @@ return [
             'lastNameInvalid' => __('Last name not valid.', 'collectme'),
             'signIn' => __('Sign in', 'collectme'),
             'submitByline' => __("You'll receive an e-mail with a link that signs you in.", 'collectme'),
-        ]
+        ],
+        'ActivityFeed' => [
+            'title' => __('Activity Feed', 'collectme'),
+            'noActivity' => __('No activity yet.', 'collectme'),
+            'pledge' => __('{firstName} promised {count} signatures.', 'collectme'),
+            'personalSignature' => __('{firstName} collected {count} signatures.', 'collectme'),
+            'organizationSignature' => __('{count} signatures were entered for {organization}.', 'collectme'),
+            'personalGoalAchieved' => __('{firstName} just achieved its goal of {count} signatures.', 'collectme'),
+            'personalGoalRaised' => __('{firstName} is going to collect {count} signatures.', 'collectme'),
+            'loadMore' => __('Load more', 'collectme'),
+        ],
     ],
 ];
