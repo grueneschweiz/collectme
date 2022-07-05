@@ -59,9 +59,8 @@ class ActivityLogControllerTest extends TestCase
 
         $request = new \WP_REST_Request();
         $request->set_param('uuid', $cause->uuid);
-        $request->set_param('page[cursor]', $log->uuid);
-        $request->set_param('page[points]', 'last');
-        $request->set_param('filter[count]', 'gt(0)');
+        $request->set_param('page', ['cursor' => $log->uuid, 'points' => 'last']);
+        $request->set_param('filter', ['count' => 'gt(0)']);
 
         $controller = new ActivityLogController($authMock);
         $response = $controller->index($request);
@@ -193,8 +192,8 @@ class ActivityLogControllerTest extends TestCase
 
         $request = new \WP_REST_Request();
         $request->set_param('uuid', $cause->uuid);
-        $request->set_param('page[cursor]', wp_generate_uuid4());
-        $request->set_param('filter[count]', 'gt(0)');
+        $request->set_param('page', ['cursor' => wp_generate_uuid4()]);
+        $request->set_param('filter', ['count' => 'gt(0)']);
 
         $controller = new ActivityLogController($authMock);
         $response = $controller->index($request);
@@ -242,8 +241,8 @@ class ActivityLogControllerTest extends TestCase
 
         $request = new \WP_REST_Request();
         $request->set_param('uuid', wp_generate_uuid4());
-        $request->set_param('page[cursor]', wp_generate_uuid4());
-        $request->set_param('filter[count]', 'gt(0)');
+        $request->set_param('page', ['cursor' => wp_generate_uuid4()]);
+        $request->set_param('filter', ['count' => 'gt(0)']);
 
         $controller = new ActivityLogController($authMock);
         $response = $controller->index($request);
@@ -291,7 +290,7 @@ class ActivityLogControllerTest extends TestCase
 
         $request = new \WP_REST_Request();
         $request->set_param('uuid', $cause->uuid);
-        $request->set_param('filter[count]', 'gt(10)');
+        $request->set_param('filter', ['count' => 'gt(10)']);
 
         $controller = new ActivityLogController($authMock);
         $response = $controller->index($request);

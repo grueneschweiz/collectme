@@ -47,13 +47,13 @@ class ActivityLogController extends WP_REST_Controller
 
         $paginatior = new Paginator();
         $paginatior->order = EnumPaginationOrder::DESC;
-        if ($request->has_param('page[cursor]')) {
-            $paginatior->cursor = $request->get_param('page[cursor]');
+        if ($request->has_param('page') && isset($request->get_param('page')['cursor'])) {
+            $paginatior->cursor = $request->get_param('page')['cursor'];
             if (!UuidValidator::check($paginatior->cursor)) {
                 return $this->makeNotFoundResponse();
             }
             $paginatior->cursorPointsTo = EnumPaginationCursorPointsTo::tryFrom(
-                $request->get_param('page[points]') ?? 'last'
+                $request->get_param('page')['points'] ?? 'last'
             );
             if ($paginatior->cursorPointsTo === null) {
                 return $this->makeValidationErrorResponse([], ['page[points]']);
@@ -61,8 +61,8 @@ class ActivityLogController extends WP_REST_Controller
         }
 
         $filter = new Filter('count', null);
-        if ($request->has_param('filter[count]')) {
-            $filterArg = $request->get_param('filter[count]');
+        if ($request->has_param('filter') && isset($request->get_param('filter')['count'])) {
+            $filterArg = $request->get_param('filter')['count'];
             $filterArg = preg_replace('/\s/', '', $filterArg);
             if (false === preg_match('/gt\((\d+)\)/', $filterArg, $matches)) {
                 return $this->makeValidationErrorResponse([], ['filter[count]']);
