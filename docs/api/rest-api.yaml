@@ -1149,7 +1149,7 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /causes/{uuid}/groups:
+  /causes/{uuid}/group:
     parameters:
       - $ref: '#/components/parameters/uuid'
 

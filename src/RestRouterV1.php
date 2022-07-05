@@ -112,7 +112,7 @@ class RestRouterV1
     {
         register_rest_route(
             REST_V1_NAMESPACE,
-            '/causes/(?P<uuid>[a-zA-Z0-9-]{36})/groups',
+            '/causes/(?P<uuid>[a-zA-Z0-9-]{36})/group',
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->groupController, 'findByCause'],
