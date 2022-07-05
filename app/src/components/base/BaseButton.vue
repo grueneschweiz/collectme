@@ -8,6 +8,7 @@
         'collectme-base-button--muted-outline': muted,
         'collectme-base-button--full-width': fullWidth,
         'collectme-base-button--disabled': disabled,
+        ['collectme-base-button--size--'+size]: true
       }"
       :disabled="disabled"
       class="collectme-base-button"
@@ -17,6 +18,8 @@
 </template>
 
 <script setup lang="ts">
+
+import type {PropType} from "vue";
 
 defineProps({
   outline: {
@@ -39,7 +42,10 @@ defineProps({
     type: Boolean,
     default: false
   },
-
+  size: {
+    type: String as PropType<'sm'|'md'|'lg'>,
+    default: 'md'
+  }
 })
 
 </script>
@@ -122,9 +128,18 @@ defineProps({
   cursor: not-allowed;
 }
 
-
 .collectme-base-button--full-width {
   width: 100%;
+}
+
+/*noinspection CssUnusedSymbol*/
+.collectme-base-button--size--sm {
+  font-size: 0.75em;
+}
+
+/*noinspection CssUnusedSymbol*/
+.collectme-base-button--size--lg {
+  font-size: 1em;
 }
 
 </style>
