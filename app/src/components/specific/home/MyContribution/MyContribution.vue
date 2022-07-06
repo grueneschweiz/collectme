@@ -9,42 +9,7 @@
         v-if="userStore.me"
     >
       <div class="collectme-my-contribution__body">
-        <BaseStepElement status="completed" next="completed">
-          <template #title>
-            Erfolgreich Angemeldet
-          </template>
-          <template #default>
-            hallo Cyrill
-          </template>
-        </BaseStepElement>
-        <BaseStepElement status="completed" prev="completed" next="active">
-          <template #title>
-            Sammelziel gesetzt
-          </template>
-          <template #default>
-            hallo Cyrill
-          </template>
-        </BaseStepElement>
-        <BaseStepElement status="active" prev="completed" next="pending">
-          <template #title>
-            Unterschriften eingetragen
-          </template>
-          <template #default>
-            hallo Cyrill
-          </template>
-        </BaseStepElement>
-        <BaseStepElement status="pending" prev="active">
-          <template #title>
-            Sammelziel erreicht
-          </template>
-          <template #default>
-            hallo Cyrill
-          </template>
-        </BaseStepElement>
-
-        <div>
-          <p>{{ t('HomeView.MyContribution.body') }}</p>
-        </div>
+        <MyContributionSteps/>
       </div>
     </template>
 
@@ -60,7 +25,7 @@
         v-else
     >
       <p class="collectme-my-contribution__sign-in-msg">
-        {{ t('HomeView.MyContribution.body') }}
+        {{ t('HomeView.MyContribution.singInMsg') }}
       </p>
       <div class="collectme-my-contribution__login-button-wrapper">
         <BaseButton
@@ -68,7 +33,7 @@
             size="md"
             @click="$router.push('/login')"
         >
-          {{ t('HomeView.MyContribution.signIn') }}
+          {{ t('HomeView.MyContribution.signInBtn') }}
         </BaseButton>
         <span>{{t('HomeView.MyContribution.noPasswordRequired')}}</span>
       </div>
@@ -78,13 +43,15 @@
 
 <script setup lang="ts">
 import BaseCard from "@/components/base/BaseCard.vue";
-import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.vue";
 import t from "@/utility/i18n";
 import {useUserStore} from "@/stores/UserStore";
 import BaseLoader from "@/components/base/BaseLoader/BaseLoader.vue";
 import BaseButton from "@/components/base/BaseButton.vue"
+import MyContributionSteps from '@/components/specific/home/MyContribution/MyContributionSteps.vue'
 
 const userStore = useUserStore();
+userStore.fetch();
+
 </script>
 
 <style>
