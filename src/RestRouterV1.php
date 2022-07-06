@@ -32,6 +32,7 @@ class RestRouterV1
     public function init(): void
     {
         $this->registerUserRoutes();
+        $this->registerAuthRoutes();
         $this->registerSessionRoutes();
         $this->registerGroupRoutes();
         $this->registerSignatureRoutes();
@@ -43,19 +44,22 @@ class RestRouterV1
     {
         register_rest_route(
             REST_V1_NAMESPACE,
-            '/users/current',
+            '/user/current',
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->userController, 'getCurrent'],
                 'permission_callback' => [$this->auth, 'isAuthenticatedAndHasValidNonce'],
             ]
         );
+    }
 
-        // todo: /users/form-auth
+    private function registerAuthRoutes(): void
+    {
+        // todo: POST /auth
 
         register_rest_route(
             REST_V1_NAMESPACE,
-            '/users/link-auth',
+            '/auth/link-auth',
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->authController, 'loginWithToken'],

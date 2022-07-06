@@ -7,7 +7,7 @@ info:
     
     **Authentication**
     
-    Users may authenticate themselves using the `/users/form-auth` or `/users/link-auth` endpoints. Authentication works
+    Users may authenticate themselves using the `POST /auth` or `GET /auth` endpoints. Authentication works
     with the following two cookies: 
     
     - `WP_COLLECTME_AUTH`: Persistent login. Cookie contains the persistent session's `uuid` and a secret that 
@@ -36,6 +36,8 @@ servers:
 
 tags:
   - name: users
+  - name: auth
+    description: authentication
   - name: sessions
     description: persistent sessions
   - name: groups
@@ -929,7 +931,7 @@ components:
         format: uuid
 
 paths:
-  /users/current:
+  /user/current:
     get:
       tags:
         - users
@@ -951,11 +953,11 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /users/form-auth:
+  /auth:
     post:
       tags:
-        - users
-      summary: Authenticate user by email
+        - auth
+      summary: Post user data and receive an authentication link by email
       description: |
         - Create user if it doesn't exist.
         - Send the user an email with a login link.
@@ -996,33 +998,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/InvalidEmail'
 
-  /users/link-auth:
-    parameters:
-      - name: token
-        description: The `token`
-        in: query
-        schema:
-          type: string
-          minLength: 64
-          maxLength: 64
-        required: true
-      - name: email
-        in: query
-        schema:
-          type: string
-          format: email
-        required: true
-      - name: cause
-        in: query
-        schema:
-          type: string
-          format: uuid
-        required: true
-
     get:
+      parameters:
+        - name: token
+          description: The `token`
+          in: query
+          schema:
+            type: string
+            minLength: 64
+            maxLength: 64
+          required: true
+        - name: email
+          in: query
+          schema:
+            type: string
+            format: email
+          required: true
+        - name: cause
+          in: query
+          schema:
+            type: string
+            format: uuid
+          required: true
       tags:
-        - users
-      summary: Authenticate user by secret link
+        - auth
+      summary: Authenticate user by secret authentication link
       description: |
         - Check link secret.
         - Create user if it doesn't exist.
