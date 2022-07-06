@@ -13,7 +13,17 @@ return [
     'HomeView' => [
         'MyContribution' => [
             'title' => __('My contribution to the cause', 'collectme'),
-            'body' => __('Please sign-in to enter your personal signatures.', 'collectme')
+            'singInMsg' => __('Please sign-in to enter your personal signatures.', 'collectme'),
+            'signInBtn' => __('Sign in', 'collectme'),
+            'noPasswordRequired' => __('No password required', 'collectme'),
+
+            'Steps' => [
+                'connected' => __('Successfully connected', 'collectme'),
+                'hello' => __('Hello {firstName}', 'collectme'),
+                'goalSet' => __('Goal set', 'collectme'),
+                'setGoal' => __('Set a goal', 'collectme'),
+                'goal' => __('On {date} you pledged {count} signatures.', 'collectme'),
+            ],
         ],
         'TheLogin' => [
             'title' => __('Full Access', 'collectme'),
