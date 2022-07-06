@@ -2,6 +2,8 @@ import {defineStore} from 'pinia';
 import api from '@/utility/api';
 import type {AxiosError, AxiosResponse} from "axios";
 import type {Group, Objective, Role} from "@/models/generated";
+import {useObjectiveStore} from "@/stores/ObjectiveStore";
+import {useRoleStore} from "@/stores/RoleStore";
 
 const endpointUrl = `causes/${collectme?.cause}/group`;
 
@@ -20,6 +22,14 @@ interface GroupStoreState {
 
 async function addResponseData(response: GroupResponseSuccess) {
     useGroupStore().addGroups(response.data.data);
+
+    response.data.included.forEach(item => {
+        if (item.type === 'objective') {
+            useObjectiveStore().addObjective(<Objective>item);
+        } else if (item.type === 'role') {
+            useRoleStore().addRole(<Role>item);
+        }
+    })
 }
 
 export const useGroupStore = defineStore('GroupStore', {
@@ -49,4 +59,17 @@ export const useGroupStore = defineStore('GroupStore', {
             }
         }
     },
+
+    getters: {
+        myPersonalGroup: (state: GroupStoreState) => {
+            let myGroup: Group|null = null;
+            state.groups.forEach((group: Group) => {
+                if (group.attributes.type === 'person') {
+                    myGroup = group;
+                }
+            });
+
+            return myGroup;
+        }
+    }
 });
