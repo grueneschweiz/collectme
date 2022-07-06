@@ -44,7 +44,7 @@ class RestRouterV1
     {
         register_rest_route(
             REST_V1_NAMESPACE,
-            '/user/current',
+            '/user/me',
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->userController, 'getCurrent'],
