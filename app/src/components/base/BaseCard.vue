@@ -24,6 +24,7 @@
   border-bottom: 2px solid var(--color-primary);
   border-radius: 5px;
   padding: clamp(10px, calc(3vw), 20px);
+  margin-bottom: clamp(20px, calc(6vw), 40px);
 }
 
 .collectme-base-card__title {
