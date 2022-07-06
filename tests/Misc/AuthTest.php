@@ -559,7 +559,7 @@ class AuthTest extends TestCase
         $auth->setPersistentSession($session);
 
         $request = new \WP_REST_Request();
-        $request->set_header(NONCE_HEADER_KEY, wp_create_nonce(REST_V1_NAMESPACE));
+        $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
 
         $this->assertTrue($auth->isAuthenticatedAndHasValidNonce($request));
     }
@@ -584,7 +584,7 @@ class AuthTest extends TestCase
         $auth->setPersistentSession($session);
 
         $request = new \WP_REST_Request();
-        $request->set_header(NONCE_HEADER_KEY, wp_create_nonce('something else'));
+        $request->set_header('X-WP-Nonce', wp_create_nonce('something else'));
 
         $this->assertFalse($auth->isAuthenticatedAndHasValidNonce($request));
     }
