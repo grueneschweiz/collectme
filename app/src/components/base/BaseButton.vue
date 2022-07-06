@@ -52,12 +52,12 @@ defineProps({
 
 <style>
 .collectme-base-button {
-  font-size: 0.875em;
+  font-size: 0.875rem;
   display: inline-block;
-  line-height: 1.71428em;
-  letter-spacing: .08928em;
-  padding: clamp(6px, 6px + 4 * (100vw - 375px) / 1305, 10px) 1.57142em;
-  border-radius: .14285em;
+  line-height: 1.71428rem;
+  letter-spacing: .08928rem;
+  padding: clamp(6px, 6px + 4 * (100vw - 375px) / 1305, 10px) 1.57142rem;
+  border-radius: .14285rem;
   border-width: 1px;
   border-style: solid;
   font-family: var(--font-secondary);
