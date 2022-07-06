@@ -19,7 +19,7 @@ info:
     cookie. Both cookies must be deleted, to log the user out.
     
     All protected functions do also need a nonce for CSRF protection. The nonce must be sent in the 
-    `X-WP-Collectme-Nonce` header. It can be obtained from the global JS variable `collectme.nonce`, which is set by the 
+    `X-WP-Nonce` header. It can be obtained from the global JS variable `collectme.nonce`, which is set by the 
     `HtmlController`.
 
   version: 1.0.0
