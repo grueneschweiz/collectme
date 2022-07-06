@@ -139,5 +139,7 @@ const showNameInputs = computed(() => {
 
 .collectme-the-login__submit-byline {
   margin: 0;
+  color: var(--color-grey-3);
+  font-size: 0.75rem;
 }
 </style>
