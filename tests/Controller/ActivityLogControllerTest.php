@@ -78,7 +78,7 @@ class ActivityLogControllerTest extends TestCase
 
         $this->assertCount(4, $resp['links']);
 
-        $baseUrl = "http://example.org/index.php?rest_route=" . urlencode("/collectme/v1/causes/$cause->uuid/activity");
+        $baseUrl = "http://example.org/index.php?rest_route=" . urlencode("/collectme/v1/causes/$cause->uuid/activities");
 
         $this->assertSame(
             $baseUrl . "&filter[count]=gt(0)",

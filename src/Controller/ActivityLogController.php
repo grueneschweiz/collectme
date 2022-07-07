@@ -95,7 +95,7 @@ class ActivityLogController extends WP_REST_Controller
 
     private function getLinks(string $causeUuid, Filter $filter, array $results): array
     {
-        $path = rest_url(REST_V1_NAMESPACE . "/causes/$causeUuid/activity");
+        $path = rest_url(REST_V1_NAMESPACE . "/causes/$causeUuid/activities");
         $filterArgs = [];
 
         if (null !== $filter->value) {

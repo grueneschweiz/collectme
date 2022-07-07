@@ -4,7 +4,7 @@ import type {AxiosResponse} from "axios";
 import type {Activity, Group, PaginationLinks} from "@/models/generated";
 import {useGroupStore} from "@/stores/GroupStore";
 
-const endpointUrl = `causes/${collectme?.cause}/activity`;
+const endpointUrl = `causes/${collectme?.cause}/activities`;
 
 interface ActivityResponseSuccess extends AxiosResponse {
     data: {

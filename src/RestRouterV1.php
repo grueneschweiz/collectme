@@ -44,7 +44,7 @@ class RestRouterV1
     {
         register_rest_route(
             REST_V1_NAMESPACE,
-            '/user/me',
+            '/users/me',
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->userController, 'getCurrent'],
@@ -116,7 +116,7 @@ class RestRouterV1
     {
         register_rest_route(
             REST_V1_NAMESPACE,
-            '/causes/(?P<uuid>[a-zA-Z0-9-]{36})/group',
+            '/causes/(?P<uuid>[a-zA-Z0-9-]{36})/groups',
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->groupController, 'findByCause'],
@@ -171,11 +171,11 @@ class RestRouterV1
         );
     }
 
-    public function registerActivityLogRoutes()
+    public function registerActivityLogRoutes(): void
     {
         register_rest_route(
             REST_V1_NAMESPACE,
-            '/causes/(?P<uuid>[a-zA-Z0-9-]{36})/activity',
+            '/causes/(?P<uuid>[a-zA-Z0-9-]{36})/activities',
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->activityLogController, 'index'],

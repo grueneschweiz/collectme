@@ -3,7 +3,7 @@ import api from '@/utility/api';
 import type {AxiosError, AxiosResponse} from "axios";
 import type {User} from "@/models/generated";
 
-const endpointUrl = `user/me`;
+const endpointUrl = `users/me`;
 
 interface UserResponseSuccess extends AxiosResponse {
     data: {

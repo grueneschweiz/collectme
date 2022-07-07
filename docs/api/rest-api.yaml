@@ -931,7 +931,7 @@ components:
         format: uuid
 
 paths:
-  /user/me:
+  /users/me:
     get:
       tags:
         - users
@@ -1149,7 +1149,7 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /causes/{uuid}/group:
+  /causes/{uuid}/groups:
     parameters:
       - $ref: '#/components/parameters/uuid'
 
@@ -1285,7 +1285,7 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /causes/{uuid}/activity:
+  /causes/{uuid}/activities:
     parameters:
       - $ref: '#/components/parameters/uuid'
 

@@ -5,7 +5,7 @@ import type {Group, Objective, Role} from "@/models/generated";
 import {useObjectiveStore} from "@/stores/ObjectiveStore";
 import {useRoleStore} from "@/stores/RoleStore";
 
-const endpointUrl = `causes/${collectme?.cause}/group`;
+const endpointUrl = `causes/${collectme?.cause}/groups`;
 
 interface GroupResponseSuccess extends AxiosResponse {
     data: {
