@@ -1,55 +1,17 @@
 <template>
 
-  <BaseStepElement
-      :status="connectedStatus"
-      :next="objectiveStatus"
-      next="completed"
-  >
-    <template #title>
-      {{t('HomeView.MyContribution.Steps.connected')}}
-    </template>
-    <template #default>
-      {{t('HomeView.MyContribution.Steps.hello', {firstName: userStore.me?.attributes.firstName ?? ''})}}
-    </template>
-  </BaseStepElement>
+  <MyContributionStepConnected
+    :status="connectedStatus"
+    :next="objectiveStatus"
+    :user="userStore.me ?? undefined"
+  />
 
-  <BaseStepElement
+  <MyContributionStepObjective
       :status="objectiveStatus"
       :prev="connectedStatus"
       :next="collectedStatus"
-  >
-    <template
-        #title
-        v-if="myObjective"
-    >
-      {{t('HomeView.MyContribution.Steps.goalSet')}}
-    </template>
-    <template
-        #title
-        v-else
-    >
-      {{t('HomeView.MyContribution.Steps.setGoal')}}
-    </template>
-
-    <template
-        #default
-        v-if="myObjective"
-    >
-      {{t(
-        'HomeView.MyContribution.Steps.goal',
-        {
-          'date': (new Date(myObjective.attributes.created)).toLocaleDateString(),
-          'count': myObjective.attributes.objective,
-        }
-    )}}
-    </template>
-    <template
-      #default
-      v-else
-    >
-      go go go // todo: continue here
-    </template>
-  </BaseStepElement>
+      :objective="myObjective ?? undefined"
+  />
 
   <BaseStepElement
       :status="collectedStatus"
@@ -95,11 +57,12 @@
 import type {StepStatus} from "@/components/base/BaseStepElement/BaseStepElement";
 import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.vue";
 import {useUserStore} from "@/stores/UserStore";
-import t from "@/utility/i18n";
 import {useGroupStore} from "@/stores/GroupStore";
 import {computed, ref} from "vue";
 import type {Group, Objective} from "@/models/generated";
 import {useObjectiveStore} from "@/stores/ObjectiveStore";
+import MyContributionStepConnected from '@/components/specific/home/MyContribution/MyContributionStepConnected.vue';
+import MyContributionStepObjective from "@/components/specific/home/MyContribution/MyContributionStepObjective.vue";
 
 enum Step {
   'connected' = 0,

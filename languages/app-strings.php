@@ -17,12 +17,16 @@ return [
             'signInBtn' => __('Sign in', 'collectme'),
             'noPasswordRequired' => __('No password required', 'collectme'),
 
-            'Steps' => [
+            'MyContributionStepConnected' => [
                 'connected' => __('Successfully connected', 'collectme'),
                 'hello' => __('Hello {firstName}', 'collectme'),
+            ],
+
+            'MyContributionStepObjective' => [
                 'goalSet' => __('Goal set', 'collectme'),
                 'setGoal' => __('Set a goal', 'collectme'),
                 'goal' => __('On {date} you pledged {count} signatures.', 'collectme'),
+                'setGoalBtn' => __('Set Goal', 'collectme'),
             ],
         ],
         'TheLogin' => [
