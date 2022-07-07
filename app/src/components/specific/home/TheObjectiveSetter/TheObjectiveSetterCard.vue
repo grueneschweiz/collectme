@@ -30,6 +30,7 @@ import {computed, ref} from "vue";
 import {useObjectiveStore} from "@/stores/ObjectiveStore";
 import type {Objective} from "@/models/generated";
 import {useGroupStore} from "@/stores/GroupStore";
+import {useActivityStore} from "@/stores/ActivityStore";
 
 const props = defineProps({
   count: {
@@ -68,6 +69,7 @@ async function selectObjective() {
 
   try {
     await saveObjective();
+    useActivityStore().update().then();
     selected.value = t('HomeView.TheObjectiveSetter.ribbonSelected');
     emit('saved', props.count);
   } catch {
