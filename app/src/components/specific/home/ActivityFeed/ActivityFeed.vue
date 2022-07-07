@@ -1,5 +1,5 @@
 <template>
-  <BaseCard>
+  <BaseLayoutCard>
     <template #header>
       {{ t('HomeView.ActivityFeed.title') }}
     </template>
@@ -47,12 +47,12 @@
       {{ t('HomeView.ActivityFeed.noActivity') }}
     </template>
 
-  </BaseCard>
+  </BaseLayoutCard>
 </template>
 
 <script setup lang="ts">
 import BaseAlert from "@/components/base/BaseAlert.vue";
-import BaseCard from "@/components/base/BaseCard.vue";
+import BaseLayoutCard from "@/components/base/BaseLayoutCard.vue";
 import BaseLoader from "@/components/base/BaseLoader/BaseLoader.vue";
 import BaseButton from '@/components/base/BaseButton.vue'
 import ActivityFeedCard from "@/components/specific/home/ActivityFeed/ActivityFeedCard.vue";

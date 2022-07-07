@@ -1,5 +1,5 @@
 <template>
-  <BaseCard>
+  <BaseLayoutCard>
     <template #header>
       {{ t('HomeView.MyContribution.title') }}
     </template>
@@ -38,11 +38,11 @@
         <span>{{t('HomeView.MyContribution.noPasswordRequired')}}</span>
       </div>
     </template>
-  </BaseCard>
+  </BaseLayoutCard>
 </template>
 
 <script setup lang="ts">
-import BaseCard from "@/components/base/BaseCard.vue";
+import BaseLayoutCard from "@/components/base/BaseLayoutCard.vue";
 import t from "@/utility/i18n";
 import {useUserStore} from "@/stores/UserStore";
 import BaseLoader from "@/components/base/BaseLoader/BaseLoader.vue";
