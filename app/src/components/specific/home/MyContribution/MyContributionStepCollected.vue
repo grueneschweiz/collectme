@@ -32,8 +32,9 @@
       <BaseButton
           size="md"
           @click="$emit('collected')"
+          :muted="status === 'pending'"
       >
-        {{ t('HomeView.MyContribution.MyContributionStepCollected.collectedBtn') }} ✔
+        {{ t('HomeView.MyContribution.MyContributionStepCollected.collectedBtn') }}
       </BaseButton>
     </template>
   </BaseStepElement>
