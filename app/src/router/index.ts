@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import TheLogin from "@/components/specific/home/TheLogin.vue";
 import TheObjectiveSetter from "@/components/specific/home/TheObjectiveSetter/TheObjectiveSetter.vue";
+import TheSignatureAdder from "@/components/specific/home/TheSignatureAdder.vue";
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -18,6 +19,10 @@ const router = createRouter({
         {
           path: '/home/set-goal',
           component: TheObjectiveSetter
+        },
+        {
+          path: '/home/enter-signatures',
+          component: TheSignatureAdder
         }
       ],
     },

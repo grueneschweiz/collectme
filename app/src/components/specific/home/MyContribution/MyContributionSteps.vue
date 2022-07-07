@@ -21,18 +21,12 @@
       @collected="collected = true"
   />
 
-  <BaseStepElement
+  <MyContributionStepEntered
       :status="enteredStatus"
       :prev="collectedStatus"
       :next="achievedStatus"
-  >
-    <template #title>
-      Unterschriften eingetragen
-    </template>
-    <template #default>
-      hallo Cyrill
-    </template>
-  </BaseStepElement>
+      :signatures="myPersonalGroup?.attributes.signatures ?? 0"
+  />
 
   <BaseStepElement
       :status="achievedStatus"
@@ -53,12 +47,13 @@ import type {StepStatus} from "@/components/base/BaseStepElement/BaseStepElement
 import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.vue";
 import {useUserStore} from "@/stores/UserStore";
 import {useGroupStore} from "@/stores/GroupStore";
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import type {Group, Objective} from "@/models/generated";
 import {useObjectiveStore} from "@/stores/ObjectiveStore";
 import MyContributionStepConnected from '@/components/specific/home/MyContribution/MyContributionStepConnected.vue';
 import MyContributionStepObjective from "@/components/specific/home/MyContribution/MyContributionStepObjective.vue";
 import MyContributionStepCollected from "@/components/specific/home/MyContribution/MyContributionStepCollected.vue";
+import MyContributionStepEntered from "@/components/specific/home/MyContribution/MyContributionStepEntered.vue";
 
 enum Step {
   'connected' = 0,
@@ -73,8 +68,6 @@ const groupStore = useGroupStore();
 const objectiveStore = useObjectiveStore();
 groupStore.fetch();
 
-const collected = ref(false); // todo: initialize true if signatures entered
-
 const myPersonalGroup = computed<Group | null>(() => {
   return groupStore.myPersonalGroup
 })
@@ -87,6 +80,18 @@ const myObjective = computed<Objective | null>(() => {
   return objectiveStore.getHighestObjectiveByGroupId(<string>(<Group>myPersonalGroup.value).id)
 })
 
+const myCount = computed<number>(() => {
+  return myPersonalGroup.value?.attributes.signatures ?? 0
+});
+
+watch(myCount, newCount => {
+  if (newCount > 0){
+    collected.value = true;
+  }
+})
+
+const collected = ref(false);
+
 const activeStep = computed<Step>(() => {
   if (!userStore.me) {
     return Step.connected
@@ -94,9 +99,13 @@ const activeStep = computed<Step>(() => {
     return Step.objective
   } else if (!collected.value) {
     return Step.collected
+  } else if (myCount.value <= 0) {
+    return Step.entered
+  } else if (myCount.value <= myObjective.value?.attributes.objective) {
+    return Step.achieved
   }
-  // todo
-  return Step.entered;
+
+  return Step.objective
 })
 
 const connectedStatus = computed<StepStatus>(() => {

@@ -32,8 +32,13 @@ return [
             'MyContributionStepCollected' => [
                 'titleDone' => __('First signatures collected', 'collectme'),
                 'titlePending' => __('Collect your fist signatures', 'collectme'),
-                'collectedBtn' => __('Done', 'collectme'),
+                'collectedBtn' => __('Mark done', 'collectme'),
                 'collectedMsg' => __('Nice. Keep going...', 'collectme'),
+            ],
+
+            'MyContributionStepEntered' => [
+                'title' => __('Register signatures', 'collectme'),
+                'enterFirst' => __('Enter now', 'collectme'),
             ],
         ],
         'TheLogin' => [
@@ -73,6 +78,17 @@ return [
                 'subline' => __('I promise {count} signatures.', 'collectme'),
                 'saving' => __('Saving...', 'collectme'),
             ],
+        ],
+
+        'TheSignatureAdder' => [
+            'title' => __('Register signatures', 'collectme'),
+            'intro' => __("Enter the number of <strong>new signatures</strong> you've collected. They will be added to the already registered signatures.", 'collectme'),
+            'input' => __('Number of new signatures', 'collectme'),
+            'helpText' => __("Number of recent collected signatures, that haven't been registered yet.", 'collectme'),
+            'invalid' => __('Invalid number.', 'collectme'),
+            'submit' => __('Register Signatures', 'collectme'),
+            'saving' => __('Saving...', 'collectme'),
+            'back' => __('Back without registering signatures', 'collectme'),
         ],
     ],
 ];
