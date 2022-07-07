@@ -12,6 +12,10 @@ use Collectme\Controller\Http\ValidationErrorResponseMaker;
 use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Exceptions\CollectmeException;
 use Collectme\Misc\Auth;
+use Collectme\Misc\DB;
+use Collectme\Model\Entities\ActivityLog;
+use Collectme\Model\Entities\EnumActivityType;
+use Collectme\Model\Entities\EnumGroupType;
 use Collectme\Model\Entities\Group;
 use Collectme\Model\Entities\Objective;
 use WP_REST_Controller;
@@ -60,7 +64,7 @@ class ObjectiveController extends WP_REST_Controller
             || $entryProps['objective'] <= 0
             || $entryProps['objective'] > PHP_INT_MAX
         ) {
-            $errors[] = '/data/attributes/count';
+            $errors[] = '/data/attributes/objective';
         }
 
         if ($errors) {
@@ -99,6 +103,15 @@ class ObjectiveController extends WP_REST_Controller
             return $this->makeSuccessResponse(200, $equalObjectives[0]);
         }
 
+        $greaterObjectives = array_filter(
+            $objectives,
+            static fn(Objective $objective) => $objective->objective > $entryProps['objective']
+        );
+
+        if (!empty($greaterObjectives)) {
+            return $this->makeValidationErrorResponse(['/data/attributes/objective']);
+        }
+
         $objective = new Objective(
             null,
             $entryProps['objective'],
@@ -106,9 +119,25 @@ class ObjectiveController extends WP_REST_Controller
             'app'
         );
 
+        $log = null;
+        if ($group->type === EnumGroupType::PERSON) {
+            $type = empty($objectives) ? EnumActivityType::PLEDGE : EnumActivityType::PERSONAL_GOAL_RAISED;
+
+            $log = new ActivityLog(
+                null,
+                $type,
+                $objective->objective,
+                $group->causeUuid,
+                $group->uuid,
+            );
+        }
+
         try {
-            $objective = $objective->save();
-        } catch (CollectmeDBException $e) {
+            $objective = DB::transactional(static function () use ($objective, $log) {
+                $log?->save();
+                return $objective->save();
+            });
+        } catch (\Exception $e) {
             return $this->makeInternalServerErrorResponse($e);
         }
 
