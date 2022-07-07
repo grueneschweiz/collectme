@@ -20,7 +20,7 @@
       <slot></slot>
     </main>
 
-    <footer>
+    <footer v-if="$slots.footer">
       <slot name="footer"></slot>
     </footer>
   </div>
@@ -51,11 +51,12 @@ const props = defineProps({
   left: 50%;
   transform: translateX(-50%);
   width: clamp(280px, 100vw - 40px, 790px);
-  height: calc(100vh - 200px);
+  min-height: calc(100vh - 200px);
+  max-height: calc(100vh - 40px);
   background-color: var(--color-white);
   box-shadow: 0 -20px 30px 10px rgba(217, 217, 217, 0.95);
   border-top: 2px solid var(--color-primary);
-  z-index: 1;
+  z-index: 999;
   padding: clamp(10px, 10 * (100vw + 80px) / 455, 20px);
   overflow: scroll;
 }
