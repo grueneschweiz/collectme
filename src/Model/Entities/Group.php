@@ -28,7 +28,7 @@ class Group extends Entity
     #[ApiModelRelationship(Role::class)]
     public array $roleUuids;
 
-    #[ApiModelAttribute('_signatures')]
+    #[ApiModelAttribute('signatures')]
     private int $signatures;
 
     public function __construct(

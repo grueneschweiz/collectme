@@ -51,7 +51,7 @@ class GroupController extends WP_REST_Controller
             $models = [];
             foreach ($groups as $group) {
                 $model = $group->toApiModel();
-                $model->attributes['_writeable'] = $group->userCanWrite($userUuid);
+                $model->attributes['writeable'] = $group->userCanWrite($userUuid);
                 $models[] = $model;
             }
 

@@ -126,7 +126,7 @@ class GroupControllerTest extends TestCase
         $groupUuids = array_map(static fn(array $group) => $group['id'], $data['data']);
         $this->assertEqualsCanonicalizing([$groupWorldReadTrue->uuid, $groupRoleRead->uuid], $groupUuids);
 
-        $this->assertFalse($data['data'][0]['attributes']['_writeable']);
+        $this->assertFalse($data['data'][0]['attributes']['writeable']);
 
         $objectives = array_values(array_filter(
             $data['included'],

@@ -200,8 +200,8 @@ components:
       required:
         - name
         - type
-        - _signatures
-        - _writeable
+        - signatures
+        - writeable
         - created
         - updated
       properties:
@@ -211,12 +211,12 @@ components:
         type:
           type: string
           enum: [ person, organization ]
-        _signatures:
+        signatures:
           type: integer
           example: 45
           description: Computed. The total amount of signatures of this group.
           readOnly: true
-        _writeable:
+        writeable:
           description: Computed. Tells if the current user has write permission for this group.
           type: boolean
           example: true
