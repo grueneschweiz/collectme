@@ -40,6 +40,8 @@ const OPTION_KEY_PLUGIN_VERSION = 'collectme_plugin_version';
 const REST_ROUTE_PREFIX = 'collectme';
 const REST_V1_NAMESPACE = REST_ROUTE_PREFIX.'/v1';
 
+const ASSET_PATH_REL = '/dist';
+
 /**
  * Database related
  */
