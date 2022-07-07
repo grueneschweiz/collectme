@@ -23,12 +23,21 @@ interface ActivityStoreState {
     first: string | null;
 }
 
-function addResponseData(response: ActivityResponseSuccess) {
-    useActivityStore().prev = response.data.links.prev ?? null;
-    useActivityStore().next = response.data.links.next ?? null;
-    useActivityStore().first = response.data.links.first ?? null;
-    addActivities(response.data.data);
+function addResponseData(response: ActivityResponseSuccess, prev: boolean = false) {
     useGroupStore().addGroups(response.data.included);
+    addActivities(response.data.data);
+
+    const store = useActivityStore();
+
+    if (prev || !useActivityStore().prev) {
+        store.prev = response.data.links.prev ?? null;
+    }
+
+    if (!prev || !useActivityStore().next) {
+        store.next = response.data.links.next ?? null;
+    }
+
+    store.first = response.data.links.first ?? null;
 }
 
 function addActivities(newActivities: Activity[]) {
@@ -40,7 +49,7 @@ function addActivities(newActivities: Activity[]) {
     }
 
     newActivities.reverse().forEach((newActivity: Activity) => {
-        if (!newActivity.attributes.created){
+        if (!newActivity.attributes.created) {
             return;
         }
 
@@ -124,7 +133,7 @@ export const useActivityStore = defineStore('ActivityStore', {
             try {
                 await api(false, true)
                     .get(this.prev)
-                    .then((resp: ActivityResponseSuccess) => addResponseData(resp))
+                    .then((resp: ActivityResponseSuccess) => addResponseData(resp, true))
             } catch (error: any) {
                 this.error = error;
             } finally {
