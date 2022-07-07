@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import TheLogin from "@/components/specific/home/TheLogin.vue";
+import TheObjectiveSetter from "@/components/specific/home/TheObjectiveSetter/TheObjectiveSetter.vue";
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -13,6 +14,10 @@ const router = createRouter({
         {
           path: 'login',
           component: TheLogin
+        },
+        {
+          path: '/home/set-goal',
+          component: TheObjectiveSetter
         }
       ],
     },

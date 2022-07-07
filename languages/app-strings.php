@@ -12,7 +12,7 @@ return [
     ],
     'HomeView' => [
         'MyContribution' => [
-            'title' => __('My contribution to the cause', 'collectme'),
+            'title' => __('My contribution to the cause', 'collectme'), // todo: overwrite
             'singInMsg' => __('Please sign-in to enter your personal signatures.', 'collectme'),
             'signInBtn' => __('Sign in', 'collectme'),
             'noPasswordRequired' => __('No password required', 'collectme'),
@@ -25,7 +25,7 @@ return [
             'MyContributionStepObjective' => [
                 'goalSet' => __('Goal set', 'collectme'),
                 'setGoal' => __('Set a goal', 'collectme'),
-                'goal' => __('On {date} you pledged {count} signatures.', 'collectme'),
+                'goal' => __('You pledged {count} signatures on {date}.', 'collectme'), // todo: overwrite
                 'setGoalBtn' => __('Set Goal', 'collectme'),
             ],
         ],
@@ -54,6 +54,18 @@ return [
             'personalGoalAchieved' => __('{firstName} just achieved its goal of {count} signatures.', 'collectme'),
             'personalGoalRaised' => __('{firstName} is going to collect {count} signatures.', 'collectme'),
             'loadMore' => __('Load more', 'collectme'),
+        ],
+        'TheObjectiveSetter' => [
+            'title' => __('My Goal for the Cause', 'collectme'), // todo: overwrite
+            'intro' => __('Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute to the cause.', 'collectme'), // todo: overwrite
+            'ribbonHot' => __('Hot', 'collectme'),
+            'ribbonDone' => __('Achieved', 'collectme'),
+            'ribbonSelected' => __('Selected', 'collectme'),
+
+            'TheObjectiveSetterCard' => [
+                'subline' => __('I promise {count} signatures.', 'collectme'),
+                'saving' => __('Saving...', 'collectme'),
+            ],
         ],
     ],
 ];

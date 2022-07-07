@@ -33,7 +33,10 @@
         #default
         v-else
     >
-      <BaseButton size="md">
+      <BaseButton
+          size="md"
+          @click="$router.push('/home/set-goal')"
+      >
         {{t('HomeView.MyContribution.MyContributionStepObjective.setGoalBtn')}}
       </BaseButton>
     </template>
