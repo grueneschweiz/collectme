@@ -45,8 +45,8 @@ export const useObjectiveStore = defineStore('ObjectiveStore', {
     },
 
     getters: {
-        getObjectivesByGroupId: (state: ObjectiveStoreState) => {
-            return (groupId: string) => {
+        getObjectivesByGroupId: (state: ObjectiveStoreState): (groupId: string) => Objective[] => {
+            return (groupId: string): Objective[] => {
 
                 const groupObjectives: Objective[] = [];
                 state.objectives.forEach((objective: Objective) => {
@@ -56,6 +56,24 @@ export const useObjectiveStore = defineStore('ObjectiveStore', {
                 });
 
                 return groupObjectives;
+            }
+        },
+
+        getHighestObjectiveByGroupId: () => {
+            return (groupId: string): Objective|null => {
+
+                const groupObjectives = useObjectiveStore().getObjectivesByGroupId(groupId);
+
+                if (!groupObjectives.length) {
+                    return null;
+                }
+
+                return groupObjectives.reduce((highest: Objective, objective: Objective) => {
+                    if (objective.attributes.objective > highest.attributes.objective) {
+                        return objective;
+                    }
+                    return highest;
+                }, groupObjectives[0]);
             }
         }
     },
