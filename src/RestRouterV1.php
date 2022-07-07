@@ -162,7 +162,7 @@ class RestRouterV1
     {
         register_rest_route(
             REST_V1_NAMESPACE,
-            '/signatures',
+            '/objectives',
             [
                 'methods' => WP_REST_Server::CREATABLE,
                 'callback' => [$this->objectiveController, 'add'],
