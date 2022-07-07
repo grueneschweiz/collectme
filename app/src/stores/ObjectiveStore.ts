@@ -1,6 +1,15 @@
 import {defineStore} from 'pinia';
 import type {Objective} from "@/models/generated";
+import api from "@/utility/api";
+import type {AxiosResponse} from "axios";
 
+const endpointUrl = 'objectives';
+
+interface ObjectiveResponseSuccess extends AxiosResponse {
+    data: {
+        data: Objective;
+    }
+}
 
 interface ObjectiveStoreState {
     objectives: Map<string, Objective>;
@@ -16,6 +25,18 @@ export const useObjectiveStore = defineStore('ObjectiveStore', {
     },
 
     actions: {
+        async create(objective: Objective) {
+            this.isLoading = true;
+
+            try {
+                const resp = await api(true, false)
+                    .post<{data: Objective}, ObjectiveResponseSuccess>(endpointUrl, {data: objective});
+                this.addObjective(resp.data.data);
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
         addObjective(objective: Objective) {
             if (objective.id != null) {
                 this.objectives.set(objective.id, objective);
