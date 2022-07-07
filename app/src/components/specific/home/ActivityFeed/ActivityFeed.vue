@@ -59,11 +59,22 @@ import BaseButton from '@/components/base/BaseButton.vue'
 import ActivityFeedCard from "@/components/specific/home/ActivityFeed/ActivityFeedCard.vue";
 import {useActivityStore} from "@/stores/ActivityStore";
 import t from "@/utility/i18n";
+import {onBeforeUnmount, onMounted} from "vue";
 
 const activityStore = useActivityStore();
 activityStore.fetchFirst();
 
 const activities = activityStore.activities;
+
+let timer: ReturnType<typeof setInterval>;
+
+onMounted(() => {
+  timer = setInterval(activityStore.update, 60000);
+})
+
+onBeforeUnmount(() => {
+  clearInterval(timer)
+})
 </script>
 
 <style>
