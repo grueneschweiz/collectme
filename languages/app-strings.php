@@ -28,6 +28,13 @@ return [
                 'goal' => __('You pledged {count} signatures on {date}.', 'collectme'), // todo: overwrite
                 'setGoalBtn' => __('Set Goal', 'collectme'),
             ],
+
+            'MyContributionStepCollected' => [
+                'titleDone' => __('First signatures collected', 'collectme'),
+                'titlePending' => __('Collect your fist signatures', 'collectme'),
+                'collectedBtn' => __('Done', 'collectme'),
+                'collectedMsg' => __('Nice. Keep going...', 'collectme'),
+            ],
         ],
         'TheLogin' => [
             'title' => __('Full Access', 'collectme'),

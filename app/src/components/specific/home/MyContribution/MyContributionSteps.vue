@@ -1,9 +1,9 @@
 <template>
 
   <MyContributionStepConnected
-    :status="connectedStatus"
-    :next="objectiveStatus"
-    :user="userStore.me ?? undefined"
+      :status="connectedStatus"
+      :next="objectiveStatus"
+      :user="userStore.me ?? undefined"
   />
 
   <MyContributionStepObjective
@@ -13,18 +13,13 @@
       :objective="myObjective ?? undefined"
   />
 
-  <BaseStepElement
+  <MyContributionStepCollected
       :status="collectedStatus"
       :prev="objectiveStatus"
       :next="enteredStatus"
-  >
-    <template #title>
-      Unterschriften gesammelt
-    </template>
-    <template #default>
-      hallo Cyrill
-    </template>
-  </BaseStepElement>
+      :collected="collected"
+      @collected="collected = true"
+  />
 
   <BaseStepElement
       :status="enteredStatus"
@@ -63,6 +58,7 @@ import type {Group, Objective} from "@/models/generated";
 import {useObjectiveStore} from "@/stores/ObjectiveStore";
 import MyContributionStepConnected from '@/components/specific/home/MyContribution/MyContributionStepConnected.vue';
 import MyContributionStepObjective from "@/components/specific/home/MyContribution/MyContributionStepObjective.vue";
+import MyContributionStepCollected from "@/components/specific/home/MyContribution/MyContributionStepCollected.vue";
 
 enum Step {
   'connected' = 0,
@@ -79,40 +75,28 @@ groupStore.fetch();
 
 const collected = ref(false); // todo: initialize true if signatures entered
 
-const myPersonalGroup = computed<Group|null>(() => {
+const myPersonalGroup = computed<Group | null>(() => {
   return groupStore.myPersonalGroup
 })
 
-const myObjective = computed<Objective|null>(() => {
+const myObjective = computed<Objective | null>(() => {
   if (!myPersonalGroup.value?.id) {
     return null;
   }
 
-  const objectives = objectiveStore.getObjectivesByGroupId(<string>(<Group>myPersonalGroup.value).id)
-
-  if (!objectives.length) {
-    return null;
-  }
-
-  let highest: Objective = objectives[0];
-
-  objectives.forEach(objective => {
-    if (objective.attributes.objective > highest.attributes.objective) {
-      highest = objective
-    }
-  });
-
-  return highest;
+  return objectiveStore.getHighestObjectiveByGroupId(<string>(<Group>myPersonalGroup.value).id)
 })
 
 const activeStep = computed<Step>(() => {
-  if (!userStore.me){
+  if (!userStore.me) {
     return Step.connected
   } else if (!myObjective.value) {
     return Step.objective
   } else if (!collected.value) {
     return Step.collected
-  } // todo
+  }
+  // todo
+  return Step.entered;
 })
 
 const connectedStatus = computed<StepStatus>(() => {
