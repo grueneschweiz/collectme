@@ -9,6 +9,7 @@
           v-for="(activity, idx) in activities"
           :activity="activity"
           :key="activity.id ?? idx"
+          class="collectme-activity-feed__card"
       />
       <BaseLoader v-if="activityStore.isLoading"/>
       <BaseButton
@@ -72,6 +73,10 @@ const activities = activityStore.activities;
   text-align: center;
   height: 1rem;
   margin: 1rem 0;
+}
+
+.collectme-activity-feed__card {
+  margin: 0.75rem 0;
 }
 
 .collectme-activity-feed__error-msg {
