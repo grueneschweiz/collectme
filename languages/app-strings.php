@@ -7,7 +7,10 @@ return [
         'Error' => [
             'unspecificTitle' => __('Nooo... 🙈', 'collectme'),
             'blameTheGoblins' => __('Some goblins blocked the data flow. Please try again.', 'collectme'),
+            'blameTheDevTitle' => __('Shame on me!', 'collectme'),
+            'blameTheDev' => __('I must have made a terrible mistake. Please send me a screenshot of this error message: {email}', 'collectme'),
             'tryAgain' => __('Try again', 'collectme'),
+            'unauthenticated' => __('Not authenticated. Please login.', 'collectme'),
         ],
     ],
     'HomeView' => [
