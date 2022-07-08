@@ -22,6 +22,7 @@
           :validation-message="t('HomeView.TheSignatureAdder.invalid')"
           :validation-status="validationStatus"
           v-model="count"
+          @keyDown:Enter="save"
       />
 
       <div class="collectme-the-signature-adder__submit-wrapper">
