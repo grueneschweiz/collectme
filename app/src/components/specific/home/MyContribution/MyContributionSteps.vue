@@ -28,23 +28,17 @@
       :signatures="myPersonalGroup?.attributes.signatures ?? 0"
   />
 
-  <BaseStepElement
+  <MyContributionStepAchieved
       :status="achievedStatus"
       :prev="enteredStatus"
-  >
-    <template #title>
-      Sammelziel erreicht
-    </template>
-    <template #default>
-      hallo Cyrill
-    </template>
-  </BaseStepElement>
+      :signatures="myPersonalGroup?.attributes.signatures ?? 0"
+      :objective="myObjective?.attributes.objective ?? 0"
+  />
 
 </template>
 
 <script setup lang="ts">
 import type {StepStatus} from "@/components/base/BaseStepElement/BaseStepElement";
-import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.vue";
 import {useUserStore} from "@/stores/UserStore";
 import {useGroupStore} from "@/stores/GroupStore";
 import {computed, ref, watch} from "vue";
@@ -54,6 +48,7 @@ import MyContributionStepConnected from '@/components/specific/home/MyContributi
 import MyContributionStepObjective from "@/components/specific/home/MyContribution/MyContributionStepObjective.vue";
 import MyContributionStepCollected from "@/components/specific/home/MyContribution/MyContributionStepCollected.vue";
 import MyContributionStepEntered from "@/components/specific/home/MyContribution/MyContributionStepEntered.vue";
+import MyContributionStepAchieved from "@/components/specific/home/MyContribution/MyContributionStepAchieved.vue";
 
 enum Step {
   'connected' = 0,

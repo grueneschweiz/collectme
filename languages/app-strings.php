@@ -40,6 +40,18 @@ return [
                 'title' => __('Register signatures', 'collectme'),
                 'enterFirst' => __('Enter now', 'collectme'),
             ],
+
+            'MyContributionStepAchieved' => [
+                'titleNone' => __('Achieve goal', 'collectme'),
+                'titleSome' => __('Achieved {percent}% of goal', 'collectme'),
+                'captionWip' => __("You've already collected and registered <strong>{count} out of {goal}</strong> signatures.", 'collectme'),
+                'captionDone' => __("Congratulations! You've achieved your goal and <strong>collected {count}</strong> signatures.", 'collectme'),
+                'captionPlaceholder' => __("Complete the previous steps, and you will see your achievements here.", 'collectme'),
+                'thank' => __('Thank you!', 'collectme'), // todo: overwrite
+                'registerSignaturesBtn' => __('Register signatures', 'collectme'),
+                'registerMoreSignaturesBtn' => __('Register more signatures', 'collectme'),
+                'upgradeObjectiveBtn' => __('Upgrade goal', 'collectme'),
+            ],
         ],
         'TheLogin' => [
             'title' => __('Full Access', 'collectme'),
