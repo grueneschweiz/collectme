@@ -133,7 +133,7 @@ const liveLineClasses = computed(() => {
 }
 
 .collectme-base-step-element__title--active {
-  font-weight: 600;
+  font-weight: bold;
 }
 
 .collectme-base-step-element__content {
