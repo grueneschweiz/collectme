@@ -29,6 +29,7 @@ class HtmlController
             'apiBaseUrl' => rest_url(REST_V1_NAMESPACE),
             'assetBaseUrl' => plugin_dir_url(COLLECTME_PLUGIN_NAME) . ASSET_PATH_REL,
             'cause' => $causeUuid,
+            'encodedAdminEmail' => base64_encode(get_bloginfo('admin_email')), // yeah, yeah, spam. but it's good enough
             'locale' => get_locale(),
             'nonce' => wp_create_nonce('wp_rest'),
             't' => array_replace_recursive($translations, $stringOverwrites),
