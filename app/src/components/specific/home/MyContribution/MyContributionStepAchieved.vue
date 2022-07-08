@@ -36,7 +36,7 @@
           v-if="fulfilled === 0"
           outline
           muted
-          size="md"
+          size="sm"
           @click="$router.push('/home/enter-signatures')"
       >
         {{ t('HomeView.MyContribution.MyContributionStepAchieved.registerSignaturesBtn') }}
@@ -45,8 +45,8 @@
       <BaseButton
           v-else-if="fulfilled < 1 || (fulfilled >=1 && objective >= ObjectiveSizes.lg)"
           outline
-          muted
-          size="md"
+          secondary
+          size="sm"
           @click="$router.push('/home/enter-signatures')"
       >
         {{ t('HomeView.MyContribution.MyContributionStepAchieved.registerMoreSignaturesBtn') }}
@@ -55,8 +55,8 @@
       <BaseButton
           v-else-if="fulfilled >= 1 && objective < ObjectiveSizes.lg"
           outline
-          muted
-          size="md"
+          secondary
+          size="sm"
           @click="$router.push('/home/set-goal')"
       >
         {{ t('HomeView.MyContribution.MyContributionStepAchieved.upgradeObjectiveBtn') }}

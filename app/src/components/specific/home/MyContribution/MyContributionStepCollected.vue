@@ -30,9 +30,11 @@
         v-else
     >
       <BaseButton
-          size="md"
+          size="sm"
           @click="$emit('collected')"
           :muted="status === 'pending'"
+          secondary
+          outline
       >
         {{ t('HomeView.MyContribution.MyContributionStepCollected.collectedBtn') }}
       </BaseButton>

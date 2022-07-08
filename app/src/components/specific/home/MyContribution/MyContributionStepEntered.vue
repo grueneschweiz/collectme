@@ -10,7 +10,10 @@
 
     <template #default>
       <BaseButton
-        size="md"
+        size="sm"
+        :secondary="status !== 'pending'"
+        :muted="status === 'pending'"
+        outline
         @click="$router.push('/home/enter-signatures')"
         :muted="status === 'pending'"
       >
