@@ -15,31 +15,12 @@
 
       <div class="collectme-the-objective-setter__card-wrapper">
         <TheObjectiveSetterCard
-            :count="50"
-            :img="`${assetBaseUrl}/img/goal-1.png`"
-            :disabled="disabled(50)"
-            :ribbon="ribbon(50)"
-            @saved="$router.back()"
-        />
-        <TheObjectiveSetterCard
-            :count="100"
-            :img="`${assetBaseUrl}/img/goal-2.png`"
-            :disabled="disabled(100)"
-            :ribbon="ribbon(100)"
-            @saved="$router.back()"
-        />
-        <TheObjectiveSetterCard
-            :count="200"
-            :img="`${assetBaseUrl}/img/goal-3.png`"
-            :disabled="disabled(200)"
-            :ribbon="ribbon(200)"
-            @saved="$router.back()"
-        />
-        <TheObjectiveSetterCard
-            :count="500"
-            :img="`${assetBaseUrl}/img/goal-4.png`"
-            :disabled="disabled(500)"
-            :ribbon="ribbon(500)"
+            v-for="key in Object.keys(ObjectiveSizes)"
+            :key="key"
+            :count="ObjectiveSizes[key]"
+            :img="`${assetBaseUrl}/img/goal-${key}.png`"
+            :disabled="disabled(ObjectiveSizes[key])"
+            :ribbon="ribbon(ObjectiveSizes[key])"
             @saved="$router.back()"
         />
       </div>
@@ -51,6 +32,7 @@
 <script setup lang="ts">
 import TheBaseOverlay from '@/components/base/TheBaseOverlay.vue'
 import TheObjectiveSetterCard from "@/components/specific/home/TheObjectiveSetter/TheObjectiveSetterCard.vue";
+import {ObjectiveSizes} from "@/components/specific/home/TheObjectiveSetter/ObjectiveSizes";
 import t from '@/utility/i18n';
 import {useGroupStore} from "@/stores/GroupStore";
 import {computed} from "vue";
@@ -79,7 +61,7 @@ function disabled(objective: number): boolean {
 function ribbon(objective: number): string | undefined {
   let defaultValue = undefined
 
-  if (objective === 200 && !currentObjective.value) {
+  if (objective === ObjectiveSizes.lg && !currentObjective.value) {
     defaultValue = t('HomeView.TheObjectiveSetter.ribbonHot')
   }
 
