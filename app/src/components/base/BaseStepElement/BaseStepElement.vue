@@ -112,6 +112,7 @@ const liveLineClasses = computed(() => {
 .collectme-base-step-element__indicator {
   width: 3rem;
   position: relative;
+  flex-shrink: 0;
 }
 
 .collectme-base-step-element__icon {
