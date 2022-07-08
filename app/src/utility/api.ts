@@ -9,9 +9,9 @@ import t from '@/utility/i18n';
 function errorHandler(error: any) {
     console.log(error);
 
-    if (axios.isAxiosError(error) && error.response.status === 401) {
+    if (error && axios.isAxiosError(error) && error.response?.status === 401) {
         useSnackbarStore().show({
-            id: error.response.status.toString(),
+            id: error.response?.status.toString() ?? 'unknown',
             type: 'error',
             shortDesc: t('General.Error.unauthenticated'),
             vanishAfter: 5000,
