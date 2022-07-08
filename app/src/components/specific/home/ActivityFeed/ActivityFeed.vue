@@ -4,8 +4,9 @@
       {{ t('HomeView.ActivityFeed.title') }}
     </template>
 
-    <template #default v-if="activities.length || activityStore.isLoading">
+    <template #default>
       <ActivityFeedCard
+          v-if="activities.length"
           v-for="(activity, idx) in activities"
           :activity="activity"
           :key="activity.id ?? idx"
@@ -13,7 +14,7 @@
       />
       <BaseLoader v-if="activityStore.isLoading"/>
       <BaseButton
-          v-if="!activityStore.isLoading && activityStore.next"
+          v-if="!activityStore.isLoading && activityStore.next && activities.length && !activityStore.error"
           outline
           muted
           full-width
@@ -22,10 +23,8 @@
       >
         {{t('HomeView.ActivityFeed.loadMore')}}
       </BaseButton>
-    </template>
-
-    <template #default v-else-if="activityStore.error">
       <BaseAlert
+          v-if="activityStore.error && !activityStore.isLoading"
           error
           @close="activityStore.error = null"
       >
@@ -44,7 +43,7 @@
       </BaseAlert>
     </template>
 
-    <template #default v-else>
+    <template #default v-if="!activities.length && !activityStore.isLoading && !activityStore.error">
       {{ t('HomeView.ActivityFeed.noActivity') }}
     </template>
 
