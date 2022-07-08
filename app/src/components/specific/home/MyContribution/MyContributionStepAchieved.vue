@@ -106,7 +106,7 @@ const fulfilled = computed<number>(() => {
     return 0
   }
 
-  return props.signatures / props.objective
+  return Math.max(0, props.signatures / props.objective)
 })
 
 const caption = computed<string>(() => {
