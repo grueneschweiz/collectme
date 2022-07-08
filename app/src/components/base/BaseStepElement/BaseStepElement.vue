@@ -142,6 +142,7 @@ const liveLineClasses = computed(() => {
 
 .collectme-base-step-element__body {
   font-size: 0.75rem;
+  line-height: 1.4em;
   color: var(--color-grey-3);
 }
 
