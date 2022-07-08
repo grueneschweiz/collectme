@@ -12,6 +12,7 @@
         v-model="currentValue"
         ref="input"
         @input="onInput"
+        @keydown.enter="$emit('keyDown:Enter')"
         :id="id"
         :name="id"
         :required="required"
@@ -49,7 +50,8 @@ import type {ValidationStatus} from "@/components/base/BaseInput/BaseInput";
 import TransitionAppearFade from '@/components/transition/TransitionAppearFade.vue'
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | number): void
+  (e: 'update:modelValue', value: string | number): void,
+  (e: 'keyDown:Enter'): void,
 }>();
 
 const props = defineProps({
