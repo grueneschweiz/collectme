@@ -45,7 +45,7 @@ export const useGroupStore = defineStore('GroupStore', {
         async fetch() {
             this.isLoading = true;
 
-            await api(true, true).get(endpointUrl)
+            await api(true).get(endpointUrl)
                 .then((resp: GroupResponseSuccess) => addResponseData(resp))
 
             this.isLoading = false;

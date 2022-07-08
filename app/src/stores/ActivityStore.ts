@@ -93,7 +93,7 @@ export const useActivityStore = defineStore('ActivityStore', {
             this.error = null;
 
             try {
-                await api(false, true)
+                await api(false)
                     .get(endpointUrl, {params: {'filter[count]': 'gt(0)'}})
                     .then((resp: ActivityResponseSuccess) => addResponseData(resp))
             } catch (error: any) {
@@ -112,7 +112,7 @@ export const useActivityStore = defineStore('ActivityStore', {
             this.error = null;
 
             try {
-                await api(false, true)
+                await api(false)
                     .get(this.next)
                     .then((resp: ActivityResponseSuccess) => addResponseData(resp))
             } catch (error: any) {
@@ -131,7 +131,7 @@ export const useActivityStore = defineStore('ActivityStore', {
             this.error = null;
 
             try {
-                await api(false, true)
+                await api(false)
                     .get(this.prev)
                     .then((resp: ActivityResponseSuccess) => addResponseData(resp, true))
             } catch (error: any) {

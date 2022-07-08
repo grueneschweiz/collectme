@@ -29,7 +29,7 @@ export const useObjectiveStore = defineStore('ObjectiveStore', {
             this.isLoading = true;
 
             try {
-                const resp = await api(true, false)
+                const resp = await api(true)
                     .post<{data: Objective}, ObjectiveResponseSuccess>(endpointUrl, {data: objective});
                 this.addObjective(resp.data.data);
             } finally {

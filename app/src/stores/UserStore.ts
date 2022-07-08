@@ -30,7 +30,7 @@ export const useUserStore = defineStore('UserStore', {
         async fetch() {
             this.isLoading = true;
 
-            await api(true, true).get(endpointUrl)
+            await api(true).get(endpointUrl)
                 .then((resp: UserResponseSuccess) => this.me = resp.data.data)
 
             this.isLoading = false;
