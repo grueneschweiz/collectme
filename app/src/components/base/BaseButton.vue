@@ -54,9 +54,9 @@ defineProps({
 .collectme-base-button {
   font-size: 0.875rem;
   display: inline-block;
-  line-height: 1.71428rem;
-  letter-spacing: .08928rem;
-  padding: clamp(6px, 6px + 4 * (100vw - 375px) / 1305, 10px) 1.57142rem;
+  line-height: 1.71428em;
+  letter-spacing: .08928em;
+  padding: clamp(6px, 6px + 4 * (100vw - 375px) / 1305, 10px) 1.57142em;
   border-radius: .14285rem;
   border-width: 1px;
   border-style: solid;
@@ -134,12 +134,12 @@ defineProps({
 
 /*noinspection CssUnusedSymbol*/
 .collectme-base-button--size--sm {
-  font-size: 0.75em;
+  font-size: 0.75rem;
 }
 
 /*noinspection CssUnusedSymbol*/
 .collectme-base-button--size--lg {
-  font-size: 1em;
+  font-size: 1rem;
 }
 
 </style>
