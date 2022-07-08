@@ -155,7 +155,7 @@ const liveLineClasses = computed(() => {
 }
 
 .collectme-base-step-element__indicator__liveline::before {
-  top: 0;
+  top: -1px; /* fix rem rounding issues */
   height: 1.8rem;
 }
 
