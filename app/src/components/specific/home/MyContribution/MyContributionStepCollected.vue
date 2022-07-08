@@ -22,7 +22,7 @@
         #default
         v-if="collected"
     >
-      🎉 {{ t('HomeView.MyContribution.MyContributionStepCollected.collectedMsg') }}
+      {{ t('HomeView.MyContribution.MyContributionStepCollected.collectedMsg') }}
     </template>
 
     <template

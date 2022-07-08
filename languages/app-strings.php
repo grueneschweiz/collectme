@@ -33,12 +33,13 @@ return [
                 'titleDone' => __('First signatures collected', 'collectme'),
                 'titlePending' => __('Collect your fist signatures', 'collectme'),
                 'collectedBtn' => __('Mark done', 'collectme'),
-                'collectedMsg' => __('Nice. Keep going...', 'collectme'),
+                'collectedMsg' => __('Glorious. Keep going...', 'collectme'),
             ],
 
             'MyContributionStepEntered' => [
                 'title' => __('Register signatures', 'collectme'),
                 'enterFirst' => __('Enter now', 'collectme'),
+                'enterMoreMsg' => __('Enter more signatures in the next step.', 'collectme'),
             ],
 
             'MyContributionStepAchieved' => [

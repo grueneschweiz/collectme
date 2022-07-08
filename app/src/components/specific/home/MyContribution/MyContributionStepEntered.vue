@@ -8,17 +8,26 @@
       {{t('HomeView.MyContribution.MyContributionStepEntered.title')}}
     </template>
 
-    <template #default>
+    <template
+        v-if="status !== 'completed'"
+        #default
+    >
       <BaseButton
         size="sm"
         :secondary="status !== 'pending'"
         :muted="status === 'pending'"
         outline
         @click="$router.push('/home/enter-signatures')"
-        :muted="status === 'pending'"
       >
         {{t('HomeView.MyContribution.MyContributionStepEntered.enterFirst')}}
       </BaseButton>
+    </template>
+
+    <template
+      v-else
+      #default
+    >
+      {{t('HomeView.MyContribution.MyContributionStepEntered.enterMoreMsg')}}
     </template>
   </BaseStepElement>
 </template>

@@ -25,13 +25,13 @@
       :status="enteredStatus"
       :prev="collectedStatus"
       :next="achievedStatus"
-      :signatures="myPersonalGroup?.attributes.signatures ?? 0"
+      :signatures="myCount"
   />
 
   <MyContributionStepAchieved
       :status="achievedStatus"
       :prev="enteredStatus"
-      :signatures="myPersonalGroup?.attributes.signatures ?? 0"
+      :signatures="myCount"
       :objective="myObjective?.attributes.objective ?? 0"
   />
 
@@ -49,6 +49,7 @@ import MyContributionStepObjective from "@/components/specific/home/MyContributi
 import MyContributionStepCollected from "@/components/specific/home/MyContribution/MyContributionStepCollected.vue";
 import MyContributionStepEntered from "@/components/specific/home/MyContribution/MyContributionStepEntered.vue";
 import MyContributionStepAchieved from "@/components/specific/home/MyContribution/MyContributionStepAchieved.vue";
+import {ObjectiveSizes} from "@/components/specific/home/TheObjectiveSetter/ObjectiveSizes";
 
 enum Step {
   'connected' = 0,
@@ -56,6 +57,7 @@ enum Step {
   'collected' = 2,
   'entered' = 3,
   'achieved' = 4,
+  'completed' = 5,
 }
 
 const userStore = useUserStore();
@@ -96,11 +98,11 @@ const activeStep = computed<Step>(() => {
     return Step.collected
   } else if (myCount.value <= 0) {
     return Step.entered
-  } else if (myCount.value <= myObjective.value?.attributes.objective) {
+  } else if (myCount.value < ObjectiveSizes.xl) {
     return Step.achieved
   }
 
-  return Step.objective
+  return Step.completed
 })
 
 const connectedStatus = computed<StepStatus>(() => {
