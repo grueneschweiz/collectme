@@ -23,9 +23,8 @@ export const useSnackbarStore = defineStore('SnackbarStore', {
 
     actions: {
         show(snackbar: Snackbar) {
-            if (!this.snackbars.filter(s => s.id === snackbar.id).length) {
-                this.snackbars.push(snackbar);
-            }
+            this.hide(snackbar);
+            this.snackbars.push(snackbar);
         },
 
         hide(snackbar: Snackbar) {

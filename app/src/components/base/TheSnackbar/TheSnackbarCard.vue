@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import type {PropType} from "vue";
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import type {Snackbar} from "@/stores/SnackbarStore";
 import {useSnackbarStore} from "@/stores/SnackbarStore";
 import BaseLoader from '@/components/base/BaseLoader/BaseLoader.vue';
@@ -59,8 +59,8 @@ function triggerAction() {
     return;
   }
 
-  if (timer) {
-    window.clearTimeout(timer)
+  if (autoHideTimer) {
+    window.clearTimeout(autoHideTimer)
   }
 
   working.value = true
@@ -77,20 +77,39 @@ function close() {
   }
 }
 
-let timer: ReturnType<typeof setTimeout>
-
-onMounted(() => {
+const vanishAfter = computed<number>(() => {
   if (!props.snackbar || 'undefined' === typeof props.snackbar.vanishAfter) {
-    return
+    return 0
   }
 
-  window.setTimeout(close, props.snackbar.vanishAfter)
+  return props.snackbar.vanishAfter
+})
+
+let autoHideTimer: ReturnType<typeof setTimeout>
+
+function initializeAutoHide() {
+  if (vanishAfter.value) {
+    window.setTimeout(close, vanishAfter.value)
+  }
+}
+
+function disableAutoHide() {
+  if (autoHideTimer) {
+    window.clearTimeout(autoHideTimer)
+  }
+}
+
+watch(vanishAfter, () => {
+  disableAutoHide()
+  initializeAutoHide()
+});
+
+onMounted(() => {
+  initializeAutoHide()
 })
 
 onBeforeUnmount(() => {
-  if (timer) {
-    window.clearTimeout(timer)
-  }
+  disableAutoHide()
 })
 </script>
 
