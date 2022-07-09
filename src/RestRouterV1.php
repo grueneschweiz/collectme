@@ -59,7 +59,7 @@ class RestRouterV1
 
         register_rest_route(
             REST_V1_NAMESPACE,
-            '/auth/link-auth',
+            '/auth',
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->authController, 'loginWithToken'],
