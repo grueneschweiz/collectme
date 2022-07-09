@@ -21,7 +21,7 @@ class HtmlController
     /**
      * @throws \JsonException
      */
-    public function index(string $causeUuid, array $stringOverwrites): string
+    public function index(string $causeUuid): string
     {
         $translations = require PATH_APP_STRINGS;
 
@@ -32,7 +32,7 @@ class HtmlController
             'encodedAdminEmail' => base64_encode(get_bloginfo('admin_email')), // yeah, yeah, spam. but it's good enough
             'locale' => get_locale(),
             'nonce' => wp_create_nonce('wp_rest'),
-            't' => array_replace_recursive($translations, $stringOverwrites),
+            't' => $translations,
         ];
 
         return '<div id="collectme-app"></div>'

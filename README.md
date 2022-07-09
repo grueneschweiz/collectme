@@ -76,6 +76,11 @@ CSS:
 
 ### WordPress-Cli
 
+Extract `.pot` file
+```
+docker-compose run wordpress bash -c 'XDEBUG_MODE=off php -d memory_limit=1G $(which wp) --allow-root i18n make-pot wp-content/plugins/collectme/ wp-content/plugins/collectme/languages/collectme.pot --slug=collectme --domain=collectme --exclude=tmp,vendor --skip-js --skip-block-json --skip-theme-json && chown 1000:1000 wp-content/plugins/collectme/languages/collectme.pot'
+```
+
 ### Restful API
 
 #### Swagger-Editor

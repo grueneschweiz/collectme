@@ -58,4 +58,9 @@ class Cause extends Entity
 
         return self::findByQuery($query);
     }
+
+    public static function findAll(): array {
+        $causeTbl = self::getTableName();
+        return self::findByQuery("SELECT * FROM {$causeTbl} WHERE deleted_at IS NULL");
+    }
 }

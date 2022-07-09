@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Collectme\Misc;
 
+use Collectme\Collectme;
 use Collectme\Controller\HtmlController;
+use Collectme\Controller\Http\UuidValidator;
 
 class ShortcodeHandler
 {
@@ -27,19 +29,15 @@ class ShortcodeHandler
 
         $args = shortcode_atts($defaults, $atts);
 
-        try {
-            $stringOverwrites = json_decode($args['stringoverwritesjson'], true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            $stringOverwrites = [];
-            trigger_error(
-                "Invalid JSON in collectme shortcode's stringOverwritesJson property. Overwrites ignored.",
-                E_USER_NOTICE
-            );
+        if (!UuidValidator::check($args['causeuuid'])) {
+            /** @noinspection ForgottenDebugOutputInspection */
+            wp_die('Invalid shortcode.');
         }
+
+        Collectme::setCauseUuid($args['causeuuid']);
 
         return $this->appController->index(
             $args['causeuuid'],
-            $stringOverwrites
         );
     }
 }

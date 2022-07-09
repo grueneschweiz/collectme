@@ -13,6 +13,7 @@ declare(strict_types=1);
  * Author:            Cyrill Bolliger
  * Author URI:        https://github.com/cyrillbolliger
  * Text Domain:       collectme
+ * Domain Path:       /languages
  * License:           GPL v2 or later
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Update URI:        https://github.com/grueneschweiz/collectme

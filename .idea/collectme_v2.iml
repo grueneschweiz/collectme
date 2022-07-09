@@ -45,6 +45,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/version" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/manifest" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/yoast/phpunit-polyfills" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/gettext/gettext" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/gettext/languages" />
     </content>
     <content url="file://$MODULE_DIR$/tmp/wordpress" />
     <content url="file://$MODULE_DIR$/tmp/wordpress-tests-lib" />

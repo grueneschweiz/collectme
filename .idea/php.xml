@@ -44,6 +44,8 @@
       <path value="$PROJECT_DIR$/vendor/yoast/phpunit-polyfills" />
       <path value="$PROJECT_DIR$/tmp/wordpress" />
       <path value="$PROJECT_DIR$/tmp/wordpress-tests-lib" />
+      <path value="$PROJECT_DIR$/vendor/gettext/gettext" />
+      <path value="$PROJECT_DIR$/vendor/gettext/languages" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

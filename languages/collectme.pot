@@ -1,0 +1,338 @@
+# Copyright (C) 2022 Cyrill Bolliger
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Collectme 2.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/collectme\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-07-09T23:40:38+02:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.6.0\n"
+"X-Domain: collectme\n"
+
+#. Plugin Name of the plugin
+#: src/AdminRouter.php:20
+msgid "Collectme"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://github.com/grueneschweiz/collectme"
+msgstr ""
+
+#. Description of the plugin
+msgid "Handle signature collections with ease."
+msgstr ""
+
+#. Author of the plugin
+msgid "Cyrill Bolliger"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://github.com/cyrillbolliger"
+msgstr ""
+
+#: admin/settings.php:21
+#: src/AdminRouter.php:19
+msgid "Collectme Settings"
+msgstr ""
+
+#: admin/settings.php:30
+msgid "Overrides for %s"
+msgstr ""
+
+#: admin/settings.php:81
+msgid "Save"
+msgstr ""
+
+#: languages/app-strings.php:8
+msgid "Nooo... 🙈"
+msgstr ""
+
+#: languages/app-strings.php:9
+msgid "Some goblins blocked the data flow. Please try again."
+msgstr ""
+
+#: languages/app-strings.php:10
+msgid "Shame on me!"
+msgstr ""
+
+#: languages/app-strings.php:11
+msgid "I must have made a terrible mistake. Please send me a screenshot of this error message: {email}"
+msgstr ""
+
+#: languages/app-strings.php:12
+msgid "Try again"
+msgstr ""
+
+#: languages/app-strings.php:13
+msgid "Not authenticated. Please login."
+msgstr ""
+
+#: languages/app-strings.php:18
+msgid "My contribution to the cause"
+msgstr ""
+
+#: languages/app-strings.php:19
+msgid "Please sign-in to enter your personal signatures."
+msgstr ""
+
+#: languages/app-strings.php:20
+#: languages/app-strings.php:74
+msgid "Sign in"
+msgstr ""
+
+#: languages/app-strings.php:21
+msgid "No password required"
+msgstr ""
+
+#: languages/app-strings.php:24
+msgid "Successfully connected"
+msgstr ""
+
+#: languages/app-strings.php:25
+msgid "Hello {firstName}"
+msgstr ""
+
+#: languages/app-strings.php:29
+msgid "Goal set"
+msgstr ""
+
+#: languages/app-strings.php:30
+msgid "Set a goal"
+msgstr ""
+
+#: languages/app-strings.php:31
+msgid "You pledged {count} signatures on {date}."
+msgstr ""
+
+#: languages/app-strings.php:32
+msgid "Set Goal"
+msgstr ""
+
+#: languages/app-strings.php:36
+msgid "First signatures collected"
+msgstr ""
+
+#: languages/app-strings.php:37
+msgid "Collect your fist signatures"
+msgstr ""
+
+#: languages/app-strings.php:38
+msgid "Mark done"
+msgstr ""
+
+#: languages/app-strings.php:39
+msgid "Glorious. Keep going..."
+msgstr ""
+
+#: languages/app-strings.php:43
+#: languages/app-strings.php:55
+#: languages/app-strings.php:103
+msgid "Register signatures"
+msgstr ""
+
+#: languages/app-strings.php:44
+msgid "Enter now"
+msgstr ""
+
+#: languages/app-strings.php:45
+msgid "Enter more signatures in the next step."
+msgstr ""
+
+#: languages/app-strings.php:49
+msgid "Achieve goal"
+msgstr ""
+
+#: languages/app-strings.php:50
+msgid "Achieved {percent}% of goal"
+msgstr ""
+
+#: languages/app-strings.php:51
+msgid "You've already collected and registered <strong>{count} out of {goal}</strong> signatures."
+msgstr ""
+
+#: languages/app-strings.php:52
+msgid "Congratulations! You've achieved your goal and <strong>collected {count}</strong> signatures."
+msgstr ""
+
+#: languages/app-strings.php:53
+msgid "Complete the previous steps, and you will see your achievements here."
+msgstr ""
+
+#: languages/app-strings.php:54
+msgid "Thank you!"
+msgstr ""
+
+#: languages/app-strings.php:56
+msgid "Register more signatures"
+msgstr ""
+
+#: languages/app-strings.php:57
+msgid "Upgrade goal"
+msgstr ""
+
+#: languages/app-strings.php:62
+msgid "Full Access"
+msgstr ""
+
+#: languages/app-strings.php:63
+msgid "Sign-in with your email address (no password required) to enter signatures and see the current state of the collection."
+msgstr ""
+
+#: languages/app-strings.php:67
+msgid "E-Mail"
+msgstr ""
+
+#: languages/app-strings.php:68
+msgid "The same e-mail address where you receive our newsletter."
+msgstr ""
+
+#: languages/app-strings.php:69
+msgid "E-Mail address is not valid."
+msgstr ""
+
+#: languages/app-strings.php:70
+msgid "First Name"
+msgstr ""
+
+#: languages/app-strings.php:71
+msgid "First name not valid."
+msgstr ""
+
+#: languages/app-strings.php:72
+msgid "Last Name"
+msgstr ""
+
+#: languages/app-strings.php:73
+msgid "Last name not valid."
+msgstr ""
+
+#: languages/app-strings.php:75
+msgid "You'll receive an e-mail with a link that signs you in."
+msgstr ""
+
+#: languages/app-strings.php:79
+msgid "Activity Feed"
+msgstr ""
+
+#: languages/app-strings.php:80
+msgid "No activity yet."
+msgstr ""
+
+#: languages/app-strings.php:81
+msgid "{firstName} promised {count} signatures."
+msgstr ""
+
+#: languages/app-strings.php:82
+msgid "{firstName} collected {count} signatures."
+msgstr ""
+
+#: languages/app-strings.php:83
+msgid "{count} signatures were entered for {organization}."
+msgstr ""
+
+#: languages/app-strings.php:84
+msgid "{firstName} just achieved its goal of {count} signatures."
+msgstr ""
+
+#: languages/app-strings.php:85
+msgid "{firstName} is going to collect {count} signatures."
+msgstr ""
+
+#: languages/app-strings.php:86
+msgid "Load more"
+msgstr ""
+
+#: languages/app-strings.php:90
+msgid "My Goal for the Cause"
+msgstr ""
+
+#: languages/app-strings.php:91
+msgid "Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute to the cause."
+msgstr ""
+
+#: languages/app-strings.php:92
+msgid "Hot"
+msgstr ""
+
+#: languages/app-strings.php:93
+msgid "Achieved"
+msgstr ""
+
+#: languages/app-strings.php:94
+msgid "Selected"
+msgstr ""
+
+#: languages/app-strings.php:97
+msgid "I promise {count} signatures."
+msgstr ""
+
+#: languages/app-strings.php:98
+#: languages/app-strings.php:109
+msgid "Saving..."
+msgstr ""
+
+#: languages/app-strings.php:104
+msgid "Enter the number of <strong>new signatures</strong> you've collected. They will be added to the already registered signatures."
+msgstr ""
+
+#: languages/app-strings.php:105
+msgid "Number of new signatures"
+msgstr ""
+
+#: languages/app-strings.php:106
+msgid "Number of recent collected signatures, that haven't been registered yet."
+msgstr ""
+
+#: languages/app-strings.php:107
+msgid "Invalid number."
+msgstr ""
+
+#: languages/app-strings.php:108
+msgid "Register Signatures"
+msgstr ""
+
+#: languages/app-strings.php:110
+msgid "{count} signatures added."
+msgstr ""
+
+#: languages/app-strings.php:111
+msgid "Back without registering signatures"
+msgstr ""
+
+#: src/Controller/AdminController.php:28
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: src/Controller/AdminController.php:59
+msgid "Saved!"
+msgstr ""
+
+#: src/Misc/LoginEmail.php:15
+msgid "Login link"
+msgstr ""
+
+#: src/Misc/LoginEmail.php:21
+msgid "single"
+msgid_plural "plural"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Misc/LoginEmail.php:22
+msgctxt "context1"
+msgid "text context1"
+msgstr ""
+
+#: src/Misc/LoginEmail.php:23
+msgctxt "context2"
+msgid "text context2"
+msgstr ""
+
+#. translators: number of monkeys, location.
+#: src/Misc/LoginEmail.php:26
+msgid "comment"
+msgstr ""
