@@ -120,7 +120,7 @@ onBeforeUnmount(() => {
   font-size: 0.875rem;
   line-height: 1.4em;
   border-radius: 3px;
-  box-shadow: 1px 4px 4px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 1px 4px 10px 1px var(--color-grey-3);
 }
 
 .collectme-the-snackbar-card__short {

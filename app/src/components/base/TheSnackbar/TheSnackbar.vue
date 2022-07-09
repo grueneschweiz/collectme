@@ -22,7 +22,7 @@ const snackbarStore = useSnackbarStore();
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(calc(100% - 1rem), calc(100% - 4vw), 768px);
+  width: clamp(300px, calc(100% - 4vw), 480px);
   display: flex;
   flex-direction: column-reverse;
   align-items: stretch;
