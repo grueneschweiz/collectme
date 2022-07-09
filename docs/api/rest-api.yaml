@@ -250,16 +250,6 @@ components:
         lastName:
           type: string
           example: Muster
-        created:
-          type: string
-          format: date-time
-          nullable: true
-          readOnly: true
-        updated:
-          type: string
-          format: date-time
-          nullable: true
-          readOnly: true
 
     ObjectiveAttributes:
       type: object
@@ -450,6 +440,7 @@ components:
       required:
         - type
         - attributes
+        - relationships
       type: object
       properties:
         type:
@@ -458,6 +449,8 @@ components:
           example: login
         attributes:
           $ref: '#/components/schemas/LoginAttributes'
+        relationships:
+          $ref: '#/components/schemas/RelatedCause'
 
     Objective:
       required:
