@@ -57,6 +57,7 @@ return [
                 'upgradeObjectiveBtn' => __('Upgrade goal', 'collectme'),
             ],
         ],
+
         'TheLogin' => [
             'title' => __('Full Access', 'collectme'),
             'loginMsg' => __(
@@ -73,6 +74,7 @@ return [
             'signIn' => __('Sign in', 'collectme'),
             'submitByline' => __("You'll receive an e-mail with a link that signs you in.", 'collectme'),
         ],
+
         'ActivityFeed' => [
             'title' => __('Activity Feed', 'collectme'),
             'noActivity' => __('No activity yet.', 'collectme'),
@@ -83,6 +85,7 @@ return [
             'personalGoalRaised' => __('{firstName} is going to collect {count} signatures.', 'collectme'),
             'loadMore' => __('Load more', 'collectme'),
         ],
+
         'TheObjectiveSetter' => [
             'title' => __('My Goal for the Cause', 'collectme'), // todo: overwrite
             'intro' => __('Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute to the cause.', 'collectme'), // todo: overwrite
@@ -104,6 +107,7 @@ return [
             'invalid' => __('Invalid number.', 'collectme'),
             'submit' => __('Register Signatures', 'collectme'),
             'saving' => __('Saving...', 'collectme'),
+            'saved' => __('{count} signatures added.', 'collectme'),
             'back' => __('Back without registering signatures', 'collectme'),
         ],
     ],

@@ -60,19 +60,20 @@ import {useUserStore} from "@/stores/UserStore";
 import {useGroupStore} from "@/stores/GroupStore";
 import {useActivityStore} from "@/stores/ActivityStore";
 import router from "@/router";
+import {useSnackbarStore} from "@/stores/SnackbarStore";
+import type {Snackbar} from "@/stores/SnackbarStore";
 
 const count = ref<undefined | number>();
 const validationStatus = ref<ValidationStatus>('unvalidated');
 const saving = ref<boolean>(false)
 
-async function save() {
+async function save(): Promise<void> {
   saving.value = true
 
   const myGroupId = useGroupStore().myPersonalGroup?.id
 
   if (!myGroupId) {
-    // todo: show error
-    return;
+    return useGroupStore().fetch().then(save);
   }
 
   const number = parseInt(count.value?.toString() ?? '0')
@@ -107,8 +108,20 @@ async function save() {
   useGroupStore().groups.get(myGroupId)!.attributes.signatures += number
   await useActivityStore().update()
   saving.value = false
+  notifySaveSuccess()
 
   router.back();
+}
+
+function notifySaveSuccess() {
+  const number = count.value?.toString() ?? '0'
+
+  useSnackbarStore().show({
+    id: 'signature-save-success',
+    type: 'success',
+    shortDesc: t('HomeView.TheSignatureAdder.saved', {count: number}),
+    vanishAfter: 5000
+  } as Snackbar)
 }
 
 watch(count, newValue => {
