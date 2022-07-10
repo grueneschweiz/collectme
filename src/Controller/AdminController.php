@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Collectme\Controller;
 
 use Collectme\Controller\Http\UuidValidator;
+use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Misc\Translator;
 use Collectme\Model\Entities\Cause;
 use Gettext\Loader\PoLoader;
@@ -59,7 +60,12 @@ class AdminController
         }
 
         $nonce = wp_create_nonce(self::NONCE_ACTION);
-        $causes = Cause::findAll();
+        try {
+            $causes = Cause::findAll();
+        } catch (CollectmeDBException $e) {
+            /** @noinspection ForgottenDebugOutputInspection */
+            wp_die('Database error. Failed to load causes. Try again.');
+        }
 
         $poLoader = new PoLoader();
         $stringTemplates = $poLoader->loadFile(PATH_POT_FILE);
