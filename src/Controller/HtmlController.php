@@ -30,6 +30,8 @@ class HtmlController
 
         $data = [
             'apiBaseUrl' => rest_url(REST_V1_NAMESPACE),
+            'appUrl' => get_permalink(),
+            'appUrlAuthentication' => wp_hash(get_permalink(), 'nonce'),
             'assetBaseUrl' => plugin_dir_url(COLLECTME_PLUGIN_NAME) . ASSET_PATH_REL,
             'cause' => $causeUuid,
             'encodedAdminEmail' => base64_encode(get_bloginfo('admin_email')), // yeah, yeah, spam. but it's good enough

@@ -1,5 +1,7 @@
 declare namespace collectme {
     const apiBaseUrl: string;
+    const appUrl: string;
+    const appUrlAuthentication: string;
     const assetBaseUrl: string;
     const cause: string;
     const encodedAdminEmail: string;
