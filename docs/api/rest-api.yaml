@@ -7,8 +7,8 @@ info:
     
     **Authentication**
     
-    Users may authenticate themselves using the `POST /auth` or `GET /auth` endpoints. Authentication works
-    with the following two cookies: 
+    Users may authenticate themselves using the `POST /api/auth` or `GET /app?action=create` endpoints. Authentication 
+    works with the following two cookies: 
     
     - `WP_COLLECTME_AUTH`: Persistent login. Cookie contains the persistent session's `uuid` and a secret that 
       corresponds to the `session_hash`.
@@ -18,9 +18,19 @@ info:
     session duration) but better performance. The session cookie therefore takes precedence over the `WP_COLLECTME_AUTH`
     cookie. Both cookies must be deleted, to log the user out.
     
+    See [/docs/uml/login-flow.puml](/docs/uml/login-flow.puml) for a diagram of the login flow.
+    
     All protected functions do also need a nonce for CSRF protection. The nonce must be sent in the 
     `X-WP-Nonce` header. It can be obtained from the global JS variable `collectme.nonce`, which is set by the 
     `HtmlController`.
+
+    **URLs**
+    
+    - `/api` is a placeholder for the api prefix. With pretty permalinks, this will be `/wp-json/collectme/v1`. It is
+      passed to the app via the global JS variable `collectme.apiBaseUrl`.
+    - `/app` is a placeholder for the url of the page or post where the plugin is used (via shortcode). It is passed to
+      the app via the global JS variable `collectme.appUrl`.
+    
 
   version: 1.0.0
   title: Collectme V2
@@ -250,6 +260,13 @@ components:
         lastName:
           type: string
           example: Muster
+        appUrl:
+          type: string
+          format: url
+        urlAuth:
+          type: string
+          format: hash
+          description: Salted hash of `appUrl`.
 
     ObjectiveAttributes:
       type: object
@@ -924,7 +941,7 @@ components:
         format: uuid
 
 paths:
-  /users/me:
+  /api/users/me:
     get:
       tags:
         - users
@@ -946,14 +963,15 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /auth:
+  /api/auth:
     post:
       tags:
         - auth
-      summary: Post user data and receive an authentication link by email
+      summary: Post user data and receive an activation link by email
       description: |
         - Create user if it doesn't exist.
-        - Send the user an email with a login link.
+        - Create not activated session for user.
+        - Send the user an email with a link to activate the session.
         - Set the `WP_COLLECTME_AUTH` cookie in the response.
       requestBody:
         required: true
@@ -991,8 +1009,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/InvalidEmail'
 
+  /app:
     get:
       parameters:
+        - name: action
+          in: query
+          schema:
+            type: string
+            enum:
+              - activate
+              - create
+          required: true
         - name: token
           description: The `token`
           in: query
@@ -1006,44 +1033,66 @@ paths:
           schema:
             type: string
             format: email
-          required: true
+          description: Required for `create` action
         - name: cause
           in: query
           schema:
             type: string
             format: uuid
-          required: true
+          description: Required for `create` action
+        - name: session
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Required for `activate` action
       tags:
         - auth
-      summary: Authenticate user by secret authentication link
+      summary: Activate session OR Authenticate user
       description: |
-        - Check link secret.
-        - Create user if it doesn't exist.
-        - Set the `WP_COLLECTME_AUTH` cookie in the response.
+        **Note:** This endpoint doesn't target the API but the pages permalink. It is therefore not handled by the
+        RestRouter but the ShortcodeHandler.
+        
+        **If `action=activate`:**
+        - Check token (`$persistentSession->activationSecret`) and activate session if valid.
+        - **No** WP_COLLECTME_AUTH cookie set. The request only activates the session, but doesn't authenticate the user.
+          User authentication must be done in the browser that called the `/api/auth` endpoint.
+        - The browser must display a message to the user that the session has been activated in the browser that called
+          the `/api/auth` endpoint.
+        
+        Counterpart of the `/api/auth` endpoint.
+        
+        **If `action=create`:**
+        - Check token (`$accountToken->token`). If valid:
+          - Create user if it doesn't exist.
+          - Create activated session for user.
+          - Set the `WP_COLLECTME_AUTH` cookie in the response.
+        
+        Used for direct login links manually prepared in the account tokens table.
       responses:
         '200':
-          description: OK
+          description: |
+            **If `action=activate`:**
+            - A message telling the user that he is now logged in in the browser that he used to register.
+            
+            **If `action=create`:**
+            - The app.
+            - If an account token was found, the user is logged in.
+            - If no account token was found, the user sees the app like a regular visitor and is therefore prompted to
+              register. If he does so, he is directed to `/api/auth` -> `/app?action=activate` flow.
           content:
-            application/json:
+            text/html:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Session'
+                type: string
+
           headers:
             Set-Cookie:
               description: |
                 WP_COLLECTME_AUTH='{sessionUuid sessionSecret}'; Secure; HttpOnly; SameSite=Strict; Expires=Tue, 01 Jan 2030 00:00:00 GMT
               schema:
                 type: string
-        '404':
-          description: No user with this token found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvalidToken'
 
-  /sessions/current:
+  /api/sessions/current:
     get:
       tags:
         - sessions
@@ -1082,38 +1131,7 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /sessions/{uuid}/activate:
-    parameters:
-      - $ref: '#/components/parameters/uuid'
-
-    get:
-      tags:
-        - sessions
-      summary: Activate persistent session
-      description: |
-        Activate a persistent session object in the database. 
-        
-        Uses a get request so we can generate a link that is distributable by email.
-      parameters:
-        - name: token
-          description: The `activation_secret` of the persistent session
-          in: query
-          schema:
-            type: string
-            minLength: 64
-            maxLength: 64
-          required: true
-      responses:
-        '204':
-          description: OK
-        '404':
-          description: Activation failed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvalidToken'
-
-  /sessions/{uuid}:
+  /api/sessions/{uuid}:
     parameters:
       - $ref: '#/components/parameters/uuid'
 
@@ -1122,7 +1140,7 @@ paths:
         - sessions
       summary: Logout
       description: |
-        Closes the persistent session in the database and removes the PHP session on the server. Additionally, the response contains cookie exiration headers for the client.
+        Closes the persistent session in the database and removes the PHP session on the server. Additionally, the response contains cookie expiration headers for the client.
       responses:
         '204':
           description: OK
@@ -1142,7 +1160,7 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /causes/{uuid}/groups:
+  /api/causes/{uuid}/groups:
     parameters:
       - $ref: '#/components/parameters/uuid'
 
@@ -1177,7 +1195,7 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /signatures:
+  /api/signatures:
     post:
       tags:
         - signatures
@@ -1211,7 +1229,7 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /signatures/{uuid}:
+  /api/signatures/{uuid}:
     parameters:
       - $ref: '#/components/parameters/uuid'
 
@@ -1227,7 +1245,8 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /objectives:
+  /api/objectives:
+
     post:
       tags:
         - objectives
@@ -1278,7 +1297,7 @@ paths:
       security:
         - cookieAuth: [ ]
 
-  /causes/{uuid}/activities:
+  /api/causes/{uuid}/activities:
     parameters:
       - $ref: '#/components/parameters/uuid'
 
