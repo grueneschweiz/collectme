@@ -40,7 +40,7 @@ use Collectme\Model\Entities\Cause;
                         ); ?>"]</code>
                     <p class="description">
                         <?php _e(
-                            'Paste shortcode into the post or page where you want the collectme app to run.',
+                            'Paste the shortcode into the post or page where you want the collectme app to run.',
                             'collectme'
                         ) ?>
                     </p>
