@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Collectme\Misc;
 
+use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Exceptions\CollectmeException;
 
+use Collectme\Model\Entities\Cause;
+
 use const Collectme\OPTION_KEY_PLUGIN_VERSION;
+use const Collectme\SETTINGS_PREFIX;
 
 class Installer
 {
@@ -23,6 +27,7 @@ class Installer
     {
         // this function must be static, so we can use be used by the register_uninstall_hook
 
+        self::forEachSite([self::class, 'removeOptions']);
         self::forEachSite([DbInstaller::class, 'removeTables']);
     }
 
@@ -42,6 +47,19 @@ class Installer
             /** @noinspection DisconnectedForeachInstructionInspection */
             $callback();
             restore_current_blog();
+        }
+    }
+
+    private static function removeOptions(): void
+    {
+        try {
+            $causes = Cause::findAll();
+        } catch (CollectmeDBException $e) {
+            return;
+        }
+
+        foreach($causes as $cause) {
+            delete_option(SETTINGS_PREFIX . $cause->uuid );
         }
     }
 
