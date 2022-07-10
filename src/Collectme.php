@@ -35,10 +35,9 @@ const PATH_APP_STRINGS = COLLECTME_BASE_PATH . '/languages/app-strings.php';
 const PATH_POT_FILE = COLLECTME_BASE_PATH . '/languages/collectme.pot';
 
 /**
- * Plugin option keys for WordPress' option API
+ * Default context for translations
  */
-const OPTION_KEY_DB_VERSION = 'collectme_db_version';
-const OPTION_KEY_PLUGIN_VERSION = 'collectme_plugin_version';
+const I18N_DEFAULT_CONTEXT = 'collectme';
 
 /**
  * Routing related
@@ -61,9 +60,11 @@ const AUTH_COOKIE_TTL = '5 years';
 const AUTH_SESSION_KEY = 'WP_COLLECTME_AUTH';
 
 /**
- * Settings
+ * Options API
  */
-const SETTINGS_PREFIX = 'collectme_';
+const OPTIONS_PREFIX = 'collectme_';
+const OPTION_KEY_DB_VERSION = OPTIONS_PREFIX . 'db_version';
+const OPTION_KEY_PLUGIN_VERSION = OPTIONS_PREFIX . 'plugin_version';
 
 class Collectme
 {

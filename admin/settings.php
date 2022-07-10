@@ -7,6 +7,7 @@ declare(strict_types=1);
  * @var string $nonce
  * @var Cause[] $causes
  * @var Translator $translator
+ * @var string $defaultContext
  */
 
 use Collectme\Misc\Translator;
@@ -45,7 +46,7 @@ use Collectme\Model\Entities\Cause;
                         }
 
                         foreach($strings as $string){
-                            $key = base64_encode($string);
+                            $stringKey = base64_encode($string);
                             $rows = strlen($string) > 50 ? 3 : 1;
                             $references = array_reduce(
                                 array_keys($stringTemplate->getReferences()->toArray()),
@@ -58,12 +59,13 @@ use Collectme\Model\Entities\Cause;
                                         static fn($comment) => 0 === stripos($comment, 'translators:')
                                 )
                             );
-                            $context = $stringTemplate->getContext() ? '['.$stringTemplate->getContext().']' : '';
+                            $contextDesc = $stringTemplate->getContext() ? 'Context: '.$stringTemplate->getContext() : '';
+                            $contextKey = $stringTemplate->getContext() ?? $defaultContext;
                             $override = $translator->getOverride($cause->uuid, $string, $stringTemplate->getContext()) ?? '';
 
                             echo '<div style="margin-bottom: 1em;">';
-                            echo "<p><label for='override[$key]$context'>".esc_html($string)."</label> <span style='margin-top: 0; font-size: 0.875em; color: #888888; line-height: 1em;'>$context</span></p>";
-                            echo "<textarea name='override[$key]$context' rows='$rows' cols='50' class='large-text' placeholder='".esc_attr__($string, 'collectme')."'>$override</textarea>";
+                            echo "<p><label for='override[$contextKey][$stringKey]'>".esc_html($string)."</label> <span style='margin-top: 0; font-size: 0.875em; color: #888888; line-height: 1em;'>$contextDesc</span></p>";
+                            echo "<textarea name='override[$contextKey][$stringKey]' rows='$rows' cols='50' class='large-text' placeholder='".esc_attr__($string, 'collectme')."'>$override</textarea>";
                             echo "<p style='margin-top: 0; font-size: 0.875em; line-height: 1em;'>$comments</p>";
                             echo "<p style='margin-top: 0; font-size: 0.875em; color: #888888; line-height: 1em;'>$references</p>";
                             echo '</div>';

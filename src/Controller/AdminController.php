@@ -10,6 +10,7 @@ use Collectme\Misc\Translator;
 use Collectme\Model\Entities\Cause;
 use Gettext\Loader\PoLoader;
 
+use const Collectme\I18N_DEFAULT_CONTEXT;
 use const Collectme\PATH_POT_FILE;
 
 class AdminController
@@ -36,22 +37,18 @@ class AdminController
                 wp_die('Invalid data');
             }
 
-            foreach($_POST['override'] as $key => $override){
-                $text = base64_decode($key);
+            foreach($_POST['override'] as $context => $override){
+                foreach($override as $key => $translation) {
+                    $text = base64_decode($key);
 
-                $context = null;
-                if (is_array($override)) {
-                    $context = array_keys($override)[0];
-                    $override = $override[$context];
+                    if (empty($translation)) {
+                        $this->translator->removeOverride($cause, $text, $context);
+                        continue;
+                    }
+
+                    $translation = strip_tags($translation, '<strong><a>');
+                    $this->translator->addOverride($cause, $text, $translation, $context);
                 }
-
-                if (empty($override)) {
-                    $this->translator->removeOverride($cause, $text, $context);
-                    continue;
-                }
-
-                $translation = strip_tags($override, '<strong><a>');
-                $this->translator->addOverride($cause, $text, $translation, $context);
             }
 
             $this->translator->saveOverrides($cause);
@@ -71,6 +68,7 @@ class AdminController
         $stringTemplates = $poLoader->loadFile(PATH_POT_FILE);
 
         $translator = $this->translator;
+        $defaultContext = I18N_DEFAULT_CONTEXT;
 
         include COLLECTME_BASE_PATH . '/admin/settings.php';
     }

@@ -6,10 +6,10 @@ namespace Collectme\Misc;
 
 use Collectme\Collectme;
 
+use const Collectme\I18N_DEFAULT_CONTEXT;
+
 class Translator
 {
-    private const DEFAULT_CONTEXT = 'collectme';
-
     private array $overrides;
     private string $lang;
 
@@ -38,15 +38,15 @@ class Translator
             return $translation;
         }
 
-        return $this->hasOverride($cause, $text, self::DEFAULT_CONTEXT)
-            ? $this->getOverride($cause, $text, self::DEFAULT_CONTEXT)
+        return $this->hasOverride($cause, $text, I18N_DEFAULT_CONTEXT)
+            ? $this->getOverride($cause, $text, I18N_DEFAULT_CONTEXT)
             : $translation;
     }
 
     public function hasOverride(string $causeUuid, string $text, ?string $context): bool
     {
         if (!$context) {
-            $context = self::DEFAULT_CONTEXT;
+            $context = I18N_DEFAULT_CONTEXT;
         }
 
         return $this->getOverride($causeUuid, $text, $context) !== null;
@@ -55,7 +55,7 @@ class Translator
     public function getOverride(string $causeUuid, string $text, ?string $context): string|null
     {
         if (!$context) {
-            $context = self::DEFAULT_CONTEXT;
+            $context = I18N_DEFAULT_CONTEXT;
         }
 
         return $this->getOverrides($causeUuid)[$text][$context] ?? null;
@@ -109,7 +109,7 @@ class Translator
     public function addOverride(string $causeUuid, string $text, string $translation, ?string $context): void
     {
         if (!$context) {
-            $context = self::DEFAULT_CONTEXT;
+            $context = I18N_DEFAULT_CONTEXT;
         }
 
         if (!isset($this->overrides[$causeUuid])) {
@@ -122,7 +122,7 @@ class Translator
     public function removeOverride(string $causeUuid, string $text, ?string $context): void
     {
         if (!$context) {
-            $context = self::DEFAULT_CONTEXT;
+            $context = I18N_DEFAULT_CONTEXT;
         }
 
         if (!isset($this->overrides[$causeUuid])) {
