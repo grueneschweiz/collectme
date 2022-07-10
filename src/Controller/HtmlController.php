@@ -6,6 +6,8 @@ namespace Collectme\Controller;
 
 use Collectme\Misc\AssetLoader;
 
+use Collectme\Misc\Settings;
+
 use const Collectme\ASSET_PATH_REL;
 use const Collectme\PATH_APP_STRINGS;
 use const Collectme\REST_V1_NAMESPACE;
@@ -14,7 +16,8 @@ use const Collectme\REST_V1_NAMESPACE;
 class HtmlController
 {
     public function __construct(
-        private readonly AssetLoader $assetLoader
+        private readonly AssetLoader $assetLoader,
+        private readonly Settings $settings,
     ) {
     }
 
@@ -32,6 +35,7 @@ class HtmlController
             'encodedAdminEmail' => base64_encode(get_bloginfo('admin_email')), // yeah, yeah, spam. but it's good enough
             'locale' => get_locale(),
             'nonce' => wp_create_nonce('wp_rest'),
+            'objectives' => $this->settings->getObjectives($causeUuid),
             't' => $translations,
         ];
 

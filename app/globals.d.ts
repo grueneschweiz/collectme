@@ -5,5 +5,11 @@ declare namespace collectme {
     const encodedAdminEmail: string;
     const locale: string;
     const nonce: string;
+    const objectives: {
+        sm: object,
+        md: object,
+        lg: object,
+        xl: object,
+    };
     const t: any;
 }

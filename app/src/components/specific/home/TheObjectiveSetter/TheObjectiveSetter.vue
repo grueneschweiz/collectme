@@ -15,13 +15,14 @@
 
       <div class="collectme-the-objective-setter__card-wrapper">
         <TheObjectiveSetterCard
-            v-for="key in Object.keys(ObjectiveSizes)"
-            :key="key"
-            :count="ObjectiveSizes[key]"
-            :img="`${assetBaseUrl}/img/goal-${key}.png`"
-            :disabled="disabled(ObjectiveSizes[key])"
-            :ribbon="ribbon(ObjectiveSizes[key])"
+            v-for="objective in objectiveSettings.getSorted()"
+            :key="objective.id"
+            :count="objective.objective"
+            :img="objective.img"
+            :disabled="disabled(objective.objective)"
+            :ribbon="ribbon(objective.objective)"
             @saved="$router.back()"
+            class="collectme-the-objective-setter__card-base-card"
         />
       </div>
 
@@ -32,13 +33,13 @@
 <script setup lang="ts">
 import TheBaseOverlay from '@/components/base/TheBaseOverlay.vue'
 import TheObjectiveSetterCard from "@/components/specific/home/TheObjectiveSetter/TheObjectiveSetterCard.vue";
-import {ObjectiveSizes} from "@/components/specific/home/TheObjectiveSetter/ObjectiveSizes";
 import t from '@/utility/i18n';
 import {useGroupStore} from "@/stores/GroupStore";
 import {computed} from "vue";
 import {useObjectiveStore} from "@/stores/ObjectiveStore";
+import {useObjectiveSettings} from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
 
-const assetBaseUrl = collectme.assetBaseUrl;
+const objectiveSettings = useObjectiveSettings();
 
 const signatureCount = computed<number>(() => {
   return useGroupStore().myPersonalGroup?.attributes.signatures ?? 0;
@@ -61,7 +62,7 @@ function disabled(objective: number): boolean {
 function ribbon(objective: number): string | undefined {
   let defaultValue = undefined
 
-  if (objective === ObjectiveSizes.lg && !currentObjective.value) {
+  if (objectiveSettings.isHot(objective) && !currentObjective.value) {
     defaultValue = t('HomeView.TheObjectiveSetter.ribbonHot')
   }
 
@@ -89,6 +90,10 @@ function ribbon(objective: number): string | undefined {
   margin: 1rem 0;
   justify-self: stretch;
   align-self: stretch;
+}
+
+.collectme-the-objective-setter__card-base-card {
+  max-height: 30vh;
 }
 
 </style>

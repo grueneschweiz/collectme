@@ -6,12 +6,12 @@
   >
     <div class="collectme-the-objective-setter-card">
       <h3 class="collectme-the-objective-setter-card__title">{{ count }}</h3>
-      <figure class="collectme-the-objective-setter-card__figure">
+      <div class="collectme-the-objective-setter-card__img-wrapper">
         <img :src="img" :alt="`Goal ${count}`" class="collectme-the-objective-setter-card__img">
-        <figcaption class="collectme-the-objective-setter-card__subline">
-          {{ t('HomeView.TheObjectiveSetter.TheObjectiveSetterCard.subline', {count: count.toString()}) }}
-        </figcaption>
-      </figure>
+      </div>
+      <div class="collectme-the-objective-setter-card__subline">
+        {{ t('HomeView.TheObjectiveSetter.TheObjectiveSetterCard.subline', {count: count.toString()}) }}
+      </div>
       <div
           class="collectme-the-objective-setter-card__ribbon"
           :class="{'collectme-the-objective-setter-card__ribbon--done': disabled}"
@@ -102,23 +102,34 @@ function saveObjective() {
 .collectme-the-objective-setter-card {
   text-align: center;
   position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .collectme-the-objective-setter-card__title {
   margin: 0 0 0.25rem;
   color: var(--color-text);
+  flex: none;
+}
+
+.collectme-the-objective-setter-card__img-wrapper {
+  max-height: calc(30vh - 6rem);
 }
 
 .collectme-the-objective-setter-card__img {
-  width: calc(100% - 2rem);
-  max-width: 7rem;
   margin: 0.5rem;
+  max-width: calc(100% - 1rem);
+  max-height: calc(100% - 1rem);
+  flex: none;
 }
 
 .collectme-the-objective-setter-card__subline {
   color: var(--color-grey-3);
   font-size: 0.875rem;
   line-height: 1.2em;
+  flex: none;
 }
 
 .collectme-the-objective-setter-card__ribbon {

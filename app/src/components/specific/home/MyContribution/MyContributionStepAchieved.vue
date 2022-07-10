@@ -43,7 +43,7 @@
       </BaseButton>
 
       <BaseButton
-          v-else-if="fulfilled < 1 || (fulfilled >=1 && objective >= ObjectiveSizes.lg)"
+          v-else-if="fulfilled < 1 || (fulfilled >=1 && objective >= greatestObjective)"
           outline
           secondary
           size="sm"
@@ -53,7 +53,7 @@
       </BaseButton>
 
       <BaseButton
-          v-else-if="fulfilled >= 1 && objective < ObjectiveSizes.lg"
+          v-else-if="fulfilled >= 1 && objective < greatestObjective"
           outline
           secondary
           size="sm"
@@ -70,11 +70,11 @@
 import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.vue";
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseDoughnutChart from "@/components/base/BaseDoughnutChart.vue";
-import {ObjectiveSizes} from "@/components/specific/home/TheObjectiveSetter/ObjectiveSizes";
 import type {StepStatus} from "@/components/base/BaseStepElement/BaseStepElement";
 import type {PropType} from "vue";
 import {computed} from "vue";
 import t from '@/utility/i18n';
+import {useObjectiveSettings} from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
 
 const props = defineProps({
   status: {
@@ -100,6 +100,8 @@ const props = defineProps({
     required: true
   }
 });
+
+const greatestObjective = useObjectiveSettings().getGreatest().objective;
 
 const fulfilled = computed<number>(() => {
   if (!props.signatures || !props.objective) {

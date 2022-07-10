@@ -49,7 +49,7 @@ import MyContributionStepObjective from "@/components/specific/home/MyContributi
 import MyContributionStepCollected from "@/components/specific/home/MyContribution/MyContributionStepCollected.vue";
 import MyContributionStepEntered from "@/components/specific/home/MyContribution/MyContributionStepEntered.vue";
 import MyContributionStepAchieved from "@/components/specific/home/MyContribution/MyContributionStepAchieved.vue";
-import {ObjectiveSizes} from "@/components/specific/home/TheObjectiveSetter/ObjectiveSizes";
+import {useObjectiveSettings} from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
 
 enum Step {
   'connected' = 0,
@@ -64,6 +64,8 @@ const userStore = useUserStore();
 const groupStore = useGroupStore();
 const objectiveStore = useObjectiveStore();
 groupStore.fetch();
+
+const greatestObjective = useObjectiveSettings().getGreatest().objective;
 
 const collected = ref(false);
 
@@ -96,7 +98,7 @@ const activeStep = computed<Step>(() => {
     return Step.collected
   } else if (myCount.value <= 0) {
     return Step.entered
-  } else if (myCount.value < ObjectiveSizes.xl) {
+  } else if (myCount.value < greatestObjective) {
     return Step.achieved
   }
 
