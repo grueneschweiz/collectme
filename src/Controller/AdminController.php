@@ -22,7 +22,6 @@ class AdminController
         private readonly Translator $translator,
         private readonly Settings $settings,
     ) {
-
     }
 
     public function showSettings(): void
@@ -43,17 +42,27 @@ class AdminController
                 $this->saveObjectives($causeUuid)
                 && $this->saveOverrides($causeUuid)
             ) {
-                echo '<div class="notice notice-success is-dismissible"><p>'. __( 'Saved!', 'collectme' ) .'</p></div>';
+                echo '<div class="notice notice-success is-dismissible"><p>' . __('Saved!', 'collectme') . '</p></div>';
             }
         }
 
+        if (!empty($_POST['delete-cause']) && wp_verify_nonce($_POST['_wpnonce'], self::NONCE_ACTION)) {
+            $this->deleteCause();
+        }
+
+        if (!empty($_POST['create-cause']) && wp_verify_nonce($_POST['_wpnonce'], self::NONCE_ACTION)) {
+            $this->createCause();
+        }
+
         $nonce = wp_create_nonce(self::NONCE_ACTION);
+
         try {
             $causes = Cause::findAll();
         } catch (CollectmeDBException $e) {
             /** @noinspection ForgottenDebugOutputInspection */
             wp_die('Database error. Failed to load causes. Try again.');
         }
+        usort($causes, static fn($b, $a) => $a->created <=> $b->created);
 
         $poLoader = new PoLoader();
         $stringTemplates = $poLoader->loadFile(PATH_POT_FILE);
@@ -66,10 +75,55 @@ class AdminController
         include COLLECTME_BASE_PATH . '/admin/settings.php';
     }
 
+    private function saveObjectives(string $causeUuid): bool
+    {
+        $objectives = $this->settings->getObjectivesDefaults();
+
+        foreach ($_POST['objective'] as $key => $attr) {
+            // validate key
+            if (!array_key_exists($key, $objectives)) {
+                echo '<div class="notice notice-error is-dismissible"><p>' . __(
+                        'Invalid objective key.',
+                        'collectme'
+                    ) . '</p></div>';
+                return false;
+            }
+
+            $objective = (int)$attr['objective'];
+            if ($objective < 1 || $objective > 1000000) {
+                echo '<div class="notice notice-error is-dismissible"><p>' . __(
+                        'Invalid goal.',
+                        'collectme'
+                    ) . '</p></div>';
+                return false;
+            }
+            $objectives[$key]['objective'] = $objective;
+
+            $img = filter_var($attr['img'], FILTER_VALIDATE_URL);
+            if (false === $img && !empty($attr['img'])) {
+                echo '<div class="notice notice-error is-dismissible"><p>' . __(
+                        'Invalid image url.',
+                        'collectme'
+                    ) . '</p></div>';
+                return false;
+            }
+            if (!empty($img)) {
+                $objectives[$key]['img'] = $img;
+            }
+
+            $objectives[$key]['hot'] = array_key_exists('hot', $attr);
+            $objectives[$key]['enabled'] = array_key_exists('enabled', $attr);
+        }
+
+        $this->settings->setObjectives($objectives, $causeUuid);
+
+        return true;
+    }
+
     private function saveOverrides(string $causeUuid): bool
     {
-        foreach($_POST['override'] as $context => $override){
-            foreach($override as $key => $translation) {
+        foreach ($_POST['override'] as $context => $override) {
+            foreach ($override as $key => $translation) {
                 $text = base64_decode($key);
 
                 if (empty($translation)) {
@@ -87,38 +141,46 @@ class AdminController
         return true;
     }
 
-    private function saveObjectives(string $causeUuid): bool {
-        $objectives = $this->settings->getObjectivesDefaults();
+    private function deleteCause(): void
+    {
+        try {
+            Cause::get($_POST['delete-cause'])->delete();
+            echo '<div class="notice notice-success is-dismissible"><p>' . __(
+                    'Cause deleted.',
+                    'collectme'
+                ) . '</p></div>';
+        } catch (CollectmeDBException $e) {
+            echo '<div class="notice notice-error is-dismissible"><p>' . __(
+                    'Failed to delete cause.',
+                    'collectme'
+                ) . '</p></div>';
+        }
+    }
 
-        foreach ($_POST['objective'] as $key => $attr) {
-            // validate key
-            if (!array_key_exists($key, $objectives)) {
-                echo '<div class="notice notice-error is-dismissible"><p>'. __( 'Invalid objective key.', 'collectme' ) .'</p></div>';
-                return false;
-            }
+    private function createCause(): void
+    {
+        $name = trim(strip_tags($_POST['create-cause']));
 
-            $objective = (int)$attr['objective'];
-            if ($objective < 1 || $objective > 1000000) {
-                echo '<div class="notice notice-error is-dismissible"><p>'. __( 'Invalid goal.', 'collectme' ) .'</p></div>';
-                return false;
-            }
-            $objectives[$key]['objective'] = $objective;
-
-            $img = filter_var($attr['img'], FILTER_VALIDATE_URL);
-            if (false === $img && !empty($attr['img'])) {
-                echo '<div class="notice notice-error is-dismissible"><p>'. __( 'Invalid image url.', 'collectme' ) .'</p></div>';
-                return false;
-            }
-            if (!empty($img)) {
-                $objectives[$key]['img'] = $img;
-            }
-
-            $objectives[$key]['hot'] = array_key_exists('hot', $attr);
-            $objectives[$key]['enabled'] = array_key_exists('enabled', $attr);
+        if (strlen($name) < 2 || strlen($name) > 45) {
+            echo '<div class="notice notice-error is-dismissible"><p>' . __(
+                    'Failed to create cause: Invalid name.',
+                    'collectme'
+                ) . '</p></div>';
+            return;
         }
 
-        $this->settings->setObjectives($objectives, $causeUuid);
+        try {
+            (new Cause(null, $name))->save();
 
-        return true;
+            echo '<div class="notice notice-success is-dismissible"><p>' . __(
+                    'Cause created.',
+                    'collectme'
+                ) . '</p></div>';
+        } catch (CollectmeDBException $e) {
+            echo '<div class="notice notice-error is-dismissible"><p>' . __(
+                    'Failed to create cause.',
+                    'collectme'
+                ) . '</p></div>';
+        }
     }
 }

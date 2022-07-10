@@ -3,7 +3,7 @@
 ## Shortcode
 
 ```
-[collectme causeUuid='{uuid}' stringOverwritesJson='{json}']
+[collectme causeuuid='{uuid}']
 ```
 
 ## Testing

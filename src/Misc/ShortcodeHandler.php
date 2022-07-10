@@ -24,7 +24,6 @@ class ShortcodeHandler
 
         $defaults = [
             'causeuuid' => '',
-            'stringoverwritesjson' => '{}'
         ];
 
         $args = shortcode_atts($defaults, $atts);
