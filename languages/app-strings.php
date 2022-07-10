@@ -15,7 +15,8 @@ return [
     ],
     'HomeView' => [
         'MyContribution' => [
-            'title' => __('My contribution to the cause', 'collectme'), // todo: overwrite
+            /* Translators: Override with "My contribution to the cause" */
+            'title' => __('My contribution', 'collectme'),
             'singInMsg' => __('Please sign-in to enter your personal signatures.', 'collectme'),
             'signInBtn' => __('Sign in', 'collectme'),
             'noPasswordRequired' => __('No password required', 'collectme'),
@@ -28,7 +29,8 @@ return [
             'MyContributionStepObjective' => [
                 'goalSet' => __('Goal set', 'collectme'),
                 'setGoal' => __('Set a goal', 'collectme'),
-                'goal' => __('You pledged {count} signatures on {date}.', 'collectme'), // todo: overwrite
+                /* Translators: Override with "You pledged {count} signatures for the cause on {date}." */
+                'goal' => __('You pledged {count} signatures on {date}.', 'collectme'),
                 'setGoalBtn' => __('Set Goal', 'collectme'),
             ],
 
@@ -51,7 +53,8 @@ return [
                 'captionWip' => __("You've already collected and registered <strong>{count} out of {goal}</strong> signatures.", 'collectme'),
                 'captionDone' => __("Congratulations! You've achieved your goal and <strong>collected {count}</strong> signatures.", 'collectme'),
                 'captionPlaceholder' => __("Complete the previous steps, and you will see your achievements here.", 'collectme'),
-                'thank' => __('Thank you!', 'collectme'), // todo: overwrite
+                /* Translators: Override with "The cause gives thanks!" */
+                'thank' => __('Thank you!', 'collectme'),
                 'registerSignaturesBtn' => __('Register signatures', 'collectme'),
                 'registerMoreSignaturesBtn' => __('Register more signatures', 'collectme'),
                 'upgradeObjectiveBtn' => __('Upgrade goal', 'collectme'),
@@ -87,8 +90,10 @@ return [
         ],
 
         'TheObjectiveSetter' => [
-            'title' => __('My Goal for the Cause', 'collectme'), // todo: overwrite
-            'intro' => __('Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute to the cause.', 'collectme'), // todo: overwrite
+            /* Translators: Override with "My Goal for the Cause" */
+            'title' => __('My Goal', 'collectme'),
+            /* Translators: Override with "Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute to the cause." */
+            'intro' => __('Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute.', 'collectme'),
             'ribbonHot' => __('Hot', 'collectme'),
             'ribbonDone' => __('Achieved', 'collectme'),
             'ribbonSelected' => __('Selected', 'collectme'),
