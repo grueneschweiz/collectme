@@ -39,7 +39,8 @@ class AdminController
             }
 
             if (
-                $this->saveObjectives($causeUuid)
+                $this->saveEmailConfigs($causeUuid)
+                && $this->saveObjectives($causeUuid)
                 && $this->saveOverrides($causeUuid)
             ) {
                 echo '<div class="notice notice-success is-dismissible"><p>' . __('Saved!', 'collectme') . '</p></div>';
@@ -73,6 +74,31 @@ class AdminController
         $settings = $this->settings;
 
         include COLLECTME_BASE_PATH . '/admin/settings.php';
+    }
+
+    private function saveEmailConfigs(string $causeUuid): bool
+    {
+        $fromName = strip_tags(trim($_POST['email']['fromName']));
+        $fromAddress = filter_var(trim($_POST['email']['fromAddress']), FILTER_VALIDATE_EMAIL);
+        $replyToAddress = filter_var(trim($_POST['email']['replyToAddress']), FILTER_VALIDATE_EMAIL);
+
+        if (empty($fromName) || empty($fromAddress) || empty($replyToAddress)) {
+            echo '<div class="notice notice-error is-dismissible"><p>' . __(
+                    'Invalid email config.',
+                    'collectme'
+                ) . '</p></div>';
+            return false;
+        }
+
+        $config = [
+            'fromName' => $fromName,
+            'fromAddress' => $fromAddress,
+            'replyToAddress' => $replyToAddress,
+        ];
+
+        $this->settings->setEmailConfig($config, $causeUuid);
+
+        return true;
     }
 
     private function saveObjectives(string $causeUuid): bool

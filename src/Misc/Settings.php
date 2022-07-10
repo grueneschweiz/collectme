@@ -11,6 +11,7 @@ class Settings
 {
     private const STRING_OVERRIDES = 'string_overrides';
     private const OBJECTIVES = 'objectives';
+    private const EMAIL_CONFIG = 'email_config';
 
     private array $settings = [];
 
@@ -42,6 +43,14 @@ class Settings
         return array_replace_recursive($defaults, $objectives);
     }
 
+    public function getEmailConfig(string $causeUuid): array
+    {
+        $config = $this->get(self::EMAIL_CONFIG, $causeUuid) ?? [];
+        $defaults = $this->getEmailConfigDefaults();
+
+        return array_replace_recursive($defaults, $config);
+    }
+
     public function setStringOverrides(array $overrides, string $causeUuid): void
     {
         $this->set(self::STRING_OVERRIDES, $overrides, $causeUuid);
@@ -50,6 +59,11 @@ class Settings
     public function setObjectives(array $objectives, string $causeUuid): void
     {
         $this->set(self::OBJECTIVES, $objectives, $causeUuid);
+    }
+
+    public function setEmailConfig(array $config, string $causeUuid): void
+    {
+        $this->set(self::EMAIL_CONFIG, $config, $causeUuid);
     }
 
     private function set(string $key, array $values, string $causeUuid): void
@@ -94,6 +108,21 @@ class Settings
                 'img' => plugin_dir_url(COLLECTME_PLUGIN_NAME) . ASSET_PATH_REL . '/img/goal-xl.png',
                 'hot' => false,
             ],
+        ];
+    }
+
+    public function getEmailConfigDefaults(): array
+    {
+        $domain = preg_replace(
+            '/^www\./',
+            '',
+            wp_parse_url( network_home_url(), PHP_URL_HOST ) ?? 'example.com'
+        );
+
+        return [
+            'fromName' => get_bloginfo('name'),
+            'fromAddress' => "website@$domain",
+            'replyToAddress' => get_bloginfo('admin_email'),
         ];
     }
 }

@@ -86,6 +86,72 @@ use Collectme\Model\Entities\Cause;
         <form method="post">
             <table class="form-table" role="presentation">
                 <tbody>
+
+                <tr>
+                    <th scope="row">
+                        <?php echo esc_html($cause->name) . ' ' . __('E-Mail', 'collectme') ?>
+                    </th>
+                    <td>
+                        <div>
+                            <label for="email[fromName]">
+                                <?php _e('Sender name', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="email[fromName]"
+                                    id="email[fromName]"
+                                    type="text"
+                                    class="regular-text"
+                                    maxlength="80"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getEmailConfig($cause->uuid)['fromName']) ?>"
+                            >
+                            <p class="description"><?php _e(
+                                    'The sender name for emails sent by this cause (e.g. login emails).',
+                                    'collectme'
+                                ) ?></p>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label for="email[fromAddress]">
+                                <?php _e('Sender address', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="email[fromAddress]"
+                                    id="email[fromAddress]"
+                                    type="email"
+                                    class="regular-text"
+                                    maxlength="80"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getEmailConfig($cause->uuid)['fromAddress']) ?>"
+                            >
+                            <p class="description"><?php _e(
+                                    'The sender address for emails sent by this cause (e.g. login emails).',
+                                    'collectme'
+                                ) ?></p>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label for="email[replyToAddress]">
+                                <?php _e('Reply-To address', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="email[replyToAddress]"
+                                    id="email[replyToAddress]"
+                                    type="email"
+                                    class="regular-text"
+                                    maxlength="80"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getEmailConfig($cause->uuid)['replyToAddress']) ?>"
+                            >
+                            <p class="description"><?php _e(
+                                    'The destination address if people reply.',
+                                    'collectme'
+                                ) ?></p>
+                        </div>
+                    </td>
+                </tr>
+
                 <tr>
                     <th scope="row">
                         <?php echo esc_html($cause->name) . ' ' . __('Goals', 'collectme') ?>
