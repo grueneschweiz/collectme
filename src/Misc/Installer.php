@@ -10,7 +10,7 @@ use Collectme\Exceptions\CollectmeException;
 use Collectme\Model\Entities\Cause;
 
 use const Collectme\OPTION_KEY_PLUGIN_VERSION;
-use const Collectme\SETTINGS_PREFIX;
+use const Collectme\OPTIONS_PREFIX;
 
 class Installer
 {
@@ -59,7 +59,7 @@ class Installer
         }
 
         foreach($causes as $cause) {
-            delete_option(SETTINGS_PREFIX . $cause->uuid );
+            delete_option(OPTIONS_PREFIX . $cause->uuid );
         }
     }
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Misc;
 
-use const Collectme\SETTINGS_PREFIX;
+use const Collectme\OPTIONS_PREFIX;
 
 class Settings
 {
@@ -22,7 +22,7 @@ class Settings
     private function get(string $key, string $causeUuid): mixed
     {
         if (!isset($this->settings[$causeUuid])) {
-            $this->settings[$causeUuid] = get_option(SETTINGS_PREFIX . $causeUuid, []);
+            $this->settings[$causeUuid] = get_option(OPTIONS_PREFIX . $causeUuid, []);
         }
 
         if (!is_array($this->settings[$causeUuid]) || !isset($this->settings[$causeUuid][$key])) {
@@ -41,6 +41,6 @@ class Settings
     {
         $this->settings[$causeUuid][$key] = $overrides;
 
-        update_option(SETTINGS_PREFIX . $causeUuid, $this->settings[$causeUuid], false);
+        update_option(OPTIONS_PREFIX . $causeUuid, $this->settings[$causeUuid], false);
     }
 }
