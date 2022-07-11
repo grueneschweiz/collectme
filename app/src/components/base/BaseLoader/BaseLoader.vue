@@ -69,4 +69,8 @@ const props = defineProps({
   fill: var(--color-grey-3);
 }
 
+.collectme-base-loader--inverted {
+  fill: var(--color-white);
+}
+
 </style>
