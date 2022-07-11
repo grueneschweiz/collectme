@@ -4,7 +4,6 @@ RUN apt-get update
 RUN apt-get install -y \
     less \
     vim \
-    msmtp \
     subversion \
     zip \
     libzip-dev --no-install-recommends \
@@ -12,6 +11,10 @@ RUN apt-get install -y \
 
 # Cleanup
 RUN apt-get clean
+
+# install mailhog sendmail
+RUN curl -L -o /usr/local/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64
+RUN chmod 711 /usr/local/bin/mhsendmail
 
 # Add xdebug
 RUN pecl install xdebug

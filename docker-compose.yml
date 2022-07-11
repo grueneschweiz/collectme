@@ -20,6 +20,7 @@ services:
       PHP_IDE_CONFIG: serverName=Docker
     depends_on:
       - "mysql"
+      - "mailhog"
     ports:
       - "8000:80"
     volumes:
@@ -57,9 +58,8 @@ services:
     image: mailhog/mailhog
     ports:
       - '8020:8025'
-    command: ["-smtp-bind-addr", "0.0.0.0:25"]
     expose:
-      - 25
+      - '1025'
 
   node:
     image: node:18
