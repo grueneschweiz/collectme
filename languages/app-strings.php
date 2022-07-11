@@ -11,6 +11,8 @@ return [
             'blameTheDev' => __('I must have made a terrible mistake. Please send me a screenshot of this error message: {email}', 'collectme'),
             'tryAgain' => __('Try again', 'collectme'),
             'unauthenticated' => __('Not authenticated. Please login.', 'collectme'),
+            'invalidData' => __('Invalid data.', 'collectme'),
+            'invalidFields' => __('Please double check the following fields before resubmitting the form: {fields}', 'collectme'),
         ],
     ],
     'HomeView' => [
@@ -75,7 +77,7 @@ return [
             'lastNameLabel' => __('Last Name', 'collectme'),
             'lastNameInvalid' => __('Last name not valid.', 'collectme'),
             'signIn' => __('Sign in', 'collectme'),
-            'submitByline' => __("You'll receive an e-mail with a link that signs you in.", 'collectme'),
+            'submitByline' => __("You'll receive an e-mail with a link that signs you in. Keep this window open.", 'collectme'),
         ],
 
         'ActivityFeed' => [
