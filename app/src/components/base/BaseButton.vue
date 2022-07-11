@@ -74,7 +74,8 @@ defineProps({
   color: var(--color-white);
 }
 
-.collectme-base-button--primary:hover {
+.collectme-base-button--primary:hover,
+.collectme-base-button--primary:focus {
   background-color: var(--color-primary-dark);
   border-color: var(--color-primary-dark);
 }
@@ -85,7 +86,8 @@ defineProps({
   color: var(--color-primary);
 }
 
-.collectme-base-button--primary-outline:hover {
+.collectme-base-button--primary-outline:hover,
+.collectme-base-button--primary-outline:focus {
   border-color: var(--color-primary-dark);
   color: var(--color-primary-dark);
 }
@@ -96,7 +98,8 @@ defineProps({
   color: var(--color-white);
 }
 
-.collectme-base-button--secondary:hover {
+.collectme-base-button--secondary:hover,
+.collectme-base-button--secondary:focus {
   background-color: var(--color-secondary-dark);
   border-color: var(--color-secondary-dark);
 }
@@ -107,7 +110,8 @@ defineProps({
   color: var(--color-secondary);
 }
 
-.collectme-base-button--secondary-outline:hover {
+.collectme-base-button--secondary-outline:hover,
+.collectme-base-button--secondary-outline:focus {
   border-color: var(--color-secondary-dark);
   color: var(--color-secondary-dark);
 }
@@ -118,7 +122,8 @@ defineProps({
   color: var(--color-grey-3);
 }
 
-.collectme-base-button--muted-outline:hover {
+.collectme-base-button--muted-outline:hover,
+.collectme-base-button--muted-outline:focus {
   background-color: transparent;
   border-color: var(--color-grey-4);
   color: var(--color-grey-4);
