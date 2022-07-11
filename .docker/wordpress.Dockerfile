@@ -6,6 +6,8 @@ RUN apt-get install -y \
     vim \
     msmtp \
     subversion \
+    zip \
+    libzip-dev --no-install-recommends \
     default-mysql-client
 
 # Cleanup
