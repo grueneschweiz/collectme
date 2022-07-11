@@ -1,10 +1,26 @@
-import axios, {AxiosError} from 'axios';
+import axios, {AxiosError, AxiosResponse} from 'axios';
 import axiosRetry from 'axios-retry';
 import router from "@/router";
 import type {Snackbar} from "@/stores/SnackbarStore";
 import {useSnackbarStore} from "@/stores/SnackbarStore";
 import t from '@/utility/i18n';
 
+export interface JsonApiError {
+    status: number;
+    title: string;
+    detail?: string;
+    source?: {
+        pointer?: string;
+        parameter?: string;
+    },
+    meta?: any;
+}
+
+export interface ErrorResponse extends AxiosResponse {
+    data: {
+        errors: JsonApiError[];
+    }
+}
 
 function errorHandler(error: any) {
     console.log(error);
