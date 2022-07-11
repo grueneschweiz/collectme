@@ -8,10 +8,14 @@ use Collectme\Controller\Http\InternalServerErrorResponseMaker;
 use Collectme\Controller\Http\ResponseApiError;
 use Collectme\Controller\Http\SuccessResponseMaker;
 use Collectme\Controller\Http\UuidValidator;
+use Collectme\Controller\Http\ValidationErrorResponseMaker;
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Exceptions\CollectmeException;
 use Collectme\Misc\Auth;
+use Collectme\Misc\LoginEmail;
 use Collectme\Model\Entities\AccountToken;
 use Collectme\Model\Entities\Cause;
+use Collectme\Model\Entities\EnumLang;
 use Collectme\Model\JsonApi\ApiError;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -29,24 +33,24 @@ class AuthController extends WP_REST_Controller
 
     public function loginWithToken(WP_REST_Request $request): WP_REST_Response
     {
-        if (!$this->hasValidEmail($request)) {
+        $token = $request->get_param('token');
+        $email = $request->get_param('email');
+        $causeUuid = $request->get_param('cause');
+
+        if (!$this->isValidEmail($email)) {
             return $this->makeInvalidTokenResponse();
         }
 
-        if (!$this->hasValidToken($request)) {
+        if (!$this->isValidTokenFormat($token)) {
             return $this->makeInvalidTokenResponse();
         }
 
-        if (!$this->hasValidCause($request)) {
+        if (!$this->isValidCause($causeUuid)) {
             return new ResponseApiError(
                 404,
                 [new ApiError(404, 'Invalid Cause', parameter: 'cause')]
             );
         }
-
-        $token = $request->get_param('token');
-        $email = $request->get_param('email');
-        $causeUuid = $request->get_param('cause');
 
         try {
             $accountToken = AccountToken::getByEmailAndToken($email, $token);
@@ -71,15 +75,13 @@ class AuthController extends WP_REST_Controller
         return $this->makeSuccessResponse(200, $session);
     }
 
-    private function hasValidEmail(WP_REST_Request $request): bool
+    private function isValidEmail(?string $email): bool
     {
-        if (!$request->has_param('email')) {
+        if (!$email) {
             return false;
         }
 
-        $email = $request->get_param('email');
-
-        return (bool) filter_var($email, FILTER_VALIDATE_EMAIL);
+        return (bool)filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
     private function makeInvalidTokenResponse(): ResponseApiError
@@ -90,32 +92,28 @@ class AuthController extends WP_REST_Controller
         );
     }
 
-    private function hasValidToken(WP_REST_Request $request): bool
+    private function isValidTokenFormat(?string $token): bool
     {
-        if (!$request->has_param('token')) {
+        if (!$token) {
             return false;
         }
-
-        $token = $request->get_param('token');
 
         return strlen($token) === 64
             && preg_match('/[[:alnum:]]{64}/', $token);
     }
 
-    private function hasValidCause(WP_REST_Request $request): bool
+    private function isValidCause(?string $causeUuid): bool
     {
-        if (!$request->has_param('cause')) {
+        if (!$causeUuid) {
             return false;
         }
 
-        $cause = $request->get_param('cause');
-
-        if (!UuidValidator::check($cause)) {
+        if (!UuidValidator::check($causeUuid)) {
             return false;
         }
 
         try {
-            Cause::get($cause);
+            Cause::get($causeUuid);
         } catch (CollectmeDBException) {
             return false;
         }
