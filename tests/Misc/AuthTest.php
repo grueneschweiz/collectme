@@ -18,9 +18,6 @@ use Collectme\Model\Entities\User;
 use Collectme\Model\PhpSession;
 use PHPUnit\Framework\TestCase;
 
-use const Collectme\NONCE_HEADER_KEY;
-use const Collectme\REST_V1_NAMESPACE;
-
 class AuthTest extends TestCase
 {
 
@@ -587,5 +584,74 @@ class AuthTest extends TestCase
         $request->set_header('X-WP-Nonce', wp_create_nonce('something else'));
 
         $this->assertFalse($auth->isAuthenticatedAndHasValidNonce($request));
+    }
+
+    public function test_getOrSetupUser__create(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_'. wp_generate_password(),
+        );
+        $cause->save();
+
+        $auth = new Auth(
+            $this->createMock(PhpSession::class),
+            $this->createMock(AuthCookie::class),
+        );
+
+        $email = wp_generate_uuid4().'@mail.com';
+
+        $user = $auth->getOrSetupUser(
+            $email,
+            'John',
+            'Doe',
+            EnumLang::FR,
+            'test: some string',
+            $cause->uuid,
+        );
+
+        self::assertNotEmpty($user->uuid);
+        self::assertTrue($user->hasCause($cause->uuid));
+    }
+
+    public function test_getOrSetupUser__user_exists(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_'. wp_generate_password(),
+        );
+        $cause->save();
+
+        $existingUser = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            'test: some string',
+        );
+        $existingUser->save();
+
+        $auth = new Auth(
+            $this->createMock(PhpSession::class),
+            $this->createMock(AuthCookie::class),
+        );
+
+        $user = $auth->getOrSetupUser(
+            $existingUser->email,
+            'Should be ignored',
+            'Should be ignored',
+            EnumLang::EN,
+            'Should be ignored',
+            $cause->uuid,
+        );
+
+        self::assertSame($existingUser->uuid, $user->uuid);
+        self::assertSame($existingUser->email, $user->email);
+        self::assertSame('Jane', $user->firstName);
+        self::assertSame('Doe', $user->lastName);
+        self::assertSame(EnumLang::FR, $user->lang);
+        self::assertSame('test: some string', $user->source);
+        self::assertTrue($existingUser->hasCause($cause->uuid));
     }
 }

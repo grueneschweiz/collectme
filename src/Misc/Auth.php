@@ -9,6 +9,7 @@ use Collectme\Exceptions\CollectmeException;
 use Collectme\Model\AuthCookie;
 use Collectme\Model\Entities\AccountToken;
 use Collectme\Model\Entities\EnumGroupType;
+use Collectme\Model\Entities\EnumLang;
 use Collectme\Model\Entities\EnumPermission;
 use Collectme\Model\Entities\Group;
 use Collectme\Model\Entities\PersistentSession;
@@ -146,6 +147,40 @@ class Auth
         $user->addCause($causeUuid);
         $accountToken->userUuid = $user->uuid;
         $accountToken->save();
+
+        return $user;
+    }
+
+    /**
+     * @throws CollectmeDBException
+     * @throws \Exception
+     */
+    public function getOrSetupUser(
+        string $email,
+        string $firstName,
+        string $lastName,
+        EnumLang $lang,
+        string $source,
+        string $causeUuid
+    ): User
+    {
+        try {
+            $user = User::getByEmail($email);
+        } catch (CollectmeDBException) {
+            $user = new User(
+                null,
+                $email,
+                $firstName,
+                $lastName,
+                $lang,
+                $source,
+            );
+            $user = $user->save();
+        }
+
+        if (!$user->hasCause($causeUuid)) {
+            $this->setupUserForCause($user, $causeUuid);
+        }
 
         return $user;
     }
