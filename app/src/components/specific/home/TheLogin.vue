@@ -16,7 +16,7 @@
           :helptext="t('HomeView.TheLogin.emailHelpText')"
           :validation-status="emailValid"
           :validation-message="t('HomeView.TheLogin.emailInvalid')"
-          v-model="email"
+          v-model.trim="email"
           required
       />
 
@@ -32,7 +32,7 @@
               autocomplete="given-name"
               :validation-status="firstNameValid"
               :validation-message="t('HomeView.TheLogin.firstNameInvalid')"
-              v-model="firstName"
+              v-model.trim="firstName"
               required
           />
 
@@ -43,7 +43,7 @@
               autocomplete="family-name"
               :validation-status="lastNameValid"
               :validation-message="t('HomeView.TheLogin.lastNameInvalid')"
-              v-model="lastName"
+              v-model.trim="lastName"
               required
           />
         </div>
@@ -53,12 +53,20 @@
         <BaseButton
             secondary
             :muted="!isFormValid"
-            :disabled="!isFormValid"
+            :disabled="!isFormValid || submitting"
+            @click="submitLoginData"
             class="collectme-the-login__submit-button"
         >
-          {{ t('HomeView.TheLogin.signIn') }}
+          <template v-if="!submitting">
+            {{ t('HomeView.TheLogin.signIn') }}
+          </template>
+          <BaseLoader
+              v-else
+              scheme="inverted"
+              class="collectme-the-login__submit-button--loading"
+          />
         </BaseButton>
-        <p class="collectme-the-login__submit-byline">{{t('HomeView.TheLogin.submitByline')}}</p>
+        <p class="collectme-the-login__submit-byline">{{ t('HomeView.TheLogin.submitByline') }}</p>
       </div>
     </template>
 
@@ -75,10 +83,17 @@ import isLength from 'validator/es/lib/isLength';
 import type {ValidationStatus} from "@/components/base/BaseInput/BaseInput";
 import TransitionAppearFade from '@/components/transition/TransitionAppearFade.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import useApi, {ErrorResponse, JsonApiError} from "@/utility/api";
+import axios, {AxiosError} from "axios";
+import {Snackbar, useSnackbarStore} from "@/stores/SnackbarStore";
+import router from "@/router";
+import BaseLoader from '@/components/base/BaseLoader/BaseLoader.vue';
 
 const email = ref('');
 const firstName = ref('');
 const lastName = ref('');
+
+const submitting = ref(false)
 
 const emailValid = computed<ValidationStatus>(() => {
   if (!email.value) {
@@ -106,8 +121,8 @@ const minLen: (name: string, len: number) => (ValidationStatus) = (name, len) =>
 
 const isFormValid = computed(() => {
   return emailValid.value === 'valid'
-    && firstNameValid.value === 'valid'
-    && lastNameValid.value === 'valid'
+      && firstNameValid.value === 'valid'
+      && lastNameValid.value === 'valid'
 })
 
 let nameInputsShown = false;
@@ -118,6 +133,49 @@ const showNameInputs = computed(() => {
 
   return nameInputsShown
 })
+
+async function submitLoginData() {
+  const data = {
+    attributes: {
+      email: email.value,
+      firstName: firstName.value,
+      lastName: lastName.value,
+      appUrl: collectme.appUrl,
+      urlAuth: collectme.appUrlAuthentication,
+    },
+    relationships: {
+      cause: {
+        data: {id: collectme.cause}
+      }
+    }
+  }
+
+  submitting.value = true
+  try {
+    useSnackbarStore().hide({id: 'login-validation-error'} as Snackbar)
+    await useApi(true).post('auth', {data: data})
+    await router.push('/await-activation')
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response.status === 422) {
+      const errorResponse = (error as AxiosError).response as ErrorResponse;
+      const invalidFields = errorResponse.data.errors
+          .map<string | false>((error: JsonApiError) => error.source?.pointer ?? false)
+          .filter(pointer => !!pointer)
+          .map<string>((pointer: string) => pointer.replace(/^\/data\/attributes\//, ''))
+          .map<string>((field: string) => field.charAt(0).toUpperCase() + field.substring(1));
+
+      useSnackbarStore().show({
+        id: 'login-validation-error',
+        type: error,
+        shortDesc: t('General.Error.invalidData'),
+        longDesc: t('General.Error.invalidFields', {fields: invalidFields.join(', ')}),
+        vanishAfter: 10000
+      } as Snackbar)
+    }
+  } finally {
+    submitting.value = false
+  }
+}
 </script>
 
 <style>
@@ -135,6 +193,11 @@ const showNameInputs = computed(() => {
 
 .collectme-the-login__submit-button {
   flex: none;
+}
+
+.collectme-the-login__submit-button--loading {
+  height: 1rem;
+  margin: 0.25rem;
 }
 
 .collectme-the-login__submit-byline {
