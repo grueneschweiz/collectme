@@ -55,7 +55,15 @@ class RestRouterV1
 
     private function registerAuthRoutes(): void
     {
-        // todo: POST /auth
+        register_rest_route(
+            REST_V1_NAMESPACE,
+            '/auth',
+            [
+                'methods' => WP_REST_Server::CREATABLE,
+                'callback' => [$this->authController, 'loginWithFormData'],
+                'permission_callback' => '__return_true',
+            ]
+        );
 
         register_rest_route(
             REST_V1_NAMESPACE,
