@@ -53,11 +53,11 @@
         <BaseButton
             secondary
             :muted="!isFormValid"
-            :disabled="!isFormValid || submitting"
+            :disabled="!isFormValid || loginStore.isLoading"
             @click="submitLoginData"
             class="collectme-the-login__submit-button"
         >
-          <template v-if="!submitting">
+          <template v-if="!loginStore.isLoading">
             {{ t('HomeView.TheLogin.signIn') }}
           </template>
           <BaseLoader
@@ -83,17 +83,18 @@ import isLength from 'validator/es/lib/isLength';
 import type {ValidationStatus} from "@/components/base/BaseInput/BaseInput";
 import TransitionAppearFade from '@/components/transition/TransitionAppearFade.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
-import useApi, {ErrorResponse, JsonApiError} from "@/utility/api";
-import axios, {AxiosError} from "axios";
-import {Snackbar, useSnackbarStore} from "@/stores/SnackbarStore";
+import {useSnackbarStore} from "@/stores/SnackbarStore";
+import type {Snackbar} from "@/stores/SnackbarStore";
 import router from "@/router";
 import BaseLoader from '@/components/base/BaseLoader/BaseLoader.vue';
+import type {Login} from "@/models/generated";
+import {useLoginStore} from "@/stores/LoginStore";
+
+const loginStore = useLoginStore()
 
 const email = ref('');
 const firstName = ref('');
 const lastName = ref('');
-
-const submitting = ref(false)
 
 const emailValid = computed<ValidationStatus>(() => {
   if (!email.value) {
@@ -148,20 +149,16 @@ async function submitLoginData() {
         data: {id: collectme.cause}
       }
     }
-  }
+  } as Login
 
-  submitting.value = true
   try {
     useSnackbarStore().hide({id: 'login-validation-error'} as Snackbar)
-    await useApi(true).post('auth', {data: data})
+    await loginStore.sendLoginData(data)
     await router.push('/await-activation')
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response.status === 422) {
-      const errorResponse = (error as AxiosError).response as ErrorResponse;
-      const invalidFields = errorResponse.data.errors
-          .map<string | false>((error: JsonApiError) => error.source?.pointer ?? false)
-          .filter(pointer => !!pointer)
-          .map<string>((pointer: string) => pointer.replace(/^\/data\/attributes\//, ''))
+    if (loginStore.invalidFields.length) {
+      const invalidFields = loginStore.invalidFields
+          .map<string>((field: string) => field.replace(/([A-Z])/g, ' $1'))
           .map<string>((field: string) => field.charAt(0).toUpperCase() + field.substring(1));
 
       useSnackbarStore().show({
@@ -172,8 +169,6 @@ async function submitLoginData() {
         vanishAfter: 10000
       } as Snackbar)
     }
-  } finally {
-    submitting.value = false
   }
 }
 </script>
