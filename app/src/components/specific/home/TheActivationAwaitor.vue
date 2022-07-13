@@ -47,12 +47,15 @@ import {onBeforeUnmount, onMounted} from "vue";
 import {useSessionStore} from "@/stores/SessionStore";
 import router from "@/router";
 
+const emit = defineEmits(['login']);
+
 const loginStore = useLoginStore()
 
 let timer: ReturnType<typeof setInterval>;
 
 function attemptLogin() {
   useSessionStore().fetch()
+      .then(() => emit('login'))
       .then(() => router.push('/'))
 }
 
