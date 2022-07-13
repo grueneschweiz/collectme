@@ -1034,12 +1034,6 @@ paths:
             type: string
             format: email
           description: Required for `create` action
-        - name: cause
-          in: query
-          schema:
-            type: string
-            format: uuid
-          description: Required for `create` action
         - name: session
           in: query
           schema:
