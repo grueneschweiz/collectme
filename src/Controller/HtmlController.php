@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Collectme\Controller;
 
+use Collectme\Controller\Validators\EmailValidator;
+use Collectme\Controller\Validators\TokenValidator;
+use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Misc\AssetLoader;
-
+use Collectme\Misc\Auth;
 use Collectme\Misc\Settings;
+use Collectme\Model\Entities\AccountToken;
 
 use const Collectme\ASSET_PATH_REL;
 use const Collectme\PATH_APP_STRINGS;
@@ -18,7 +22,44 @@ class HtmlController
     public function __construct(
         private readonly AssetLoader $assetLoader,
         private readonly Settings $settings,
+        private readonly Auth $auth,
     ) {
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public function createUserFromToken(string $causeUuid): string
+    {
+        $token = trim($_GET['token'] ?? '');
+        $email = trim($_GET['email'] ?? '');
+
+        if (!TokenValidator::check($token) || !EmailValidator::check($email)) {
+            return $this->index($causeUuid);
+        }
+
+        try {
+            $accountToken = AccountToken::getByEmailAndToken($email, $token);
+        } catch (CollectmeDBException $e) {
+            // token not found / invalid
+            return $this->index($causeUuid);
+        }
+
+        try {
+            $user = $this->auth->getOrSetupUserFromAccountToken($accountToken, $causeUuid);
+            $this->auth->createPersistentSession($user, true);
+        } catch (\Exception $e) {
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                /** @noinspection ForgottenDebugOutputInspection */
+                wp_die($e->getMessage());
+            } else {
+                return $this->index($causeUuid);
+            }
+        }
+
+        $this->auth->getPersistentSession();
+
+        return $this->index($causeUuid);
     }
 
     /**

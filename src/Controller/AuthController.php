@@ -31,96 +31,6 @@ class AuthController extends WP_REST_Controller
     ) {
     }
 
-    public function loginWithToken(WP_REST_Request $request): WP_REST_Response
-    {
-        $token = $request->get_param('token');
-        $email = $request->get_param('email');
-        $causeUuid = $request->get_param('cause');
-
-        if (!$this->isValidEmail($email)) {
-            return $this->makeInvalidTokenResponse();
-        }
-
-        if (!$this->isValidTokenFormat($token)) {
-            return $this->makeInvalidTokenResponse();
-        }
-
-        if (!$this->isValidCause($causeUuid)) {
-            return new ResponseApiError(
-                404,
-                [new ApiError(404, 'Invalid Cause', parameter: 'cause')]
-            );
-        }
-
-        try {
-            $accountToken = AccountToken::getByEmailAndToken($email, $token);
-        } catch (CollectmeDBException $e) {
-            // token not found / invalid
-            return $this->makeInvalidTokenResponse();
-        }
-
-        try {
-            $user = $this->auth->getOrSetupUserFromAccountToken($accountToken, $causeUuid);
-            $this->auth->createPersistentSession($user, true);
-        } catch (\Exception $e) {
-            return $this->makeInternalServerErrorResponse($e);
-        }
-
-        $session = $this->auth->getPersistentSession();
-
-        if (!$session) {
-            return $this->makeInvalidTokenResponse();
-        }
-
-        return $this->makeSuccessResponse(200, $session);
-    }
-
-    private function isValidEmail(?string $email): bool
-    {
-        if (!$email) {
-            return false;
-        }
-
-        return (bool)filter_var($email, FILTER_VALIDATE_EMAIL);
-    }
-
-    private function makeInvalidTokenResponse(): ResponseApiError
-    {
-        return new ResponseApiError(
-            404,
-            [new ApiError(404, 'Invalid Token', parameter: 'token')]
-        );
-    }
-
-    private function isValidTokenFormat(?string $token): bool
-    {
-        if (!$token) {
-            return false;
-        }
-
-        return strlen($token) === 64
-            && preg_match('/[[:alnum:]]{64}/', $token);
-    }
-
-    private function isValidCause(?string $causeUuid): bool
-    {
-        if (!$causeUuid) {
-            return false;
-        }
-
-        if (!UuidValidator::check($causeUuid)) {
-            return false;
-        }
-
-        try {
-            Cause::get($causeUuid);
-        } catch (CollectmeDBException) {
-            return false;
-        }
-
-        return true;
-    }
-
     public function loginWithFormData(WP_REST_Request $request): WP_REST_Response
     {
         // START: user data validation
@@ -158,7 +68,7 @@ class AuthController extends WP_REST_Controller
             $errors[] = '/data/attributes/appUrl';
         }
 
-        if (!$this->isValidCause($data['relationships']['cause']['data']['id'] ?? null)) {
+        if (!CauseUuidValidator::check($data['relationships']['cause']['data']['id'] ?? null)) {
             $errors[] = '/data/relationships/cause/data/id';
         }
 
