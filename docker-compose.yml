@@ -90,14 +90,6 @@ services:
       - ./gen:/tmp/swagger/output
     command: "" # see README.md on how to generate stubs.
 
-  prism:
-    image: stoplight/prism:4.10.0
-    volumes:
-      - ./docs/api:/tmp/prism:ro
-    ports:
-      - "8040:4010"
-    command: mock -h 0.0.0.0 /tmp/prism/rest-api.yaml
-
 volumes:
   db:
   wp:
