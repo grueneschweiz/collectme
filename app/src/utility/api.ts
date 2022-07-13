@@ -23,7 +23,7 @@ export interface ErrorResponse extends AxiosResponse {
     }
 }
 
-function errorHandler(error: any) {
+async function errorHandler(error: any) {
     console.log(error);
 
     if (error && axios.isAxiosError(error) && error.response?.status === 401) {
@@ -38,7 +38,7 @@ function errorHandler(error: any) {
             vanishAfter: 5000,
         } as Snackbar);
 
-        router.push('/login');
+        await router.push('/login');
         return Promise.reject(error);
     }
 
