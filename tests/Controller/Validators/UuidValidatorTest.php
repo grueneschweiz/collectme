@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Controller\Http;
+namespace Controller\Validators;
 
-use Collectme\Controller\Http\UuidValidator;
+use Collectme\Controller\Validators\UuidValidator;
 use PHPUnit\Framework\TestCase;
 
 class UuidValidatorTest extends TestCase

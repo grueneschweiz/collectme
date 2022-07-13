@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace Collectme\Controller;
 
 use Collectme\Controller\Http\InternalServerErrorResponseMaker;
-use Collectme\Controller\Http\ResponseApiError;
 use Collectme\Controller\Http\SuccessResponseMaker;
-use Collectme\Controller\Http\UuidValidator;
 use Collectme\Controller\Http\ValidationErrorResponseMaker;
-use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Controller\Validators\CauseUuidValidator;
+use Collectme\Controller\Validators\EmailValidator;
+use Collectme\Controller\Validators\StringValidator;
+use Collectme\Controller\Validators\UrlValidator;
 use Collectme\Exceptions\CollectmeException;
 use Collectme\Misc\Auth;
 use Collectme\Misc\LoginEmail;
-use Collectme\Model\Entities\AccountToken;
-use Collectme\Model\Entities\Cause;
 use Collectme\Model\Entities\EnumLang;
-use Collectme\Model\JsonApi\ApiError;
 use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -140,23 +138,23 @@ class AuthController extends WP_REST_Controller
 
         $errors = [];
 
-        if (!$this->isValidEmail($attributes['email'] ?? null)) {
+        if (!EmailValidator::check($attributes['email'] ?? null)) {
             $errors[] = '/data/attributes/email';
         }
 
-        if (!$this->isValidString($attributes['firstName'] ?? null, 45)) {
+        if (!StringValidator::check($attributes['firstName'] ?? null, 2, 45)) {
             $errors[] = "/data/attributes/firstName";
         }
 
-        if (!$this->isValidString($attributes['lastName'] ?? null, 45)) {
+        if (!StringValidator::check($attributes['lastName'] ?? null, 2, 45)) {
             $errors[] = "/data/attributes/lastName";
         }
 
-        if (!$this->isValidString($attributes['urlAuth'] ?? null, 64)) {
+        if (!StringValidator::check($attributes['urlAuth'] ?? null, 32, 32)) {
             $errors[] = '/data/attributes/urlAuth';
         }
 
-        if (!$this->isValidUrl($attributes['appUrl'] ?? null)) {
+        if (!UrlValidator::check($attributes['appUrl'] ?? null, 'http')) {
             $errors[] = '/data/attributes/appUrl';
         }
 
@@ -216,25 +214,6 @@ class AuthController extends WP_REST_Controller
         }
 
         return $this->makeSuccessResponse(201, $session);
-    }
-
-    private function isValidString(?string $string, int $maxLen): bool
-    {
-        if (empty($string)) {
-            return false;
-        }
-
-        return strlen($string) < $maxLen && $string === strip_tags($string);
-    }
-
-    private function isValidUrl(?string $url): bool
-    {
-        if (empty($url)) {
-            return false;
-        }
-
-        return false !== filter_var($url, FILTER_VALIDATE_URL)
-            && str_starts_with($url, 'http');
     }
 
     private function getLang(): EnumLang

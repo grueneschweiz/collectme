@@ -9,6 +9,7 @@ use Collectme\Controller\Http\NotFoundResponseMaker;
 use Collectme\Controller\Http\ResponseApiError;
 use Collectme\Controller\Http\SuccessResponseMaker;
 use Collectme\Controller\Http\UnauthorizedResponseMaker;
+use Collectme\Controller\Validators\TokenValidator;
 use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Exceptions\CollectmeException;
 use Collectme\Misc\Auth;
@@ -108,14 +109,7 @@ class SessionController extends \WP_REST_Controller
 
     private function hasValidToken(WP_REST_Request $request): bool
     {
-        if (!$request->has_param('token')) {
-            return false;
-        }
-
-        $token = $request->get_param('token');
-
-        return strlen($token) === 64
-            && preg_match('/[[:alnum:]]{64}/', $token);
+        return TokenValidator::check($request->get_param('token'));
     }
 
     private function makeInvalidTokenResponse(): ResponseApiError

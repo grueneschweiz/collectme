@@ -7,8 +7,8 @@ namespace Collectme\Controller;
 use Collectme\Controller\Http\InternalServerErrorResponseMaker;
 use Collectme\Controller\Http\SuccessResponseMaker;
 use Collectme\Controller\Http\UnauthorizedResponseMaker;
-use Collectme\Controller\Http\UuidValidator;
 use Collectme\Controller\Http\ValidationErrorResponseMaker;
+use Collectme\Controller\Validators\UuidValidator;
 use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Exceptions\CollectmeException;
 use Collectme\Misc\Auth;
@@ -55,7 +55,7 @@ class ObjectiveController extends WP_REST_Controller
         }
 
         $errors = [];
-        if (!array_key_exists('groupUuid', $entryProps) || !UuidValidator::check($entryProps['groupUuid'])) {
+        if (!UuidValidator::check($entryProps['groupUuid'] ?? null)) {
             $errors[] = '/data/relationships/group/data/id';
         }
 

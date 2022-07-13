@@ -9,8 +9,8 @@ use Collectme\Controller\Http\NotFoundResponseMaker;
 use Collectme\Controller\Http\ResponseApiSuccess;
 use Collectme\Controller\Http\SuccessResponseMaker;
 use Collectme\Controller\Http\UnauthorizedResponseMaker;
-use Collectme\Controller\Http\UuidValidator;
 use Collectme\Controller\Http\ValidationErrorResponseMaker;
+use Collectme\Controller\Validators\UuidValidator;
 use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Exceptions\CollectmeException;
 use Collectme\Misc\Auth;
@@ -20,7 +20,6 @@ use Collectme\Model\Entities\EnumActivityType;
 use Collectme\Model\Entities\EnumGroupType;
 use Collectme\Model\Entities\Group;
 use Collectme\Model\Entities\SignatureEntry;
-use Collectme\Model\JsonApi\ApiError;
 use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -59,11 +58,11 @@ class SignatureController extends WP_REST_Controller
         }
 
         $errors = [];
-        if (!array_key_exists('groupUuid', $entryProps) || !UuidValidator::check($entryProps['groupUuid'])) {
+        if (!UuidValidator::check($entryProps['groupUuid'] ?? null)) {
             $errors[] = '/data/relationships/group/data/id';
         }
 
-        if (!array_key_exists('userUuid', $entryProps) || !UuidValidator::check($entryProps['userUuid'])) {
+        if (!UuidValidator::check($entryProps['userUuid'] ?? null)) {
             $errors[] = '/data/relationships/user/data/id';
         }
 

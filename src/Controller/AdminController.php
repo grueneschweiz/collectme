@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Collectme\Controller;
 
-use Collectme\Controller\Http\UuidValidator;
+use Collectme\Controller\Validators\CauseUuidValidator;
+use Collectme\Controller\Validators\EmailValidator;
+use Collectme\Controller\Validators\StringValidator;
+use Collectme\Controller\Validators\UrlValidator;
 use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Misc\Settings;
 use Collectme\Misc\Translator;
@@ -32,8 +35,8 @@ class AdminController
         }
 
         if (!empty($_POST['cause']) && wp_verify_nonce($_POST['_wpnonce'], self::NONCE_ACTION)) {
-            $causeUuid = UuidValidator::check($_POST['cause']) ? $_POST['cause'] : null;
-            if (!$causeUuid) {
+            $causeUuid = $_POST['cause'];
+            if (!CauseUuidValidator::check($causeUuid)) {
                 /** @noinspection ForgottenDebugOutputInspection */
                 wp_die('Invalid data');
             }
@@ -78,11 +81,14 @@ class AdminController
 
     private function saveEmailConfigs(string $causeUuid): bool
     {
-        $fromName = strip_tags(trim($_POST['email']['fromName']));
-        $fromAddress = filter_var(trim($_POST['email']['fromAddress']), FILTER_VALIDATE_EMAIL);
-        $replyToAddress = filter_var(trim($_POST['email']['replyToAddress']), FILTER_VALIDATE_EMAIL);
+        $fromName = strip_tags(trim($_POST['email']['fromName'] ?? ''));
+        $fromAddress = trim($_POST['email']['fromAddress'] ?? '');
+        $replyToAddress = trim($_POST['email']['replyToAddress'] ?? '');
 
-        if (empty($fromName) || empty($fromAddress) || empty($replyToAddress)) {
+        if (!StringValidator::check($fromName, 1, 80) ||
+            !EmailValidator::check($fromAddress) ||
+            !EmailValidator::check($replyToAddress)
+        ) {
             echo '<div class="notice notice-error is-dismissible"><p>' . __(
                     'Invalid email config.',
                     'collectme'
@@ -125,8 +131,8 @@ class AdminController
             }
             $objectives[$key]['objective'] = $objective;
 
-            $img = filter_var($attr['img'], FILTER_VALIDATE_URL);
-            if (false === $img && !empty($attr['img'])) {
+            $img = $attr['img'] ?? null;
+            if (!UrlValidator::check($img, 'http')) {
                 echo '<div class="notice notice-error is-dismissible"><p>' . __(
                         'Invalid image url.',
                         'collectme'
