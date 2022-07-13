@@ -117,5 +117,14 @@ return [
             'saved' => __('{count} signatures added.', 'collectme'),
             'back' => __('Back without registering signatures', 'collectme'),
         ],
+
+        'TheActivationAwaitor' => [
+            'title' => __("You've got mail", 'collectme'),
+            'descLogin' => __("<strong>Do not close this window</strong>. We've emailed you a link that will activate your login here in this window.", 'collectme'),
+            'descSlowMail' => __("Emails are sometimes slow. It may take a minute or two until it reaches your inbox.", 'collectme'),
+            'retryBtn' => __('Send again', 'collectme'),
+            'retryByline' => __('Retry sending login email to: {email}', 'collectme'),
+            'invalidEmail' => __('invalid e-mail address', 'collectme'),
+        ]
     ],
 ];
