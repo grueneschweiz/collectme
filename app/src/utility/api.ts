@@ -27,6 +27,10 @@ function errorHandler(error: any) {
     console.log(error);
 
     if (error && axios.isAxiosError(error) && error.response?.status === 401) {
+        if (router.currentRoute.value.path === '/login') {
+            return Promise.reject(error);
+        }
+
         useSnackbarStore().show({
             id: error.response?.status.toString() ?? 'unknown',
             type: 'error',
