@@ -18,8 +18,210 @@ use PHPUnit\Framework\TestCase;
 class HtmlControllerTest extends TestCase
 {
 
-    public function testActivateSession()
+    public function test_activateSession__success__sameBrowser(): void
     {
+        $user = new User(
+            null,
+            wp_generate_uuid4().'@example.com',
+            'Jane',
+            'Doe',
+            EnumLang::EN,
+            'test: some string',
+        );
+        $user->save();
+
+        $activationSecret = wp_generate_password(64, false, false);
+        $sessionSecret = wp_generate_password(64, false, false);
+        $sessionHash = password_hash($sessionSecret, PASSWORD_DEFAULT);
+        $session = new PersistentSession(
+            null,
+            $user->uuid,
+            0,
+            null,
+            $activationSecret,
+            $sessionHash,
+            null,
+            null,
+        );
+        $session->save();
+
+        $cause = new Cause(
+            null,
+            'html_controller' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $authMock = $this->createMock(Auth::class);
+        $authMock->expects($this->once())
+            ->method('getPersistentSession')
+            ->willReturn($session);
+        $authMock->expects($this->once())
+            ->method('isAuthenticated')
+            ->willReturn(true);
+
+        $htmlController = new HtmlController(
+            $this->createMock(AssetLoader::class),
+            $this->createMock(Settings::class),
+            $authMock,
+        );
+
+        $_GET['token'] = $activationSecret;
+        $_GET['session'] = $session->uuid;
+
+        $html = $htmlController->activateSession($cause->uuid);
+        $this->assertStringContainsString('id="collectme-app"', $html);
+    }
+
+    public function test_activateSession__success__differentBrowser(): void
+    {
+        $user = new User(
+            null,
+            wp_generate_uuid4().'@example.com',
+            'Jane',
+            'Doe',
+            EnumLang::EN,
+            'test: some string',
+        );
+        $user->save();
+
+        $activationSecret = wp_generate_password(64, false, false);
+        $sessionSecret = wp_generate_password(64, false, false);
+        $sessionHash = password_hash($sessionSecret, PASSWORD_DEFAULT);
+        $session = new PersistentSession(
+            null,
+            $user->uuid,
+            0,
+            null,
+            $activationSecret,
+            $sessionHash,
+            null,
+            null,
+        );
+        $session->save();
+
+        $cause = new Cause(
+            null,
+            'html_controller' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $authMock = $this->createMock(Auth::class);
+        $authMock->expects($this->once())
+            ->method('getPersistentSession')
+            ->willReturn($session);
+        $authMock->expects($this->once())
+            ->method('isAuthenticated')
+            ->willReturn(false);
+
+        $htmlController = new HtmlController(
+            $this->createMock(AssetLoader::class),
+            $this->createMock(Settings::class),
+            $authMock,
+        );
+
+        $_GET['token'] = $activationSecret;
+        $_GET['session'] = $session->uuid;
+
+        $html = $htmlController->activateSession($cause->uuid);
+        $this->assertStringContainsString('class="collectme-success"', $html);
+    }
+
+    public function test_activateSession__timeout(): void
+    {
+        $user = new User(
+            null,
+            wp_generate_uuid4().'@example.com',
+            'Jane',
+            'Doe',
+            EnumLang::EN,
+            'test: some string',
+        );
+        $user->save();
+
+        $activationSecret = wp_generate_password(64, false, false);
+        $sessionSecret = wp_generate_password(64, false, false);
+        $sessionHash = password_hash($sessionSecret, PASSWORD_DEFAULT);
+        $session = new PersistentSession(
+            null,
+            $user->uuid,
+            0,
+            null,
+            $activationSecret,
+            $sessionHash,
+            null,
+            null,
+            date_create('-1 hour'),
+        );
+        $session->save();
+
+        $cause = new Cause(
+            null,
+            'html_controller' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $authMock = $this->createMock(Auth::class);
+
+        $htmlController = new HtmlController(
+            $this->createMock(AssetLoader::class),
+            $this->createMock(Settings::class),
+            $authMock,
+        );
+
+        $_GET['token'] = $activationSecret;
+        $_GET['session'] = $session->uuid;
+
+        $html = $htmlController->activateSession($cause->uuid);
+        $this->assertStringContainsString('class="collectme-error"', $html);
+        $this->assertStringContainsString('expired', $html);
+    }
+
+    public function test_activateSession__closed(): void
+    {
+        $user = new User(
+            null,
+            wp_generate_uuid4().'@example.com',
+            'Jane',
+            'Doe',
+            EnumLang::EN,
+            'test: some string',
+        );
+        $user->save();
+
+        $activationSecret = wp_generate_password(64, false, false);
+        $sessionSecret = wp_generate_password(64, false, false);
+        $sessionHash = password_hash($sessionSecret, PASSWORD_DEFAULT);
+        $session = new PersistentSession(
+            null,
+            $user->uuid,
+            0,
+            null,
+            $activationSecret,
+            $sessionHash,
+            null,
+            date_create('-1 hour'),
+        );
+        $session->save();
+
+        $cause = new Cause(
+            null,
+            'html_controller' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $authMock = $this->createMock(Auth::class);
+
+        $htmlController = new HtmlController(
+            $this->createMock(AssetLoader::class),
+            $this->createMock(Settings::class),
+            $authMock,
+        );
+
+        $_GET['token'] = $activationSecret;
+        $_GET['session'] = $session->uuid;
+
+        $html = $htmlController->activateSession($cause->uuid);
+        $this->assertStringContainsString('class="collectme-error"', $html);
     }
 
     public function test_createUserFromToken__success(): void
@@ -65,7 +267,7 @@ class HtmlControllerTest extends TestCase
 
         $cause = new Cause(
             null,
-            'auth_controller_' . wp_generate_password(),
+            'html_controller_' . wp_generate_password(),
         );
         $cause->save();
 
@@ -122,7 +324,7 @@ class HtmlControllerTest extends TestCase
 
         $cause = new Cause(
             null,
-            'auth_controller_' . wp_generate_password(),
+            'html_controller_' . wp_generate_password(),
         );
         $cause->save();
 
@@ -151,7 +353,7 @@ class HtmlControllerTest extends TestCase
     {
         $cause = new Cause(
             null,
-            'auth_controller_' . wp_generate_password(),
+            'html_controller_' . wp_generate_password(),
         );
         $cause->save();
 
@@ -180,7 +382,7 @@ class HtmlControllerTest extends TestCase
     {
         $cause = new Cause(
             null,
-            'html-controller' . wp_generate_password(),
+            'html_controller' . wp_generate_password(),
         );
         $cause->save();
 

@@ -6,13 +6,16 @@ namespace Collectme\Controller;
 
 use Collectme\Controller\Validators\EmailValidator;
 use Collectme\Controller\Validators\TokenValidator;
+use Collectme\Controller\Validators\UuidValidator;
 use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Misc\AssetLoader;
 use Collectme\Misc\Auth;
 use Collectme\Misc\Settings;
 use Collectme\Model\Entities\AccountToken;
+use Collectme\Model\Entities\PersistentSession;
 
 use const Collectme\ASSET_PATH_REL;
+use const Collectme\AUTH_SESSION_ACTIVATION_TIMEOUT;
 use const Collectme\PATH_APP_STRINGS;
 use const Collectme\REST_V1_NAMESPACE;
 
@@ -86,5 +89,62 @@ class HtmlController
             . $this->assetLoader->getStylesHtml()
             . $this->assetLoader->getScriptDataHtml('collectme', $data)
             . $this->assetLoader->getScriptsHtml();
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public function activateSession(string $causeUuid): string
+    {
+        $activationSecret = trim($_GET['token'] ?? '');
+        $sessionUuid = trim($_GET['session'] ?? '');
+
+        if (!TokenValidator::check($activationSecret) || !UuidValidator::check($sessionUuid)) {
+            return $this->getView('activation-error');
+        }
+
+        try {
+            $session = PersistentSession::get($sessionUuid);
+
+            if ($session->isClosed()) {
+                return $this->getView('activation-error');
+            }
+
+            if (!$session->isActivated() && hash_equals($session->activationSecret, $activationSecret)) {
+                if ($session->created < date_create('-' . AUTH_SESSION_ACTIVATION_TIMEOUT)) {
+                    return $this->getView('activation-timeout');
+                }
+
+                $session->activated = date_create('-1 second');
+                $session = $session->save();
+            }
+
+            if ($session->isActivated()) {
+                $this->auth->getPersistentSession();
+
+                if ($this->auth->isAuthenticated()) {
+                    // user activated session in same browser as he requested
+                    // activation. so he is now logged in, and we can redirect
+                    // him directly to the app.
+                    return $this->index($causeUuid);
+                }
+
+                // user activated session in different browser than he
+                // requested activation. so lets tell him, that he is now
+                // logged-in in the other browser.
+                return $this->getView('activation-success');
+            }
+        } catch (CollectmeDBException) {
+        }
+
+        return $this->getView('activation-error');
+    }
+
+    private function getView(string $viewName): string
+    {
+        ob_start();
+        /** @noinspection PhpIncludeInspection */
+        include COLLECTME_BASE_PATH . "/views/$viewName.php";
+        return ob_get_clean();
     }
 }

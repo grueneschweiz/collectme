@@ -58,6 +58,7 @@ const DB_PREFIX = 'collectme_';
 const AUTH_COOKIE_KEY = 'wp-collectme-auth';
 const AUTH_COOKIE_TTL = '5 years';
 const AUTH_SESSION_KEY = 'WP_COLLECTME_AUTH';
+const AUTH_SESSION_ACTIVATION_TIMEOUT = '15 minutes';
 
 /**
  * Options API

@@ -56,38 +56,6 @@ class SessionController extends \WP_REST_Controller
         return $this->makeUnauthorizedResponse();
     }
 
-    public function activate(WP_REST_Request $request): WP_REST_Response
-    {
-        if (!$this->hasValidToken($request)) {
-            return $this->makeInvalidTokenResponse();
-        }
-
-        $activationSecret = $request->get_param('token');
-        $sessionUuid = $request->get_param('uuid');
-
-        try {
-            $session = PersistentSession::get($sessionUuid);
-
-            if ($session->isClosed()) {
-                return $this->makeNotFoundResponse();
-            }
-
-            if ($session->isActivated()) {
-                return new WP_REST_Response(null, 204);
-            }
-
-            if (hash_equals($session->activationSecret, $activationSecret)) {
-                $session->activated = date_create('-1 second');
-                $session->save();
-                return new WP_REST_Response(null, 204);
-            }
-
-            return $this->makeInvalidTokenResponse();
-        } catch (CollectmeDBException) {
-            return $this->makeNotFoundResponse();
-        }
-    }
-
     public function logout(WP_REST_Request $request): WP_REST_Response
     {
         $sessionUuid = $request->get_param('uuid');
@@ -105,18 +73,5 @@ class SessionController extends \WP_REST_Controller
         }
 
         return new WP_REST_Response(null, 204);
-    }
-
-    private function hasValidToken(WP_REST_Request $request): bool
-    {
-        return TokenValidator::check($request->get_param('token'));
-    }
-
-    private function makeInvalidTokenResponse(): ResponseApiError
-    {
-        return new ResponseApiError(
-            404,
-            [new ApiError(404, 'Invalid Token', parameter: 'token')]
-        );
     }
 }
