@@ -76,7 +76,7 @@ class AdminController
 
         $settings = $this->settings;
 
-        include COLLECTME_BASE_PATH . '/admin/settings.php';
+        include COLLECTME_BASE_PATH . '/views/admin/settings.php';
     }
 
     private function saveEmailConfigs(string $causeUuid): bool
@@ -181,7 +181,7 @@ class AdminController
                     'Cause deleted.',
                     'collectme'
                 ) . '</p></div>';
-        } catch (CollectmeDBException $e) {
+        } catch (CollectmeDBException) {
             echo '<div class="notice notice-error is-dismissible"><p>' . __(
                     'Failed to delete cause.',
                     'collectme'
@@ -208,7 +208,7 @@ class AdminController
                     'Cause created.',
                     'collectme'
                 ) . '</p></div>';
-        } catch (CollectmeDBException $e) {
+        } catch (CollectmeDBException) {
             echo '<div class="notice notice-error is-dismissible"><p>' . __(
                     'Failed to create cause.',
                     'collectme'
