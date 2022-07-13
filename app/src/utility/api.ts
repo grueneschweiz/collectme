@@ -1,4 +1,5 @@
-import axios, {AxiosError, AxiosResponse} from 'axios';
+import type {AxiosError, AxiosResponse} from 'axios';
+import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import router from "@/router";
 import type {Snackbar} from "@/stores/SnackbarStore";
