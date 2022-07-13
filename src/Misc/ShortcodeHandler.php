@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Collectme\Misc;
 
 use Collectme\Collectme;
-use Collectme\Controller\HtmlController;
-use Collectme\Controller\Http\UuidValidator;
+use Collectme\Controller\Validators\CauseUuidValidator;
+use Collectme\FrontendRouter;
 
 class ShortcodeHandler
 {
     public function __construct(
-        private readonly HtmlController $appController
+        private readonly FrontendRouter $router
     ) {
     }
 
@@ -28,15 +28,13 @@ class ShortcodeHandler
 
         $args = shortcode_atts($defaults, $atts);
 
-        if (!UuidValidator::check($args['causeuuid'])) {
+        if (!CauseUuidValidator::check($args['causeuuid'])) {
             /** @noinspection ForgottenDebugOutputInspection */
-            wp_die('Invalid shortcode.');
+            wp_die('Invalid cause in shortcode.');
         }
 
         Collectme::setCauseUuid($args['causeuuid']);
 
-        return $this->appController->index(
-            $args['causeuuid'],
-        );
+        return $this->router->init($args);
     }
 }
