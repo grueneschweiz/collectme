@@ -14,4 +14,8 @@ import ActivityFeed from "@/components/specific/home/ActivityFeed/ActivityFeed.v
 
 <style>
 
+.collectme-overlay-open .collectme-home-view {
+  filter: blur(1px);
+}
+
 </style>

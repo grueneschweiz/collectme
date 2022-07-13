@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 import BaseButtonClose from '@/components/base/BaseButtonClose.vue';
+import {onBeforeUnmount, onMounted} from "vue";
 
 defineEmits<{
   (e: 'close'): void
@@ -40,6 +41,14 @@ const props = defineProps({
     required: false,
     default: true
   },
+})
+
+onMounted(() => {
+  document.querySelector('body')?.classList.add('collectme-overlay-open')
+})
+
+onBeforeUnmount(() => {
+  document.querySelector('body')?.classList.remove('collectme-overlay-open')
 })
 
 </script>

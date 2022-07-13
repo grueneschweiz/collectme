@@ -42,3 +42,8 @@
     --font-secondary: Arial, Helvetica, sans-serif;
     --font-title: 'Arial Black', 'OpenSansBold', Gadget, sans-serif;
 }
+
+/* applied to body tag by TheBaseOverlay */
+.collectme-overlay-open {
+    overflow: hidden;
+}
