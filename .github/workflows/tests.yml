@@ -73,8 +73,6 @@ jobs:
   js_tests:
     name: Run JS tests
     runs-on: ubuntu-latest
-    needs:
-      - add_test_deps
     steps:
       - name: Checkout
         uses: actions/checkout@v3
