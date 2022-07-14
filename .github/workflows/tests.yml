@@ -77,6 +77,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Install JS dependencies
+        run: >-
+          docker-compose 
+          run 
+          -u root:root 
+          --no-deps
+          node 
+          yarn 
+          --no-progress 
+          --non-interactive
+          install
+          --frozen-lockfile
+
       - name: TS check types
         run: >-
           docker-compose 
