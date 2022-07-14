@@ -78,7 +78,7 @@
 import type { PropType } from "vue";
 import type { BaseLoaderScheme } from "@/components/base/BaseLoader/BaseLoader";
 
-const props = defineProps({
+defineProps({
   scheme: {
     type: String as PropType<BaseLoaderScheme>,
     default: "primary",

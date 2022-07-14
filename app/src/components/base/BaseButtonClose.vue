@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
+defineProps({
   secondary: {
     type: Boolean,
     default: false,

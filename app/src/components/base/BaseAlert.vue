@@ -24,7 +24,7 @@ import BaseButtonClose from "@/components/base/BaseButtonClose.vue";
 
 defineEmits(["close"]);
 
-const props = defineProps({
+defineProps({
   closable: {
     type: Boolean,
     default: true,
