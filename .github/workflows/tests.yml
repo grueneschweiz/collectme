@@ -15,6 +15,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Get WordPress image
+        uses: actions/download-artifact@v3
+        with:
+          name: collectme-wordpress
+          path: /tmp
+
+      - name: Load WordPress image
+        run: |
+          docker load --input /tmp/docker-image-collectme-wordpress.tar      
+
       - name: Install PHP dependencies with dev deps
         run: >-
           docker-compose 
@@ -93,6 +103,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Get WordPress image
+        uses: actions/download-artifact@v3
+        with:
+          name: collectme-wordpress
+          path: /tmp
+
+      - name: Load WordPress image
+        run: |
+          docker load --input /tmp/docker-image-collectme-wordpress.tar
 
       - name: PHP Unit
         run: >-
