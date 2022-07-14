@@ -13,5 +13,6 @@ declare namespace collectme {
     lg: object;
     xl: object;
   };
+  // eslint-disable-next-line
   const t: any;
 }
