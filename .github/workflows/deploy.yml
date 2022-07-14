@@ -20,13 +20,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: vendor-prod
+          path: vendor
 
       - name: Debug
         run: |
+          pwd
           ls -la
+          ls -la vendor
           ls -la collectme
-          ls -la dist
-          ls -la collectme/dist
+          ls -la collectme/vendor
 
       - name: Get dist files
         uses: actions/download-artifact@v3
