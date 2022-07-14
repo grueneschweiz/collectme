@@ -72,7 +72,19 @@ CSS:
 
 ### Node
 
+```
+# install
+docker-compose run node yarn install
+
+# build for production
+docker-compose run node yarn run build
+```
+
 ### Composer
+
+```
+docker-compose run wordpress composer --working-dir=wp-content/plugins/collectme install
+```
 
 ### WordPress-Cli
 
