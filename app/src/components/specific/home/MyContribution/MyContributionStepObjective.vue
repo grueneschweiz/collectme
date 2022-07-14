@@ -38,7 +38,7 @@ import t from "@/utility/i18n";
 import type { Objective } from "@/models/generated";
 import BaseButton from "@/components/base/BaseButton.vue";
 
-const props = defineProps({
+defineProps({
   status: {
     type: String as PropType<StepStatus>,
     required: true,

@@ -29,7 +29,7 @@ import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.v
 import BaseButton from "@/components/base/BaseButton.vue";
 import t from "@/utility/i18n";
 
-const props = defineProps({
+defineProps({
   status: {
     type: String as PropType<StepStatus>,
     required: true,

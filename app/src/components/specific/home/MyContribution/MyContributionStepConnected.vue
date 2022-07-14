@@ -20,7 +20,7 @@ import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.v
 import t from "@/utility/i18n";
 import type { User } from "@/models/generated";
 
-const props = defineProps({
+defineProps({
   status: {
     type: String as PropType<StepStatus>,
     required: true,
