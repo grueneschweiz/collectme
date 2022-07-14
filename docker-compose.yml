@@ -3,6 +3,7 @@ version: '3.8'
 
 services:
   wordpress:
+    image: grueneschweiz/collectme:latest
     build:
       context: .
       dockerfile: "./.docker/wordpress.Dockerfile"

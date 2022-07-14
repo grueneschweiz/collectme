@@ -21,6 +21,7 @@ jobs:
           cache-to: type=gha,mode=max
           pull: true
           load: true
+          tags: grueneschweiz/collectme:latest
 
       - name: Install PHP dependencies
         run: >-
