@@ -12,6 +12,9 @@ jobs:
     needs:
       - build
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Install PHP dependencies with dev deps
         run: >-
           docker-compose 
@@ -53,6 +56,9 @@ jobs:
     needs:
       - add_test_deps
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: TS check types
         run: >-
           docker-compose 
@@ -85,6 +91,9 @@ jobs:
     needs:
       - add_test_deps
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: PHP Unit
         run: >-
           docker-compose 
