@@ -1,0 +1,67 @@
+on:
+  workflow_call:
+
+jobs:
+  template:
+    name: Extract pot file
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Docker BuildX
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build WordPress image
+        uses: docker/build-push-action@v3
+        with:
+          context: .docker
+          file: .docker/wordpress.Dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          pull: true
+          load: true
+          tags: grueneschweiz/collectme:latest
+
+      - name: Generate translation template
+        run: >-
+          docker-compose 
+          run 
+          -u root:root
+          --no-deps
+          wordpress 
+          bash 
+          -c 'XDEBUG_MODE=off php -d memory_limit=1G $(which wp) --allow-root i18n make-pot wp-content/plugins/collectme/ wp-content/plugins/collectme/languages/collectme.pot --slug=collectme --domain=collectme --exclude=tmp,vendor --skip-js --skip-block-json --skip-theme-json'
+
+      - name: Setup git config
+        run: |
+          git config user.name "GitHub Actions L10N"
+          git config user.email "<>"
+
+      - name: If translation template has changes
+        run: >-
+          git diff -U0 
+          | grep '^[+-]' 
+          | grep -Ev '^(--- a/|\+\+\+ b/)' 
+          | grep -v 'POT-Creation-Date:'
+          && echo "CHANGES=1" >> $GITHUB_ENV 
+
+      - name: Commit changed translation template
+        run: |
+          git add languages/collectme.pot
+          git commit -m "[L10N] Update pot file"
+          git push origin ${{ github.ref_name }}
+        if: env.CHANGES
+
+#      - name: Sync with crowdin
+#        uses: crowdin/github-action@1.4.10
+#        with:
+#          upload_sources: true
+#          download_translations: true
+#          push_translations: true
+#          commit_message: '[L10N] New Crowdin translations'
+#          create_pull_request: false
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+#          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

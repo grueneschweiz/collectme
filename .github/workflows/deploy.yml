@@ -10,6 +10,9 @@ jobs:
   build:
     uses: ./.github/workflows/build.yml
 
+  l10n:
+    uses: ./.github/workflows/l10n.yml
+
   deploy:
     name: Prepare release
     runs-on: ubuntu-latest
@@ -30,12 +33,6 @@ jobs:
         with:
           name: dist-prod
           path: dist
-
-      - name: Get pot files
-        uses: actions/download-artifact@v3
-        with:
-          name: pot
-          path: languages/collectme.pot
 
       - name: Package files
         run: |
