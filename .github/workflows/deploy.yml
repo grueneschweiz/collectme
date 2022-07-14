@@ -22,18 +22,11 @@ jobs:
           name: vendor-prod
           path: vendor
 
-      - name: Debug
-        run: |
-          pwd
-          ls -la
-          ls -la vendor
-          ls -la collectme
-          ls -la collectme/vendor
-
       - name: Get dist files
         uses: actions/download-artifact@v3
         with:
           name: dist-prod
+          path: dist
 
       - name: Get pot files
         uses: actions/download-artifact@v3
