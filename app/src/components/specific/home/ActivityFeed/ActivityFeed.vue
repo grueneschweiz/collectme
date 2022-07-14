@@ -6,7 +6,6 @@
 
     <template #default>
       <ActivityFeedCard
-        v-if="activities.length"
         v-for="(activity, idx) in activities"
         :activity="activity"
         :key="activity.id ?? idx"
@@ -48,15 +47,13 @@
           {{ t("General.Error.tryAgain") }}
         </BaseButton>
       </BaseAlert>
-    </template>
-
-    <template
-      #default
-      v-if="
-        !activities.length && !activityStore.isLoading && !activityStore.error
-      "
-    >
-      {{ t("HomeView.ActivityFeed.noActivity") }}
+      <template
+        v-if="
+          !activities.length && !activityStore.isLoading && !activityStore.error
+        "
+      >
+        {{ t("HomeView.ActivityFeed.noActivity") }}
+      </template>
     </template>
   </BaseLayoutCard>
 </template>
