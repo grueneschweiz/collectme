@@ -24,26 +24,26 @@ jobs:
           install 
           --no-progress
 
-    - name: Start MySQL
-      run: >-
-        docker-compose
-        up
-        -d
-        mysql
+      - name: Start MySQL
+        run: >-
+          docker-compose
+          up
+          -d
+          mysql
 
-    - name: Wait until MySQL is ready
-      run: |
-        while ! docker exec -t collectme_v2_mysql_1 sh -c 'mysql -uroot -e quit > /dev/null 2>&1'; do
-          sleep 1
-        done
+      - name: Wait until MySQL is ready
+        run: |
+          while ! docker exec -t collectme_v2_mysql_1 sh -c 'mysql -uroot -e quit > /dev/null 2>&1'; do
+            sleep 1
+          done
 
-    - name: Install WordPress test environment
-      run: >-
-        docker-compose 
-        run
-        wordpress
-        bash
-        -c 'cd wp-content/plugins/collectme && TMPDIR=$(pwd)/tmp bin/install-wp-tests.sh collectme_test root "" mysql latest'
+      - name: Install WordPress test environment
+        run: >-
+          docker-compose 
+          run
+          wordpress
+          bash
+          -c 'cd wp-content/plugins/collectme && TMPDIR=$(pwd)/tmp bin/install-wp-tests.sh collectme_test root "" mysql latest'
 
   test_js:
     name: Run JS tests
