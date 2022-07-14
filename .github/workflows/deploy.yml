@@ -16,6 +16,22 @@ jobs:
     needs:
       - build
     steps:
+      - name: Get vendor files
+        uses: actions/download-artifact@v3
+        with:
+          name: vendor-prod
+
+      - name: Get dist files
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-prod
+
+      - name: Get pot files
+        uses: actions/download-artifact@v3
+        with:
+          name: pot
+          path: languages/collectme.pot
+
       - name: Package files
         run: |
           mkdir /tmp/collectme

@@ -95,7 +95,7 @@ jobs:
           run
           build-only
 
-      - name: Store generated plugin assets
+      - name: Store dist files
         uses: actions/upload-artifact@v3
         with:
           name: dist-prod
