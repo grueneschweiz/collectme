@@ -9,6 +9,7 @@ export type ObjectiveSettings = {
 
 export function useObjectiveSettings() {
   function getGreatest(): ObjectiveSettings {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (<any>Object)
       .values(collectme.objectives)
       .filter((objective: ObjectiveSettings) => objective.enabled)
@@ -18,6 +19,7 @@ export function useObjectiveSettings() {
   }
 
   function getSorted(): ObjectiveSettings[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (<any>Object)
       .values(collectme.objectives)
       .filter((objective: ObjectiveSettings) => objective.enabled)
@@ -29,6 +31,7 @@ export function useObjectiveSettings() {
 
   function isHot(objective: number): boolean {
     return (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (<any>Object)
         .values(collectme.objectives)
         .filter(
