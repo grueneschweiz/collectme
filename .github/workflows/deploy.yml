@@ -21,6 +21,13 @@ jobs:
         with:
           name: vendor-prod
 
+      - name: Debug
+        run: |
+          ls -la
+          ls -la collectme
+          ls -la dist
+          ls -la collectme/dist
+
       - name: Get dist files
         uses: actions/download-artifact@v3
         with:
