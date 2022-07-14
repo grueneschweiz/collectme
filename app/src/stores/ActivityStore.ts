@@ -17,6 +17,7 @@ interface ActivityResponseSuccess extends AxiosResponse {
 interface ActivityStoreState {
   activities: Activity[];
   isLoading: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any | null;
   prev: string | null;
   next: string | null;
@@ -54,6 +55,7 @@ function addActivities(newActivities: Activity[]) {
     }
 
     if (
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       newActivity.attributes.created > storedActivities[0]!.attributes.created!
     ) {
       storedActivities.unshift(newActivity);
@@ -61,8 +63,9 @@ function addActivities(newActivities: Activity[]) {
     }
 
     if (
-      newActivity!.attributes.created <
-      storedActivities[storedActivities.length - 1]!.attributes.created!
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      storedActivities[storedActivities.length - 1]!.attributes.created! >=
+      newActivity?.attributes.created
     ) {
       storedActivities.push(newActivity);
       return;
@@ -70,8 +73,9 @@ function addActivities(newActivities: Activity[]) {
 
     for (let i = 0; i < storedActivities.length; i++) {
       if (
-        newActivity.attributes.created >=
-        storedActivities[i].attributes.created!
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        storedActivities[i].attributes.created! <
+        newActivity?.attributes.created
       ) {
         if (newActivity.id !== storedActivities[i].id) {
           storedActivities.splice(i, 0, newActivity);
@@ -104,6 +108,7 @@ export const useActivityStore = defineStore("ActivityStore", {
         await api(false)
           .get(endpointUrl, { params: { "filter[count]": "gt(0)" } })
           .then((resp: ActivityResponseSuccess) => addResponseData(resp));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         this.error = error;
       } finally {
@@ -123,6 +128,7 @@ export const useActivityStore = defineStore("ActivityStore", {
         await api(false)
           .get(this.next)
           .then((resp: ActivityResponseSuccess) => addResponseData(resp));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         this.error = error;
       } finally {
@@ -142,6 +148,7 @@ export const useActivityStore = defineStore("ActivityStore", {
         await api(false)
           .get(this.prev)
           .then((resp: ActivityResponseSuccess) => addResponseData(resp, true));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         this.error = error;
       } finally {

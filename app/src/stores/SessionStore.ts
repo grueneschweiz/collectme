@@ -47,6 +47,7 @@ export const useSessionStore = defineStore("SessionStore", {
           .then(
             (resp: SessionResponseSuccess) => (this.session = resp.data.data)
           );
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         if (error && axios.isAxiosError(error)) {
           this.waitingForActivation = error.response?.status === 401;

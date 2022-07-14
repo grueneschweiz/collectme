@@ -31,6 +31,7 @@ export const useLoginStore = defineStore("LoginStore", {
     async sendLoginData(data: Login) {
       this.isLoading = true;
       this.invalidFields = [];
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       this.login = data;
 
