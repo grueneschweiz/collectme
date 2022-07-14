@@ -1,1 +1,1 @@
-export type BaseLoaderScheme = 'primary' | 'secondary' | 'muted' | 'inverted'
+export type BaseLoaderScheme = "primary" | "secondary" | "muted" | "inverted";

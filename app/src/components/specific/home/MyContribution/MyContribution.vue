@@ -1,41 +1,28 @@
 <template>
   <BaseLayoutCard>
     <template #header>
-      {{ t('HomeView.MyContribution.title') }}
+      {{ t("HomeView.MyContribution.title") }}
     </template>
 
-    <template
-        #default
-        v-if="userStore.me"
-    >
+    <template #default v-if="userStore.me">
       <div class="collectme-my-contribution__body">
-        <MyContributionSteps/>
+        <MyContributionSteps />
       </div>
     </template>
 
-    <template
-        #default
-        v-else-if="userStore.isLoading"
-    >
-      <BaseLoader/>
+    <template #default v-else-if="userStore.isLoading">
+      <BaseLoader />
     </template>
 
-    <template
-        #default
-        v-else
-    >
+    <template #default v-else>
       <p class="collectme-my-contribution__sign-in-msg">
-        {{ t('HomeView.MyContribution.singInMsg') }}
+        {{ t("HomeView.MyContribution.singInMsg") }}
       </p>
       <div class="collectme-my-contribution__login-button-wrapper">
-        <BaseButton
-            secondary
-            size="md"
-            @click="$router.push('/login')"
-        >
-          {{ t('HomeView.MyContribution.signInBtn') }}
+        <BaseButton secondary size="md" @click="$router.push('/login')">
+          {{ t("HomeView.MyContribution.signInBtn") }}
         </BaseButton>
-        <span>{{t('HomeView.MyContribution.noPasswordRequired')}}</span>
+        <span>{{ t("HomeView.MyContribution.noPasswordRequired") }}</span>
       </div>
     </template>
   </BaseLayoutCard>
@@ -44,14 +31,13 @@
 <script setup lang="ts">
 import BaseLayoutCard from "@/components/base/BaseLayoutCard.vue";
 import t from "@/utility/i18n";
-import {useUserStore} from "@/stores/UserStore";
+import { useUserStore } from "@/stores/UserStore";
 import BaseLoader from "@/components/base/BaseLoader/BaseLoader.vue";
-import BaseButton from "@/components/base/BaseButton.vue"
-import MyContributionSteps from '@/components/specific/home/MyContribution/MyContributionSteps.vue'
+import BaseButton from "@/components/base/BaseButton.vue";
+import MyContributionSteps from "@/components/specific/home/MyContribution/MyContributionSteps.vue";
 
 const userStore = useUserStore();
 userStore.fetch();
-
 </script>
 
 <style>

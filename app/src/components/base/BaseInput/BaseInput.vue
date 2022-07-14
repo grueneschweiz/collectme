@@ -1,31 +1,31 @@
 <template>
   <div class="collectme-base-input">
     <label
-        :for="id"
-        :class="{'collectme-base-input__label--above':showLabelAbove}"
-        class="collectme-base-input__label"
+      :for="id"
+      :class="{ 'collectme-base-input__label--above': showLabelAbove }"
+      class="collectme-base-input__label"
     >
       {{ label }}
       <span v-if="required">*</span>
     </label>
     <input
-        v-model="currentValue"
-        ref="input"
-        @input="onInput"
-        @keydown.enter="$emit('keyDown:Enter')"
-        :id="id"
-        :name="id"
-        :required="required"
-        :type="type"
-        :autocomplete="autocomplete"
-        :disabled="disabled"
-        :class="{
-          'collectme-base-input__field--is-empty':!currentValue,
-          'collectme-base-input__field--invalid':isInvalid,
-          'collectme-base-input__field--valid':isValid
-        }"
-        class="collectme-base-input__field"
-    >
+      v-model="currentValue"
+      ref="input"
+      @input="onInput"
+      @keydown.enter="$emit('keyDown:Enter')"
+      :id="id"
+      :name="id"
+      :required="required"
+      :type="type"
+      :autocomplete="autocomplete"
+      :disabled="disabled"
+      :class="{
+        'collectme-base-input__field--is-empty': !currentValue,
+        'collectme-base-input__field--invalid': isInvalid,
+        'collectme-base-input__field--valid': isValid,
+      }"
+      class="collectme-base-input__field"
+    />
 
     <template v-if="helptext">
       <div class="collectme-base-input__helptext">
@@ -44,32 +44,32 @@
 </template>
 
 <script setup lang="ts">
-import type {PropType} from 'vue';
-import {computed, onBeforeUnmount, onMounted, ref} from "vue";
-import type {ValidationStatus} from "@/components/base/BaseInput/BaseInput";
-import TransitionAppearFade from '@/components/transition/TransitionAppearFade.vue'
+import type { PropType } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import type { ValidationStatus } from "@/components/base/BaseInput/BaseInput";
+import TransitionAppearFade from "@/components/transition/TransitionAppearFade.vue";
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | number): void,
-  (e: 'keyDown:Enter'): void,
+  (e: "update:modelValue", value: string | number): void;
+  (e: "keyDown:Enter"): void;
 }>();
 
 const props = defineProps({
   id: {
     type: String,
-    required: true
+    required: true,
   },
   label: {
     type: String,
-    required: true
+    required: true,
   },
   required: {
     type: Boolean,
-    default: false
+    default: false,
   },
   type: {
     type: String,
-    default: 'text'
+    default: "text",
   },
   modelValue: {
     type: [String, Number],
@@ -82,60 +82,58 @@ const props = defineProps({
     default: false,
   },
   helptext: {
-    type: String
+    type: String,
   },
   validationStatus: {
     type: String as PropType<ValidationStatus>,
-    default: 'unvalidated'
+    default: "unvalidated",
   },
   validationMessage: {
-    type: String
-  }
-})
+    type: String,
+  },
+});
 
-const input = ref<HTMLInputElement | null>(null)
+const input = ref<HTMLInputElement | null>(null);
 const inputFocused = ref(false);
 
-const currentValue = ref(props.modelValue)
+const currentValue = ref(props.modelValue);
 
 const onInput = (e: Event) => {
   const input = e.target as HTMLInputElement;
-  emit('update:modelValue', input.value);
-}
+  emit("update:modelValue", input.value);
+};
 
 const showLabelAbove = computed(() => {
-  return (currentValue.value || inputFocused.value);
-})
+  return currentValue.value || inputFocused.value;
+});
 
 const showInvalidMessage = computed(() => {
-  return props.validationStatus === 'invalid' && props.validationMessage;
-})
+  return props.validationStatus === "invalid" && props.validationMessage;
+});
 
 const isInvalid = computed(() => {
-  return props.validationStatus === 'invalid' && !inputFocused.value;
-})
+  return props.validationStatus === "invalid" && !inputFocused.value;
+});
 
 const isValid = computed(() => {
-  return props.validationStatus === 'valid' && !inputFocused.value;
-})
+  return props.validationStatus === "valid" && !inputFocused.value;
+});
 
-const setFocus = () => inputFocused.value = true;
-const removeFocus = () => inputFocused.value = false;
+const setFocus = () => (inputFocused.value = true);
+const removeFocus = () => (inputFocused.value = false);
 
 onMounted(() => {
-  input.value?.addEventListener('focus', setFocus);
-  input.value?.addEventListener('blur', removeFocus);
-})
+  input.value?.addEventListener("focus", setFocus);
+  input.value?.addEventListener("blur", removeFocus);
+});
 
 onBeforeUnmount(() => {
-  input.value?.removeEventListener('focus', setFocus)
-  input.value?.removeEventListener('blur', removeFocus);
-})
-
+  input.value?.removeEventListener("focus", setFocus);
+  input.value?.removeEventListener("blur", removeFocus);
+});
 </script>
 
 <style>
-
 .collectme-base-input {
   position: relative;
   width: 100%;
@@ -202,5 +200,4 @@ onBeforeUnmount(() => {
   color: var(--color-red);
   margin-top: 0.4em;
 }
-
 </style>

@@ -1,34 +1,34 @@
 <template>
-  <TheBaseOverlay
-      :closeable="false"
-  >
+  <TheBaseOverlay :closeable="false">
     <template #header>
-      {{ t('HomeView.TheActivationAwaitor.title') }}
+      {{ t("HomeView.TheActivationAwaitor.title") }}
     </template>
     <template #default>
-      <p v-html="t('HomeView.TheActivationAwaitor.descLogin')"/>
-      <p>{{ t('HomeView.TheActivationAwaitor.descSlowMail') }}</p>
+      <p v-html="t('HomeView.TheActivationAwaitor.descLogin')" />
+      <p>{{ t("HomeView.TheActivationAwaitor.descSlowMail") }}</p>
 
       <div class="collectme-the-activation-awaitor__submit-wrapper">
         <BaseButton
-            secondary
-            :disabled="loginStore.isLoading"
-            @click="loginStore.resendLoginData"
-            class="collectme-the-activation-awaitor__submit-button"
+          secondary
+          :disabled="loginStore.isLoading"
+          @click="loginStore.resendLoginData"
+          class="collectme-the-activation-awaitor__submit-button"
         >
           <template v-if="!loginStore.isLoading">
-            {{ t('HomeView.TheActivationAwaitor.retryBtn') }}
+            {{ t("HomeView.TheActivationAwaitor.retryBtn") }}
           </template>
           <BaseLoader
-              v-else
-              scheme="inverted"
-              class="collectme-the-activation-awaitor__submit-button--loading"
+            v-else
+            scheme="inverted"
+            class="collectme-the-activation-awaitor__submit-button--loading"
           />
         </BaseButton>
         <p class="collectme-the-activation-awaitor__submit-byline">
           {{
-            t('HomeView.TheActivationAwaitor.retryByline', {
-              email: loginStore.login?.attributes.email ?? t('HomeView.TheActivationAwaitor.invalidEmail')
+            t("HomeView.TheActivationAwaitor.retryByline", {
+              email:
+                loginStore.login?.attributes.email ??
+                t("HomeView.TheActivationAwaitor.invalidEmail"),
             })
           }}
         </p>
@@ -38,35 +38,35 @@
 </template>
 
 <script setup lang="ts">
-import TheBaseOverlay from '@/components/base/TheBaseOverlay.vue'
-import BaseButton from '@/components/base/BaseButton.vue'
-import BaseLoader from '@/components/base/BaseLoader/BaseLoader.vue'
-import t from '@/utility/i18n'
-import {useLoginStore} from "@/stores/LoginStore";
-import {onBeforeUnmount, onMounted} from "vue";
-import {useSessionStore} from "@/stores/SessionStore";
+import TheBaseOverlay from "@/components/base/TheBaseOverlay.vue";
+import BaseButton from "@/components/base/BaseButton.vue";
+import BaseLoader from "@/components/base/BaseLoader/BaseLoader.vue";
+import t from "@/utility/i18n";
+import { useLoginStore } from "@/stores/LoginStore";
+import { onBeforeUnmount, onMounted } from "vue";
+import { useSessionStore } from "@/stores/SessionStore";
 import router from "@/router";
 
-const emit = defineEmits(['login']);
+const emit = defineEmits(["login"]);
 
-const loginStore = useLoginStore()
+const loginStore = useLoginStore();
 
 let timer: ReturnType<typeof setInterval>;
 
 function attemptLogin() {
-  useSessionStore().fetch()
-      .then(() => emit('login'))
-      .then(() => router.push('/'))
+  useSessionStore()
+    .fetch()
+    .then(() => emit("login"))
+    .then(() => router.push("/"));
 }
 
 onMounted(() => {
-  timer = setInterval(attemptLogin, 4000)
-})
+  timer = setInterval(attemptLogin, 4000);
+});
 
 onBeforeUnmount(() => {
-  clearInterval(timer)
-})
-
+  clearInterval(timer);
+});
 </script>
 
 <style>

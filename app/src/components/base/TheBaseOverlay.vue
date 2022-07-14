@@ -1,18 +1,16 @@
 <template>
   <div class="collectme-the-base-overlay">
     <header
-        v-if="$slots.header || props.closeable"
-        class="collectme-the-base-overlay__header"
+      v-if="$slots.header || props.closeable"
+      class="collectme-the-base-overlay__header"
     >
-      <h2
-          class="collectme-the-base-overlay__title"
-      >
+      <h2 class="collectme-the-base-overlay__title">
         <slot name="header"></slot>
       </h2>
       <BaseButtonClose
-          v-if="props.closeable"
-          @click="$emit('close')"
-          class="collectme-the-base-overlay__close"
+        v-if="props.closeable"
+        @click="$emit('close')"
+        class="collectme-the-base-overlay__close"
       />
     </header>
 
@@ -27,30 +25,28 @@
 </template>
 
 <script setup lang="ts">
-import BaseButtonClose from '@/components/base/BaseButtonClose.vue';
-import {onBeforeUnmount, onMounted} from "vue";
+import BaseButtonClose from "@/components/base/BaseButtonClose.vue";
+import { onBeforeUnmount, onMounted } from "vue";
 
 defineEmits<{
-  (e: 'close'): void
-}>()
-
+  (e: "close"): void;
+}>();
 
 const props = defineProps({
   closeable: {
     type: Boolean,
     required: false,
-    default: true
+    default: true,
   },
-})
+});
 
 onMounted(() => {
-  document.querySelector('body')?.classList.add('collectme-overlay-open')
-})
+  document.querySelector("body")?.classList.add("collectme-overlay-open");
+});
 
 onBeforeUnmount(() => {
-  document.querySelector('body')?.classList.remove('collectme-overlay-open')
-})
-
+  document.querySelector("body")?.classList.remove("collectme-overlay-open");
+});
 </script>
 
 <style>

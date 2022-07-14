@@ -1,15 +1,15 @@
 <template>
   <div class="collectme-the-snackbar">
     <TheSnackbarCard
-        v-for="(snackbar, idx) in snackbarStore.snackbars"
-        :key="idx"
-        :snackbar="snackbar"
+      v-for="(snackbar, idx) in snackbarStore.snackbars"
+      :key="idx"
+      :snackbar="snackbar"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import {useSnackbarStore} from "@/stores/SnackbarStore";
+import { useSnackbarStore } from "@/stores/SnackbarStore";
 import TheSnackbarCard from "@/components/base/TheSnackbar/TheSnackbarCard.vue";
 
 const snackbarStore = useSnackbarStore();

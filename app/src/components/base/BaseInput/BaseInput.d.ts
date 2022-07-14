@@ -1,1 +1,1 @@
-export type ValidationStatus = 'unvalidated' | 'valid' | 'invalid'
+export type ValidationStatus = "unvalidated" | "valid" | "invalid";

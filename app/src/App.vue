@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView } from "vue-router";
 import TheSnackbar from "@/components/base/TheSnackbar/TheSnackbar.vue";
 </script>
 
 <template>
   <RouterView />
-  <TheSnackbar/>
+  <TheSnackbar />
 </template>
 
 <style>
-@import '@/assets/base.css';
-
+@import "@/assets/base.css";
 </style>

@@ -1,44 +1,35 @@
 <template>
   <div class="collectme-base-content-card">
     <button
-        v-if="button"
-        class="collectme-base-content-card__card collectme-base-content-card__card--btn"
-        :class="{'collectme-base-content-card__card--disabled': disabled}"
-        :disabled="disabled"
+      v-if="button"
+      class="collectme-base-content-card__card collectme-base-content-card__card--btn"
+      :class="{ 'collectme-base-content-card__card--disabled': disabled }"
+      :disabled="disabled"
     >
       <slot name="default"></slot>
     </button>
 
-    <div
-        v-else
-        class="collectme-base-content-card__card"
-    >
+    <div v-else class="collectme-base-content-card__card">
       <slot name="default"></slot>
     </div>
 
-    <div
-        v-if="$slots.trailer"
-        class="collectme-base-content-card__trailer"
-    >
+    <div v-if="$slots.trailer" class="collectme-base-content-card__trailer">
       <slot name="trailer"></slot>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
-
 defineProps({
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
   },
   button: {
     type: Boolean,
-    default: false
-  }
-})
-
+    default: false,
+  },
+});
 </script>
 
 <style>

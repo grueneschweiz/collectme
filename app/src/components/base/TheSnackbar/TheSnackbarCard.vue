@@ -1,116 +1,107 @@
 <template>
   <div class="collectme-the-snackbar-card">
-    <div
-        class="collectme-the-snackbar-card__short"
-    >
+    <div class="collectme-the-snackbar-card__short">
       {{ snackbar.shortDesc }}
     </div>
 
-    <div
-        class="collectme-the-snackbar-card__long"
-        v-if="snackbar.longDesc"
-    >
+    <div class="collectme-the-snackbar-card__long" v-if="snackbar.longDesc">
       {{ snackbar.longDesc }}
     </div>
 
     <div class="collectme-the-snackbar-card__action-group">
-      <BaseLoader
-          class="collectme-the-snackbar-card__loader"
-          v-if="working"
-      />
+      <BaseLoader class="collectme-the-snackbar-card__loader" v-if="working" />
 
       <button
-          class="collectme-the-snackbar-card__action"
-          v-if="snackbar.actionLabel"
-          :disabled="working"
-          @click="triggerAction"
-          ref="button"
+        class="collectme-the-snackbar-card__action"
+        v-if="snackbar.actionLabel"
+        :disabled="working"
+        @click="triggerAction"
+        ref="button"
       >
         {{ snackbar.actionLabel }}
       </button>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
-import type {PropType} from "vue";
-import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
-import type {Snackbar} from "@/stores/SnackbarStore";
-import {useSnackbarStore} from "@/stores/SnackbarStore";
-import BaseLoader from '@/components/base/BaseLoader/BaseLoader.vue';
+import type { PropType } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import type { Snackbar } from "@/stores/SnackbarStore";
+import { useSnackbarStore } from "@/stores/SnackbarStore";
+import BaseLoader from "@/components/base/BaseLoader/BaseLoader.vue";
 
-const snackbarStore = useSnackbarStore()
+const snackbarStore = useSnackbarStore();
 
 const props = defineProps({
   snackbar: {
     type: Object as PropType<Snackbar>,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 
 const working = ref(false);
-const button = ref<HTMLButtonElement>()
+const button = ref<HTMLButtonElement>();
 
 function triggerAction() {
-  button.value?.blur()
+  button.value?.blur();
 
-  if (!props.snackbar || 'function' !== typeof props.snackbar.action) {
+  if (!props.snackbar || "function" !== typeof props.snackbar.action) {
     return;
   }
 
   if (autoHideTimer) {
-    window.clearTimeout(autoHideTimer)
+    window.clearTimeout(autoHideTimer);
   }
 
-  working.value = true
+  working.value = true;
   props.snackbar
-      .action()
-      .then(() => working.value = false)
-      .then(close)
-      .catch(() => working.value = false)
+    .action()
+    .then(() => (working.value = false))
+    .then(close)
+    .catch(() => (working.value = false));
 }
 
 function close() {
   if (props.snackbar) {
-    snackbarStore.hide(props.snackbar)
+    snackbarStore.hide(props.snackbar);
   }
 }
 
 const vanishAfter = computed<number>(() => {
-  if (!props.snackbar || 'undefined' === typeof props.snackbar.vanishAfter) {
-    return 0
+  if (!props.snackbar || "undefined" === typeof props.snackbar.vanishAfter) {
+    return 0;
   }
 
-  return props.snackbar.vanishAfter
-})
+  return props.snackbar.vanishAfter;
+});
 
-let autoHideTimer: ReturnType<typeof setTimeout>
+let autoHideTimer: ReturnType<typeof setTimeout>;
 
 function initializeAutoHide() {
   if (vanishAfter.value) {
-    window.setTimeout(close, vanishAfter.value)
+    window.setTimeout(close, vanishAfter.value);
   }
 }
 
 function disableAutoHide() {
   if (autoHideTimer) {
-    window.clearTimeout(autoHideTimer)
+    window.clearTimeout(autoHideTimer);
   }
 }
 
 watch(vanishAfter, () => {
-  disableAutoHide()
-  initializeAutoHide()
+  disableAutoHide();
+  initializeAutoHide();
 });
 
 onMounted(() => {
-  initializeAutoHide()
-})
+  initializeAutoHide();
+});
 
 onBeforeUnmount(() => {
-  disableAutoHide()
-})
+  disableAutoHide();
+});
 </script>
 
 <style>
@@ -166,5 +157,4 @@ onBeforeUnmount(() => {
   grid-area: loader;
   margin: 0 !important;
 }
-
 </style>

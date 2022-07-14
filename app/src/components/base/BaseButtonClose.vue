@@ -1,20 +1,18 @@
 <template>
-  <button
-      class="collectme-base-button-close"
-  >
+  <button class="collectme-base-button-close">
     <svg
-        role="img"
-        viewBox="0 0 30 30"
-        preserveAspectRatio="xMinYMin meet"
-        class="collectme-base-button-close__svg"
-        :class="{
+      role="img"
+      viewBox="0 0 30 30"
+      preserveAspectRatio="xMinYMin meet"
+      class="collectme-base-button-close__svg"
+      :class="{
         'collectme-base-button-close__svg--primary': !secondary,
         'collectme-base-button-close__svg--secondary': secondary,
         'collectme-base-button-close__svg--muted': muted,
       }"
     >
       <g>
-        <path stroke-width="2" fill="none" d="M29 1L1 29M1 1l28 28"/>
+        <path stroke-width="2" fill="none" d="M29 1L1 29M1 1l28 28" />
       </g>
     </svg>
   </button>
@@ -29,8 +27,8 @@ const props = defineProps({
   muted: {
     type: Boolean,
     default: false,
-  }
-})
+  },
+});
 </script>
 
 <style>
