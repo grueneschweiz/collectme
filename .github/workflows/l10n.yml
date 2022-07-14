@@ -40,11 +40,14 @@ jobs:
 
       - name: If translation template has changes
         run: >-
+          (
           git diff -U0 
           | grep '^[+-]' 
           | grep -Ev '^(--- a/|\+\+\+ b/)' 
           | grep -v 'POT-Creation-Date:'
-          && echo "CHANGES=1" >> $GITHUB_ENV 
+          && echo "CHANGES=1" >> $GITHUB_ENV
+          ) 
+          || true
 
       - name: Commit changed translation template
         run: |
