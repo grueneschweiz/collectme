@@ -149,18 +149,6 @@ Helpful resources:
 
 - [OpenAPI Schema to JSON Schema](https://github.com/openapi-contrib/openapi-schema-to-json-schema)
 
-#### Prism
-
-API mock server.
-
-```
-docker-compose up -d prism
-```
-
-Visit:
-
-- [localhost:8040/users/link-auth?token=dc74835ae17fe4aa876d7838791ce9005151abf1aeabce922d472884214b1ee4](http://localhost:8040/users/link-auth?token=dc74835ae17fe4aa876d7838791ce9005151abf1aeabce922d472884214b1ee4)
-- Or any other endpoint defined the [rest-api](/docs/api/rest-api.yaml).
 
 ## Quirks
 
