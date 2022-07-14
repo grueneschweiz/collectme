@@ -1,90 +1,86 @@
 <template>
-  <TheBaseOverlay
-      :closeable="true"
-      @close="$router.back()"
-  >
+  <TheBaseOverlay :closeable="true" @close="$router.back()">
     <template #header>
-      {{ t('HomeView.TheSignatureAdder.title') }}
+      {{ t("HomeView.TheSignatureAdder.title") }}
     </template>
 
     <template #default>
-
-      <div class="collectme-the-signature-adder__intro"
-           v-html="t('HomeView.TheSignatureAdder.intro')"
+      <div
+        class="collectme-the-signature-adder__intro"
+        v-html="t('HomeView.TheSignatureAdder.intro')"
       />
 
       <BaseInput
-          id="collectme-the-signature-adder-input"
-          :label="t('HomeView.TheSignatureAdder.input')"
-          :required="true"
-          type="number"
-          :helptext="t('HomeView.TheSignatureAdder.helpText')"
-          :validation-message="t('HomeView.TheSignatureAdder.invalid')"
-          :validation-status="validationStatus"
-          v-model="count"
-          @keyDown:Enter="save"
+        id="collectme-the-signature-adder-input"
+        :label="t('HomeView.TheSignatureAdder.input')"
+        :required="true"
+        type="number"
+        :helptext="t('HomeView.TheSignatureAdder.helpText')"
+        :validation-message="t('HomeView.TheSignatureAdder.invalid')"
+        :validation-status="validationStatus"
+        v-model="count"
+        @keyDown:Enter="save"
       />
 
       <div class="collectme-the-signature-adder__submit-wrapper">
         <BaseButton
-            class="collectme-the-signature-adder__submit"
-            @click="save"
-            :disabled="saving || !count"
-            :muted="saving || !count "
-            :secondary="!saving"
+          class="collectme-the-signature-adder__submit"
+          @click="save"
+          :disabled="saving || !count"
+          :muted="saving || !count"
+          :secondary="!saving"
         >
-          {{ saving ? t('HomeView.TheSignatureAdder.saving') : t('HomeView.TheSignatureAdder.submit') }}
+          {{
+            saving
+              ? t("HomeView.TheSignatureAdder.saving")
+              : t("HomeView.TheSignatureAdder.submit")
+          }}
         </BaseButton>
-        <BaseLoader
-            scheme="secondary"
-            v-if="saving"
-        />
+        <BaseLoader scheme="secondary" v-if="saving" />
       </div>
-
     </template>
-
   </TheBaseOverlay>
 </template>
 
 <script setup lang="ts">
-import TheBaseOverlay from '@/components/base/TheBaseOverlay.vue'
-import t from '@/utility/i18n';
-import BaseInput from '@/components/base/BaseInput/BaseInput.vue'
-import BaseButton from '@/components/base/BaseButton.vue'
-import BaseLoader from '@/components/base/BaseLoader/BaseLoader.vue'
-import type {ValidationStatus} from "@/components/base/BaseInput/BaseInput";
-import {ref, watch} from "vue";
-import {useSignatureStore} from "@/stores/SignatureStore";
-import type {Signature} from "@/models/generated";
-import {useUserStore} from "@/stores/UserStore";
-import {useGroupStore} from "@/stores/GroupStore";
-import {useActivityStore} from "@/stores/ActivityStore";
+import TheBaseOverlay from "@/components/base/TheBaseOverlay.vue";
+import t from "@/utility/i18n";
+import BaseInput from "@/components/base/BaseInput/BaseInput.vue";
+import BaseButton from "@/components/base/BaseButton.vue";
+import BaseLoader from "@/components/base/BaseLoader/BaseLoader.vue";
+import type { ValidationStatus } from "@/components/base/BaseInput/BaseInput";
+import { ref, watch } from "vue";
+import { useSignatureStore } from "@/stores/SignatureStore";
+import type { Signature } from "@/models/generated";
+import { useUserStore } from "@/stores/UserStore";
+import { useGroupStore } from "@/stores/GroupStore";
+import { useActivityStore } from "@/stores/ActivityStore";
 import router from "@/router";
-import {useSnackbarStore} from "@/stores/SnackbarStore";
-import type {Snackbar} from "@/stores/SnackbarStore";
+import { useSnackbarStore } from "@/stores/SnackbarStore";
+import type { Snackbar } from "@/stores/SnackbarStore";
 
 const count = ref<undefined | number>();
-const validationStatus = ref<ValidationStatus>('unvalidated');
-const saving = ref<boolean>(false)
+const validationStatus = ref<ValidationStatus>("unvalidated");
+const saving = ref<boolean>(false);
 
 async function save(): Promise<void> {
-  saving.value = true
+  saving.value = true;
 
-  const myGroupId = useGroupStore().myPersonalGroup?.id
+  const myGroupId = useGroupStore().myPersonalGroup?.id;
 
   if (!myGroupId) {
     return useGroupStore().fetch().then(save);
   }
 
-  const number = parseInt(count.value?.toString() ?? '0')
+  const number = parseInt(count.value?.toString() ?? "0");
 
   if (0 === number) {
     return;
   }
 
-  await useSignatureStore().create(<Signature>{
+  await useSignatureStore().create({
     id: null,
-    type: 'signature',
+    type: "signature",
     attributes: {
       count: number,
       created: null,
@@ -93,48 +89,54 @@ async function save(): Promise<void> {
     relationships: {
       user: {
         data: {
-          id: useUserStore().me?.id
-        }
+          id: useUserStore().me?.id,
+        },
       },
       group: {
         data: {
-          id: myGroupId
-        }
-      }
-    }
-  });
+          id: myGroupId,
+        },
+      },
+    },
+  } as Signature);
 
   // update dependant stores
-  useGroupStore().groups.get(myGroupId)!.attributes.signatures += number
-  await useActivityStore().update()
-  saving.value = false
-  notifySaveSuccess()
+  addSignaturesToGroup(myGroupId, number);
+  await useActivityStore().update();
+  saving.value = false;
+  notifySaveSuccess();
 
   router.back();
 }
 
-function notifySaveSuccess() {
-  const number = count.value?.toString() ?? '0'
-
-  useSnackbarStore().show({
-    id: 'signature-save-success',
-    type: 'success',
-    shortDesc: t('HomeView.TheSignatureAdder.saved', {count: number}),
-    vanishAfter: 5000
-  } as Snackbar)
+function addSignaturesToGroup(groupId: string, signatures: number) {
+  const group = useGroupStore().groups.get(groupId);
+  if (group) {
+    group.attributes.signatures += signatures;
+  }
 }
 
-watch(count, newValue => {
-  const val = newValue?.toString()
-  const isInt = !!val && parseInt(val).toString() === val
+function notifySaveSuccess() {
+  const number = count.value?.toString() ?? "0";
 
-  if (isInt && Number.isSafeInteger(parseInt(<string>val))) {
-    validationStatus.value = 'valid'
+  useSnackbarStore().show({
+    id: "signature-save-success",
+    type: "success",
+    shortDesc: t("HomeView.TheSignatureAdder.saved", { count: number }),
+    vanishAfter: 5000,
+  } as Snackbar);
+}
+
+watch(count, (newValue) => {
+  const val = newValue?.toString();
+  const isInt = !!val && parseInt(val).toString() === val;
+
+  if (isInt && Number.isSafeInteger(parseInt(val as string))) {
+    validationStatus.value = "valid";
   } else {
-    validationStatus.value = 'invalid'
+    validationStatus.value = "invalid";
   }
-})
-
+});
 </script>
 
 <style>
