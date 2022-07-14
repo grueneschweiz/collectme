@@ -1,43 +1,39 @@
 <template>
-  <TheBaseOverlay
-      :closeable="true"
-      @close="$router.back()"
-  >
+  <TheBaseOverlay :closeable="true" @close="$router.back()">
     <template #header>
-      {{ t('HomeView.TheObjectiveSetter.title') }}
+      {{ t("HomeView.TheObjectiveSetter.title") }}
     </template>
 
     <template #default>
       <div
-          class="collectme-the-base-overlay__intro"
-          v-html="t('HomeView.TheObjectiveSetter.intro')"
+        class="collectme-the-base-overlay__intro"
+        v-html="t('HomeView.TheObjectiveSetter.intro')"
       />
 
       <div class="collectme-the-objective-setter__card-wrapper">
         <TheObjectiveSetterCard
-            v-for="objective in objectiveSettings.getSorted()"
-            :key="objective.id"
-            :count="objective.objective"
-            :img="objective.img"
-            :disabled="disabled(objective.objective)"
-            :ribbon="ribbon(objective.objective)"
-            @saved="$router.back()"
-            class="collectme-the-objective-setter__card-base-card"
+          v-for="objective in objectiveSettings.getSorted()"
+          :key="objective.id"
+          :count="objective.objective"
+          :img="objective.img"
+          :disabled="disabled(objective.objective)"
+          :ribbon="ribbon(objective.objective)"
+          @saved="$router.back()"
+          class="collectme-the-objective-setter__card-base-card"
         />
       </div>
-
     </template>
   </TheBaseOverlay>
 </template>
 
 <script setup lang="ts">
-import TheBaseOverlay from '@/components/base/TheBaseOverlay.vue'
+import TheBaseOverlay from "@/components/base/TheBaseOverlay.vue";
 import TheObjectiveSetterCard from "@/components/specific/home/TheObjectiveSetter/TheObjectiveSetterCard.vue";
-import t from '@/utility/i18n';
-import {useGroupStore} from "@/stores/GroupStore";
-import {computed} from "vue";
-import {useObjectiveStore} from "@/stores/ObjectiveStore";
-import {useObjectiveSettings} from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
+import t from "@/utility/i18n";
+import { useGroupStore } from "@/stores/GroupStore";
+import { computed } from "vue";
+import { useObjectiveStore } from "@/stores/ObjectiveStore";
+import { useObjectiveSettings } from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
 
 const objectiveSettings = useObjectiveSettings();
 
@@ -52,27 +48,33 @@ const currentObjective = computed<number>(() => {
     return 0;
   }
 
-  return useObjectiveStore().getHighestObjectiveByGroupId(<string>groupId)?.attributes.objective ?? 0;
-})
+  return (
+    useObjectiveStore().getHighestObjectiveByGroupId(groupId as string)
+      ?.attributes.objective ?? 0
+  );
+});
 
 function disabled(objective: number): boolean {
-  return signatureCount.value >= objective || currentObjective.value >= objective
+  return (
+    signatureCount.value >= objective || currentObjective.value >= objective
+  );
 }
 
 function ribbon(objective: number): string | undefined {
-  let defaultValue = undefined
+  let defaultValue = undefined;
 
   if (objectiveSettings.isHot(objective) && !currentObjective.value) {
-    defaultValue = t('HomeView.TheObjectiveSetter.ribbonHot')
+    defaultValue = t("HomeView.TheObjectiveSetter.ribbonHot");
   }
 
   if (currentObjective.value === objective) {
-    defaultValue = t('HomeView.TheObjectiveSetter.ribbonSelected')
+    defaultValue = t("HomeView.TheObjectiveSetter.ribbonSelected");
   }
 
-  return signatureCount.value >= objective ? t('HomeView.TheObjectiveSetter.ribbonDone') : defaultValue
+  return signatureCount.value >= objective
+    ? t("HomeView.TheObjectiveSetter.ribbonDone")
+    : defaultValue;
 }
-
 </script>
 
 <style>
@@ -95,5 +97,4 @@ function ribbon(objective: number): string | undefined {
 .collectme-the-objective-setter__card-base-card {
   max-height: 30vh;
 }
-
 </style>
