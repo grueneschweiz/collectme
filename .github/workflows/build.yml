@@ -82,6 +82,8 @@ jobs:
           -o /tmp/swagger/output 
           -l typescript-axios
           &&
+          sudo chown -R $(id -u):$(id -g) gen
+          &&
           sed -i '/import type/! s/import /import type /g' gen/models/*.ts
           &&
           sed -i -r 's/(\s)Date(\s)/\1string\2/g' gen/models/*.ts
