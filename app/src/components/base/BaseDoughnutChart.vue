@@ -124,7 +124,7 @@ watch(
 
     delayTimer = setTimeout(() => {
       animate();
-    }, props.animationDelay!);
+    }, props.animationDelay);
   }
 );
 
