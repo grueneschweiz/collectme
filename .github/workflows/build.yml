@@ -34,6 +34,8 @@ jobs:
         run: >-
           docker-compose 
           run 
+          -u root:root 
+          --no-deps
           node 
           yarn 
           --no-progress 
@@ -46,6 +48,7 @@ jobs:
           docker-compose 
           run 
           -u root:root 
+          --no-deps
           wordpress 
           composer 
           --working-dir=wp-content/plugins/collectme 
@@ -59,6 +62,7 @@ jobs:
           docker-compose 
           run 
           -u root:root 
+          --no-deps
           node 
           yarn 
           --no-progress 
@@ -70,6 +74,8 @@ jobs:
         run: >-
           docker-compose 
           run 
+          -u root:root 
+          --no-deps
           swagger-codegen 
           generate 
           -i /tmp/swagger/input/rest-api.yaml 
@@ -86,7 +92,8 @@ jobs:
         run: >-
           docker-compose 
           run 
-          -u root:root 
+          -u root:root
+          --no-deps
           wordpress 
           bash 
           -c 'XDEBUG_MODE=off php -d memory_limit=1G $(which wp) --allow-root i18n make-pot wp-content/plugins/collectme/ wp-content/plugins/collectme/languages/collectme.pot --slug=collectme --domain=collectme --exclude=tmp,vendor --skip-js --skip-block-json --skip-theme-json'
@@ -102,6 +109,8 @@ jobs:
         run: >-
           docker-compose 
           run 
+          -u root:root 
+          --no-deps
           swagger-codegen 
           generate 
           -i /tmp/swagger/input/rest-api.yaml 

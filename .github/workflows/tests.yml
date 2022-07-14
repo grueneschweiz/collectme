@@ -17,6 +17,7 @@ jobs:
           docker-compose 
           run 
           -u root:root 
+          --no-deps
           wordpress 
           composer 
           --working-dir=wp-content/plugins/collectme 
@@ -41,6 +42,7 @@ jobs:
         run: >-
           docker-compose 
           run
+          -u root:root 
           wordpress
           bash
           -c 'cd wp-content/plugins/collectme && TMPDIR=$(pwd)/tmp bin/install-wp-tests.sh collectme_test root "" mysql latest'
@@ -56,6 +58,7 @@ jobs:
           docker-compose 
           run 
           -u root:root 
+          --no-deps
           node 
           yarn 
           --no-progress 
@@ -68,6 +71,7 @@ jobs:
           docker-compose 
           run 
           -u root:root 
+          --no-deps
           node 
           yarn 
           --no-progress 
