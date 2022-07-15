@@ -91,4 +91,39 @@ class AccountTokenTest extends TestCase
         $this->expectException(CollectmeDBException::class);
         $accountToken = AccountToken::getByEmailAndToken('mail@example.com', $token2);
     }
+
+    public function test_getByEmail(): void
+    {
+        $token = wp_generate_password(64, false, false);
+        $validUntil = date_create('+5 years')->format(DATE_ATOM);
+        $uuid = $this->insertTestTokenIntoDB($token, 'c@example.com', 'Jane', 'Doe', 'd', $validUntil);
+
+        $accountToken = AccountToken::getByEmail('c@example.com');
+
+        $this->assertSame($uuid, $accountToken->uuid);
+    }
+
+    public function test_getByEmail__longestValid(): void
+    {
+        $token1 = wp_generate_password(64, false, false);
+        $token2 = wp_generate_password(64, false, false);
+        $token3 = wp_generate_password(64, false, false);
+        $uuid1 = $this->insertTestTokenIntoDB($token1, 'a@example.com', 'Jane', 'Doe', 'd', date_create('+5 years')->format(DATE_ATOM));
+        $uuid2 = $this->insertTestTokenIntoDB($token2, 'a@example.com', 'Jane', 'Doe', 'd', date_create('+10 years')->format(DATE_ATOM));
+        $uuid3 = $this->insertTestTokenIntoDB($token3, 'a@example.com', 'Jane', 'Doe', 'd', date_create('+2 years')->format(DATE_ATOM));
+
+        $accountToken = AccountToken::getByEmail('a@example.com');
+
+        $this->assertSame($uuid2, $accountToken->uuid);
+    }
+
+    public function test_getByEmail__expired(): void
+    {
+        $token = wp_generate_password(64, false, false);
+        $validUntil = date_create('-1 day')->format(DATE_ATOM);
+        $uuid = $this->insertTestTokenIntoDB($token, 'b@example.com', 'Jane', 'Doe', 'd', $validUntil);
+
+        $this->expectException(CollectmeDBException::class);
+        $accountToken = AccountToken::getByEmail('b@example.com');
+    }
 }
