@@ -41,13 +41,14 @@ class HtmlController
             return $this->index($causeUuid);
         }
 
+        $token = apply_filters('collectme_account_token', $token, $email );
+
+        if (!$token) {
+            return $this->index($causeUuid);
+        }
+
         try {
-            $accountToken = apply_filters(
-                'collectme_get_account_token',
-                AccountToken::getByEmailAndToken($email, $token),
-                $email,
-                $token
-            );
+            $accountToken = AccountToken::getByEmailAndToken($email, $token);
         } catch (CollectmeDBException $e) {
             // token not found / invalid
             return $this->index($causeUuid);
