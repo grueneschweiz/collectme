@@ -22,7 +22,13 @@ For folks that just want to use employ the plugin on their site.
 
 ### Generating Links that Log-in the Users Automatically
 
-Todo
+1. Populate the `wp_collectme_account_tokens` table with the data of the users you want to log in automatically.
+   The `token` must contain exactly 64 alpha-numeric characters (e.g. SHA256 hash).
+2. You may then send the users their personal link, which must look like follows: 
+   `https://example.com/post-with-collectme-shortcode?action=create&email=<email>&token=<token>`
+
+**Variant:** You may also use the `collectme_get_account_token` filter and craft your own token validation function.
+See [/docs/link-auth-with-mailchimp.md](/docs/link-auth-with-mailchimp.md) for an example.
 
 ## Dev Guide
 
@@ -192,8 +198,6 @@ Helpful resources:
 
 #### Codegen
 
-Generate API docs in [/docs/api/index.html](/docs/api/index.html)
-
 - Generate type definitions in [/app/src/models/generated](/app/src/models/generated)
   ```bash
   docker-compose run swagger-codegen generate -i /tmp/swagger/input/rest-api.yaml -o /tmp/swagger/output -l typescript-axios
@@ -202,6 +206,7 @@ Generate API docs in [/docs/api/index.html](/docs/api/index.html)
   sed -i -r 's/(\s)Date(\s)/\1string\2/g' gen/models/*.ts
   rsync -av --delete gen/models/ app/src/models/generated
   ```
+  
 - Generate API docs in [/docs/api/index.html](/docs/api/index.html)
   ```bash
   docker-compose run swagger-codegen generate -i /tmp/swagger/input/rest-api.yaml -o /tmp/swagger/output -l html2 
@@ -214,6 +219,3 @@ Helpful resources:
 - `docker-compose run swagger-codegen langs`
 - `docker-compose run swagger-codegen generate`
 - [Swagger-Codegen](https://github.com/swagger-api/swagger-codegen) on GitHub
-
-
-
