@@ -42,7 +42,12 @@ class HtmlController
         }
 
         try {
-            $accountToken = AccountToken::getByEmailAndToken($email, $token);
+            $accountToken = apply_filters(
+                'collectme_get_account_token',
+                AccountToken::getByEmailAndToken($email, $token),
+                $email,
+                $token
+            );
         } catch (CollectmeDBException $e) {
             // token not found / invalid
             return $this->index($causeUuid);
