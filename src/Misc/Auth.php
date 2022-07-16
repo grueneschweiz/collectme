@@ -16,7 +16,6 @@ use Collectme\Model\Entities\PersistentSession;
 use Collectme\Model\Entities\Role;
 use Collectme\Model\Entities\User;
 use Collectme\Model\PhpSession;
-
 use WP_REST_Request;
 
 
@@ -190,7 +189,8 @@ class Auth
      */
     private function setupUserForCause(User $user, string $causeUuid): void
     {
-        DB::transactional(static function () use ($user, $causeUuid) {
+        $group = null;
+        DB::transactional(static function () use (&$user, &$group, $causeUuid) {
             $group = new Group(
                 null,
                 $user->firstName,
@@ -209,9 +209,9 @@ class Auth
             $role->save();
 
             $user->addCause($causeUuid);
-
-            return $user;
         });
+
+        do_action('collectme_after_user_setup', $user, $group->uuid, $causeUuid);
     }
 
     /**
