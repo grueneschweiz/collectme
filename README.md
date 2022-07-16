@@ -30,6 +30,40 @@ For folks that just want to use employ the plugin on their site.
 **Variant:** You may also use the `collectme_get_account_token` filter and craft your own token validation function.
 See [/docs/link-auth-with-mailchimp.md](/docs/link-auth-with-mailchimp.md) for an example.
 
+### Adding Goals from External Data
+
+The action `collectme_after_user_setup` is built for this purpose. It fires every time a user is added to a cause.
+
+Example:
+```php
+add_action( 'collectme_after_user_setup', function( 
+        \Collectme\Model\Entities\User $user,
+        string $groupUuid, 
+        string $causeUuid 
+    ) {
+    // add your logic to grab the objective data from an external source
+    // assign the goal to $count, a string identifying the source to $source
+    $count = 123;
+    $source = 'Form XY';
+    
+    $objective = new \Collectme\Model\Entities\Objective(
+        null,
+        $count,
+        $groupUuid,
+        $source
+    );
+    
+    try {
+        $objective->save();
+    } catch (\Collectme\Exceptions\CollectmeDBException $e) {
+        // it's possibly ok to just ignore the error as the
+        // user will be prompted by the application to set a
+        // goal if he hasn't got one yet.
+    }
+}, 10, 3 );
+```
+
+
 ## Dev Guide
 
 For the cool kids that want to contribute :sunglasses:
