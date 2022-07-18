@@ -41,7 +41,7 @@ class HtmlController
             return $this->index($causeUuid);
         }
 
-        $token = apply_filters('collectme_account_token', $token, $email );
+        $token = apply_filters('collectme_account_token', $token, $email);
 
         if (!$token) {
             return $this->index($causeUuid);
