@@ -63,7 +63,7 @@ onBeforeUnmount(() => {
   border-top: 2px solid var(--color-primary);
   z-index: 999;
   padding: clamp(10px, 10 * (100vw + 80px) / 455, 20px);
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .admin-bar .collectme-the-base-overlay {
