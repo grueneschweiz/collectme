@@ -22,18 +22,36 @@
           class="collectme-the-objective-setter__card-base-card"
         />
       </div>
+
+      <p
+        class="collectme-the-objective-setter__upgrade-info"
+        v-if="currentObjective > 0 && nextObjective && signatureCount > 0"
+      >
+        {{
+          t("HomeView.TheObjectiveSetter.upgradeInfo", {
+            currentGoal: currentObjective.toString(),
+            nextGoal: nextObjective.toString(),
+            percent: nextObjectivePercent.toString(),
+          })
+        }}
+      </p>
+
+      <p class="collectme-the-objective-setter__quota-info">
+        {{ t("HomeView.TheObjectiveSetter.quotaInfo") }}
+      </p>
     </template>
   </TheBaseOverlay>
 </template>
 
 <script setup lang="ts">
+import type { ObjectiveSettings } from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
+import { useObjectiveSettings } from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
 import TheBaseOverlay from "@/components/base/TheBaseOverlay.vue";
 import TheObjectiveSetterCard from "@/components/specific/home/TheObjectiveSetter/TheObjectiveSetterCard.vue";
 import t from "@/utility/i18n";
 import { useGroupStore } from "@/stores/GroupStore";
 import { computed } from "vue";
 import { useObjectiveStore } from "@/stores/ObjectiveStore";
-import { useObjectiveSettings } from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
 
 const objectiveSettings = useObjectiveSettings();
 
@@ -52,6 +70,24 @@ const currentObjective = computed<number>(() => {
     useObjectiveStore().getHighestObjectiveByGroupId(groupId as string)
       ?.attributes.objective ?? 0
   );
+});
+
+const nextObjective = computed<number | null>(() => {
+  return (
+    useObjectiveSettings()
+      .getSorted()
+      .find(
+        (objective: ObjectiveSettings) =>
+          objective.objective > currentObjective.value
+      )?.objective || null
+  );
+});
+
+const nextObjectivePercent = computed<number>(() => {
+  if (!nextObjective.value || nextObjective.value === 0) {
+    return 100;
+  }
+  return (signatureCount.value / nextObjective.value) * 100;
 });
 
 function disabled(objective: number): boolean {
@@ -96,5 +132,11 @@ function ribbon(objective: number): string | undefined {
 
 .collectme-the-objective-setter__card-base-card {
   max-height: 30vh;
+}
+
+.collectme-the-objective-setter__upgrade-info,
+.collectme-the-objective-setter__quota-info {
+  color: var(--color-grey-3);
+  font-size: 0.875rem;
 }
 </style>
