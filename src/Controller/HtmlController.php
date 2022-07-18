@@ -91,8 +91,11 @@ class HtmlController
             't' => $translations,
         ];
 
+        $customCss = preg_replace('/\s+/', ' ', $this->settings->getCustomCss($causeUuid));
+
         return '<div id="collectme-app"></div>'
             . $this->assetLoader->getStylesHtml()
+            . '<style>' . $customCss . '</style>'
             . $this->assetLoader->getScriptDataHtml('collectme', $data)
             . $this->assetLoader->getScriptsHtml();
     }

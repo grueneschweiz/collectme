@@ -44,6 +44,7 @@ class AdminController
             if (
                 $this->saveEmailConfigs($causeUuid)
                 && $this->saveObjectives($causeUuid)
+                && $this->saveCustomCss($causeUuid)
                 && $this->saveOverrides($causeUuid)
             ) {
                 echo '<div class="notice notice-success is-dismissible"><p>' . __('Saved!', 'collectme') . '</p></div>';
@@ -75,6 +76,10 @@ class AdminController
         $defaultContext = I18N_DEFAULT_CONTEXT;
 
         $settings = $this->settings;
+
+        foreach ($causes as $cause) {
+            $this->initCodeEditor($cause->uuid);
+        }
 
         include COLLECTME_BASE_PATH . '/views/admin/settings.php';
     }
@@ -152,6 +157,22 @@ class AdminController
         return true;
     }
 
+    private function saveCustomCss(string $causeUuid): bool
+    {
+        $customCss = strip_tags($_POST['customCss'] ?? '');
+
+        if (isset($_POST['customCss']) && $customCss !== $_POST['customCss']) {
+            echo '<div class="notice notice-error is-dismissible"><p>' . __(
+                    'Markup is not allowed in CSS.',
+                    'collectme'
+                ) . '</p></div>';
+            return false;
+        }
+
+        $this->settings->setCustomCss(trim($customCss), $causeUuid);
+        return true;
+    }
+
     private function saveOverrides(string $causeUuid): bool
     {
         foreach ($_POST['override'] as $context => $override) {
@@ -214,5 +235,26 @@ class AdminController
                     'collectme'
                 ) . '</p></div>';
         }
+    }
+
+    private function initCodeEditor(string $causeUuid): void
+    {
+        $settings = wp_enqueue_code_editor( [
+            'type' => 'text/css',
+        ] );
+
+        // if user disabled CodeMirror.
+        if ( false === $settings ) {
+            return;
+        }
+
+        wp_add_inline_script(
+            'code-editor',
+            sprintf(
+                "jQuery( function() { wp.codeEditor.initialize( 'customCss-%s', %s ); } );",
+                $causeUuid,
+                wp_json_encode( $settings )
+            )
+        );
     }
 }

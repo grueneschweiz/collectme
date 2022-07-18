@@ -236,6 +236,18 @@ use Collectme\Model\Entities\Cause;
 
                 <tr>
                     <th scope="row">
+                        <?php _e('Custom CSS', 'collectme') ?>
+                    </th>
+                    <td>
+                        <textarea style="resize: both;" name="customCss" id="customCss-<?php echo $cause->uuid ?>"><?php echo $settings->getCustomCss($cause->uuid) ?></textarea>
+                        <p class="description">
+                            <label for="customCss-<?php echo $cause->uuid ?>"><?php _e('CSS entered here will be applied to every page this cause is displayed.', 'collectme') ?></label>
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
                         <?php echo esc_html($cause->name) . ' ' . __('Overrides', 'collectme') ?>
                     </th>
 

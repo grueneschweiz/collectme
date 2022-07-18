@@ -12,6 +12,7 @@ class Settings
     private const STRING_OVERRIDES = 'string_overrides';
     private const OBJECTIVES = 'objectives';
     private const EMAIL_CONFIG = 'email_config';
+    private const CUSTOM_CSS = 'custom_css';
 
     private array $settings = [];
 
@@ -124,5 +125,17 @@ class Settings
             'fromAddress' => "website@$domain",
             'replyToAddress' => get_bloginfo('admin_email'),
         ];
+    }
+
+    public function setCustomCss(string $css, string $causeUuid): void
+    {
+        $this->set(self::CUSTOM_CSS, [$css], $causeUuid);
+    }
+
+    public function getCustomCss(string $causeUuid): string
+    {
+        $customCss = $this->get(self::CUSTOM_CSS, $causeUuid);
+
+        return $customCss[0] ?? '';
     }
 }
