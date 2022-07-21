@@ -84,6 +84,7 @@ class HtmlController
             'appUrlAuthentication' => wp_hash(get_permalink(), 'nonce'),
             'assetBaseUrl' => plugin_dir_url(COLLECTME_PLUGIN_NAME) . ASSET_PATH_REL,
             'cause' => $causeUuid,
+            'defaultObjective' => $this->settings->getDefaultObjective($causeUuid),
             'encodedAdminEmail' => base64_encode(get_bloginfo('admin_email')), // yeah, yeah, spam. but it's good enough
             'locale' => get_locale(),
             'nonce' => wp_create_nonce('wp_rest'),

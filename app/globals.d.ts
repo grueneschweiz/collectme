@@ -4,6 +4,7 @@ declare namespace collectme {
   const appUrlAuthentication: string;
   const assetBaseUrl: string;
   const cause: string;
+  const defaultObjective: object;
   const encodedAdminEmail: string;
   const locale: string;
   const nonce: string;
