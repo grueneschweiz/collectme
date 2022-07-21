@@ -44,6 +44,7 @@ class AdminController
             if (
                 $this->saveEmailConfigs($causeUuid)
                 && $this->saveObjectives($causeUuid)
+                && $this->saveDefaultObjective($causeUuid)
                 && $this->saveCustomCss($causeUuid)
                 && $this->saveOverrides($causeUuid)
             ) {
@@ -153,6 +154,26 @@ class AdminController
         }
 
         $this->settings->setObjectives($objectives, $causeUuid);
+
+        return true;
+    }
+
+    private function saveDefaultObjective(string $causeUuid): bool {
+        $objective = $this->settings->getDefaultObjective($causeUuid);
+
+        $img = $_POST['defaultObjective']['img'] ?? null;
+        if (!UrlValidator::check($img, 'http')) {
+            echo '<div class="notice notice-error is-dismissible"><p>' . __(
+                    'Invalid image url.',
+                    'collectme'
+                ) . '</p></div>';
+            return false;
+        }
+        if (!empty($img)) {
+            $objective['img'] = $img;
+        }
+
+        $this->settings->setDefaultObjective($objective, $causeUuid);
 
         return true;
     }

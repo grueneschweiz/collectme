@@ -11,6 +11,7 @@ class Settings
 {
     private const STRING_OVERRIDES = 'string_overrides';
     private const OBJECTIVES = 'objectives';
+    private const DEFAULT_OBJECTIVE = 'default_objective';
     private const EMAIL_CONFIG = 'email_config';
     private const CUSTOM_CSS = 'custom_css';
 
@@ -137,5 +138,25 @@ class Settings
         $customCss = $this->get(self::CUSTOM_CSS, $causeUuid);
 
         return $customCss[0] ?? '';
+    }
+
+    public function getDefaultObjective(string $causeUuid): array
+    {
+        $defaultObjective = $this->get(self::DEFAULT_OBJECTIVE, $causeUuid) ?? [];
+        $defaults = [
+            'id' => 'default',
+            'name' => __('Default', 'collectme'),
+            'enabled' => true,
+            'objective' => 0,
+            'img' => plugin_dir_url(COLLECTME_PLUGIN_NAME) . ASSET_PATH_REL . '/img/goal-default.png',
+            'hot' => false,
+        ];
+
+        return array_replace($defaults, $defaultObjective);
+    }
+
+    public function setDefaultObjective(array $defaultObjective, string $causeUuid): void
+    {
+        $this->set(self::DEFAULT_OBJECTIVE, $defaultObjective, $causeUuid);
     }
 }

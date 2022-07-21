@@ -163,7 +163,7 @@ use Collectme\Model\Entities\Cause;
                     <td>
                         <?php foreach ($settings->getObjectives($cause->uuid) as $key => $objective): ?>
                             <h4><?php echo $objective['name'] ?></h4>
-                            <div>
+                            <div style="margin-top: 1em;">
                                 <p>
                                     <?php _e('Goal', 'collectme') ?>
                                 </p>
@@ -231,6 +231,28 @@ use Collectme\Model\Entities\Cause;
                                     ) ?></label>
                             </div>
                         <?php endforeach; ?>
+                        <h4><?php _e('Default', 'collectme') ?></h4>
+                        <p class="description"><?php _e(
+                                'This is shown before any goal is selected.',
+                                'collectme'
+                            ) ?></p>
+                        <div style="margin-top: 1em;">
+                            <label for="defaultObjective[img]">
+                                <?php _e('Image URL', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="defaultObjective[img]"
+                                    id="defaultObjective[img]"
+                                    type="text"
+                                    class="large-text"
+                                    value="<?php echo esc_attr($settings->getDefaultObjective($cause->uuid)['img']) ?>"
+                            >
+                            <p class="description"><?php _e(
+                                    'Fully qualified URL to the image. Clear to reset to default.',
+                                    'collectme'
+                                ) ?></p>
+                        </div>
                     </td>
                 </tr>
 
