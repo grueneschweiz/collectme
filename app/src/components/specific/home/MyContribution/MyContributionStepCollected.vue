@@ -13,7 +13,8 @@
     <template #default v-if="collected">
       {{
         t("HomeView.MyContribution.MyContributionStepCollected.collectedMsg")
-      }} 👏
+      }}
+      👏
     </template>
 
     <template #default v-else>
