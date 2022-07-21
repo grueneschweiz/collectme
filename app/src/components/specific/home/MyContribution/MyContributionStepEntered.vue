@@ -1,7 +1,12 @@
 <template>
   <BaseStepElement :status="status" :prev="prev" :next="next">
     <template #title>
-      {{ t("HomeView.MyContribution.MyContributionStepEntered.title") }}
+      <template v-if="status !== 'completed'">
+      {{ t("HomeView.MyContribution.MyContributionStepEntered.titlePending") }}
+      </template>
+      <template v-else>
+      {{ t("HomeView.MyContribution.MyContributionStepEntered.titleDone") }}
+      </template>
     </template>
 
     <template v-if="status !== 'completed'" #default>

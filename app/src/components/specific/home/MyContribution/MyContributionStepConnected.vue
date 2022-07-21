@@ -8,7 +8,7 @@
         t("HomeView.MyContribution.MyContributionStepConnected.hello", {
           firstName: user?.attributes.firstName ?? "",
         })
-      }}
+      }} 👋
     </template>
   </BaseStepElement>
 </template>
