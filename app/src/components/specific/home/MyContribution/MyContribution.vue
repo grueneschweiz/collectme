@@ -1,46 +1,117 @@
 <template>
-  <BaseLayoutCard>
-    <template #header>
-      {{ t("HomeView.MyContribution.title") }}
-    </template>
+  <BaseLayoutCard class="collectme-my-contribution">
+    <template #default>
+      <div class="collectme-my-contribution__header-img-wrapper">
+        <img
+          :src="objectiveSettings.img"
+          alt="goal image"
+          class="collectme-my-contribution__header-img"
+          :class="`collectme-my-contribution__header-img--${objectiveSettings.objective}`"
+        />
+      </div>
 
-    <template #default v-if="userStore.me">
-      <div class="collectme-my-contribution__body">
+      <h3 class="collectme-my-contribution__title">
+        {{ t("HomeView.MyContribution.title") }}
+      </h3>
+
+      <div class="collectme-my-contribution__body" v-if="userStore.me">
         <MyContributionSteps />
       </div>
-    </template>
 
-    <template #default v-else-if="userStore.isLoading">
-      <BaseLoader />
-    </template>
+      <BaseLoader v-else-if="userStore.isLoading" />
 
-    <template #default v-else>
-      <p class="collectme-my-contribution__sign-in-msg">
-        {{ t("HomeView.MyContribution.singInMsg") }}
-      </p>
-      <div class="collectme-my-contribution__login-button-wrapper">
-        <BaseButton secondary size="md" @click="$router.push('/login')">
-          {{ t("HomeView.MyContribution.signInBtn") }}
-        </BaseButton>
-        <span>{{ t("HomeView.MyContribution.noPasswordRequired") }}</span>
-      </div>
+      <template v-else>
+        <p class="collectme-my-contribution__sign-in-msg">
+          {{ t("HomeView.MyContribution.singInMsg") }}
+        </p>
+        <div class="collectme-my-contribution__login-button-wrapper">
+          <BaseButton secondary size="md" @click="$router.push('/login')">
+            {{ t("HomeView.MyContribution.signInBtn") }}
+          </BaseButton>
+          <span>{{ t("HomeView.MyContribution.noPasswordRequired") }}</span>
+        </div>
+      </template>
     </template>
   </BaseLayoutCard>
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted } from "vue";
 import BaseLayoutCard from "@/components/base/BaseLayoutCard.vue";
 import t from "@/utility/i18n";
 import { useUserStore } from "@/stores/UserStore";
 import BaseLoader from "@/components/base/BaseLoader/BaseLoader.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import MyContributionSteps from "@/components/specific/home/MyContribution/MyContributionSteps.vue";
+import type { ObjectiveSettings } from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
+import { useObjectiveSettings } from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
+import { useGroupStore } from "@/stores/GroupStore";
+import { useObjectiveStore } from "@/stores/ObjectiveStore";
 
 const userStore = useUserStore();
-userStore.fetch();
+const groupStore = useGroupStore();
+const objectiveStore = useObjectiveStore();
+
+const objectiveCount = computed<number>(() => {
+  if (!groupStore.myPersonalGroup?.id) {
+    return 0;
+  }
+
+  return (
+    objectiveStore.getHighestObjectiveByGroupId(groupStore.myPersonalGroup.id)
+      ?.attributes.objective || 0
+  );
+});
+
+const objectiveSettings = computed<ObjectiveSettings>(() => {
+  return useObjectiveSettings().getLowerOrEqual(objectiveCount.value);
+});
+
+onMounted(() => {
+  userStore.fetch();
+  groupStore.fetch();
+});
 </script>
 
 <style>
+.collectme-my-contribution {
+  position: relative;
+  margin-top: calc(75px + 2rem);
+  padding-top: 75px;
+}
+
+.collectme-my-contribution__header-img-wrapper {
+  width: 150px;
+  height: 150px;
+  border-radius: 75px;
+  border: solid 5px white;
+  background: white;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.collectme-my-contribution__header-img-wrapper::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--color-grey-2);
+  border-radius: 75px;
+}
+
+.collectme-my-contribution__header-img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.collectme-my-contribution__title {
+  text-align: center;
+}
+
 .collectme-my-contribution__sign-in-msg {
   margin: 1em 0;
 }

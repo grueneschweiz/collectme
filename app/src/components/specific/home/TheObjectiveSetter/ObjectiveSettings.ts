@@ -29,6 +29,10 @@ export function useObjectiveSettings() {
       );
   }
 
+  function getDefault(): ObjectiveSettings {
+    return collectme.defaultObjective as ObjectiveSettings;
+  }
+
   function isHot(objective: number): boolean {
     return (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,7 +45,22 @@ export function useObjectiveSettings() {
     );
   }
 
+  function getLowerOrEqual(count: number): ObjectiveSettings {
+    let last = getDefault();
+    for (const objective of getSorted()) {
+      if (objective.objective > count) {
+        break;
+      } else {
+        last = objective;
+      }
+    }
+
+    return last;
+  }
+
   return {
+    getDefault,
+    getLowerOrEqual,
     getGreatest,
     getSorted,
     isHot,

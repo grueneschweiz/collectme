@@ -61,7 +61,6 @@ enum Step {
 const userStore = useUserStore();
 const groupStore = useGroupStore();
 const objectiveStore = useObjectiveStore();
-groupStore.fetch();
 
 const greatestObjective = useObjectiveSettings().getGreatest().objective;
 
