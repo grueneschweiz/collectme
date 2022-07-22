@@ -75,7 +75,7 @@
 import TheBaseOverlay from "@/components/base/TheBaseOverlay.vue";
 import t from "@/utility/i18n";
 import BaseInput from "@/components/base/BaseInput/BaseInput.vue";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import isEmail from "validator/es/lib/isEmail";
 import isLength from "validator/es/lib/isLength";
 import type { ValidationStatus } from "@/components/base/BaseInput/BaseInput";
@@ -87,6 +87,7 @@ import router from "@/router";
 import BaseLoader from "@/components/base/BaseLoader/BaseLoader.vue";
 import type { Login } from "@/models/generated";
 import { useLoginStore } from "@/stores/LoginStore";
+import { useUserStore } from "@/stores/UserStore";
 
 const loginStore = useLoginStore();
 
@@ -175,6 +176,12 @@ async function submitLoginData() {
     }
   }
 }
+
+onMounted(() => {
+  if (useUserStore().me?.id) {
+    router.push("/");
+  }
+});
 </script>
 
 <style>
