@@ -67,7 +67,7 @@
 
       <BaseButton
         v-else-if="fulfilled >= 1 && objective < greatestObjective"
-        outline
+        class="collectme-my-contribution-step-achieved__upgrade-btn"
         secondary
         size="sm"
         @click="$router.push('/home/set-goal')"
@@ -87,11 +87,11 @@ import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.v
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseDoughnutChart from "@/components/base/BaseDoughnutChart.vue";
 import type { StepStatus } from "@/components/base/BaseStepElement/BaseStepElement";
-import { ref, type PropType } from "vue";
-import { computed } from "vue";
+import { computed, type PropType, ref } from "vue";
 import t from "@/utility/i18n";
 import { useObjectiveSettings } from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
 import { myCurrentObjectiveSettings } from "@/components/specific/home/MyContribution/MyContributionCurrentObjectiveSettings";
+import party from "party-js";
 
 const props = defineProps({
   status: {
@@ -119,6 +119,7 @@ const props = defineProps({
 });
 
 const imageElement = ref<HTMLImageElement>();
+let preventAnimation = true;
 
 const greatestObjective = useObjectiveSettings().getGreatest().objective;
 
@@ -158,6 +159,13 @@ const progressCaption = computed<string>(() => {
 });
 
 function animateImage() {
+  if (preventAnimation) {
+    // first execution is on component load. we want to prevent this
+    // but execute on any subsequent call.
+    preventAnimation = false;
+    return;
+  }
+
   imageElement.value?.classList.add(
     "collectme-my-contribution-step-achieved__chart-img--animated"
   );
@@ -167,6 +175,21 @@ function animateImage() {
       "collectme-my-contribution-step-achieved__chart-img--animated"
     );
   }, 1000);
+
+  if (fulfilled.value >= 1) {
+    throwConfetti();
+    window.setTimeout(throwConfetti, 500);
+  }
+}
+
+function throwConfetti() {
+  if (!imageElement.value) {
+    return;
+  }
+
+  party.confetti(imageElement.value, {
+    count: party.variation.range(50, 100),
+  });
 }
 </script>
 
@@ -195,7 +218,7 @@ function animateImage() {
 
 /*noinspection CssUnusedSymbol*/
 .collectme-my-contribution-step-achieved__chart-img--animated {
-  animation-name: pulsate;
+  animation-name: pulsateImage;
   animation-direction: alternate;
   animation-duration: 0.5s;
   animation-iteration-count: 2;
@@ -206,7 +229,15 @@ function animateImage() {
   padding-bottom: 1em;
 }
 
-@keyframes pulsate {
+.collectme-my-contribution-step-achieved__upgrade-btn {
+  animation-name: pulsateBtn;
+  animation-direction: alternate;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes pulsateImage {
   0% {
     transform: translate(-50%, -50%) scale(1);
   }
@@ -215,6 +246,21 @@ function animateImage() {
   }
   100% {
     transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes pulsateBtn {
+  0% {
+    transform: scale(1);
+  }
+  12.5% {
+    transform: scale(1.01);
+  }
+  25% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
