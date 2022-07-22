@@ -58,7 +58,7 @@ defineProps({
 
 .collectme-base-content-card__trailer {
   text-align: right;
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
   color: var(--color-grey-3);
   padding: 0.25rem;
 }

@@ -116,7 +116,7 @@ function ribbon(objective: number): string | undefined {
 <style>
 .collectme-the-base-overlay__intro {
   color: var(--color-text);
-  line-height: 1.4em;
+  line-height: 1.4rem;
 }
 
 .collectme-the-objective-setter__card-wrapper {

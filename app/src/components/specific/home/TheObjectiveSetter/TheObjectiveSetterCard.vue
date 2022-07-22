@@ -138,7 +138,7 @@ function saveObjective() {
 
 .collectme-the-objective-setter-card__subline {
   color: var(--color-grey-3);
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
   line-height: 1.2em;
   flex: none;
 }
