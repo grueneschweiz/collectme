@@ -6,10 +6,10 @@
         class="collectme-my-contribution__header-img-wrapper"
       >
         <img
-          :src="objectiveSettings.img"
+          :src="myCurrentObjectiveSettings.img"
           alt="goal image"
           class="collectme-my-contribution__header-img"
-          :class="`collectme-my-contribution__header-img--${objectiveSettings.objective}`"
+          :class="`collectme-my-contribution__header-img--${myCurrentObjectiveSettings.objective}`"
         />
       </router-link>
 
@@ -39,36 +39,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { onMounted } from "vue";
 import BaseLayoutCard from "@/components/base/BaseLayoutCard.vue";
 import t from "@/utility/i18n";
 import { useUserStore } from "@/stores/UserStore";
 import BaseLoader from "@/components/base/BaseLoader/BaseLoader.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import MyContributionSteps from "@/components/specific/home/MyContribution/MyContributionSteps.vue";
-import type { ObjectiveSettings } from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
-import { useObjectiveSettings } from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
 import { useGroupStore } from "@/stores/GroupStore";
-import { useObjectiveStore } from "@/stores/ObjectiveStore";
+import { myCurrentObjectiveSettings } from "@/components/specific/home/MyContribution/MyContributionCurrentObjectiveSettings";
 
 const userStore = useUserStore();
 const groupStore = useGroupStore();
-const objectiveStore = useObjectiveStore();
-
-const objectiveCount = computed<number>(() => {
-  if (!groupStore.myPersonalGroup?.id) {
-    return 0;
-  }
-
-  return (
-    objectiveStore.getHighestObjectiveByGroupId(groupStore.myPersonalGroup.id)
-      ?.attributes.objective || 0
-  );
-});
-
-const objectiveSettings = computed<ObjectiveSettings>(() => {
-  return useObjectiveSettings().getLowerOrEqual(objectiveCount.value);
-});
 
 onMounted(() => {
   userStore.fetch();

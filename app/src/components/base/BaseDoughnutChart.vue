@@ -4,7 +4,7 @@
       <!-- Background circle -->
       <path
         :d="dBg"
-        fill="transparent"
+        fill="white"
         :stroke="backgroundColor"
         :stroke-width="strokeWidth"
       />
@@ -26,6 +26,8 @@
  */
 
 import { computed, onMounted, ref, watch } from "vue";
+
+const emit = defineEmits(["animationFinished"]);
 
 const props = defineProps({
   percent: {
@@ -149,6 +151,7 @@ function animate() {
     animatedValue.value = initialValue + delta * progress;
     if (frame === totalFrames) {
       clearInterval(counter);
+      emit("animationFinished");
     }
   }, frameDuration);
 }

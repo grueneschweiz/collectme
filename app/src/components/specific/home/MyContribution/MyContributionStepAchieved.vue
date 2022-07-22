@@ -14,11 +14,21 @@
 
     <template #default>
       <figure class="collectme-my-contribution-step-achieved__figure">
-        <BaseDoughnutChart
-          class="collectme-my-contribution-step-achieved__chart"
-          :percent="Math.min(Math.round(fulfilled * 100), 100)"
-          :stroke-width="40"
-        />
+        <div class="collectme-my-contribution-step-achieved__chart">
+          <BaseDoughnutChart
+            class="collectme-my-contribution-step-achieved__chart-graph"
+            :percent="Math.min(Math.round(fulfilled * 100), 100)"
+            :stroke-width="6"
+            @animation-finished="animateImage"
+          />
+          <img
+            :src="myCurrentObjectiveSettings.img"
+            alt="goal image"
+            class="collectme-my-contribution-step-achieved__chart-img"
+            :class="`collectme-my-contribution-step-achieved__chart-img--${myCurrentObjectiveSettings.objective}`"
+            ref="imageElement"
+          />
+        </div>
         <figcaption
           class="collectme-my-contribution-step-achieved__caption"
           v-html="caption"
@@ -77,10 +87,11 @@ import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.v
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseDoughnutChart from "@/components/base/BaseDoughnutChart.vue";
 import type { StepStatus } from "@/components/base/BaseStepElement/BaseStepElement";
-import type { PropType } from "vue";
+import { ref, type PropType } from "vue";
 import { computed } from "vue";
 import t from "@/utility/i18n";
 import { useObjectiveSettings } from "@/components/specific/home/TheObjectiveSetter/ObjectiveSettings";
+import { myCurrentObjectiveSettings } from "@/components/specific/home/MyContribution/MyContributionCurrentObjectiveSettings";
 
 const props = defineProps({
   status: {
@@ -106,6 +117,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const imageElement = ref<HTMLImageElement>();
 
 const greatestObjective = useObjectiveSettings().getGreatest().objective;
 
@@ -143,6 +156,18 @@ const progressCaption = computed<string>(() => {
     "HomeView.MyContribution.MyContributionStepAchieved.captionPlaceholder"
   );
 });
+
+function animateImage() {
+  imageElement.value?.classList.add(
+    "collectme-my-contribution-step-achieved__chart-img--animated"
+  );
+
+  window.setTimeout(() => {
+    imageElement.value?.classList.remove(
+      "collectme-my-contribution-step-achieved__chart-img--animated"
+    );
+  }, 1000);
+}
 </script>
 
 <style>
@@ -156,9 +181,40 @@ const progressCaption = computed<string>(() => {
 .collectme-my-contribution-step-achieved__chart {
   width: clamp(4rem, 18vw, 8rem);
   flex-shrink: 0;
+  position: relative;
+}
+
+.collectme-my-contribution-step-achieved__chart-img {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: 0.2s ease;
+}
+
+/*noinspection CssUnusedSymbol*/
+.collectme-my-contribution-step-achieved__chart-img--animated {
+  animation-name: pulsate;
+  animation-direction: alternate;
+  animation-duration: 0.5s;
+  animation-iteration-count: 2;
+  animation-timing-function: ease-in-out;
 }
 
 .collectme-my-contribution-step-achieved__caption {
   padding-bottom: 1em;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 </style>
