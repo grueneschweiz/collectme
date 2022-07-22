@@ -154,7 +154,7 @@ async function submitLoginData() {
   try {
     useSnackbarStore().hide({ id: "login-validation-error" } as Snackbar);
     await loginStore.sendLoginData(data);
-    await router.push("/await-activation");
+    await router.push("await-activation");
   } catch (error) {
     if (loginStore.invalidFields.length) {
       const invalidFields = loginStore.invalidFields
