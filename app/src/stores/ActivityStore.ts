@@ -54,6 +54,14 @@ function addActivities(newActivities: Activity[]) {
       return;
     }
 
+    const alreadyStored = storedActivities.find(
+      (storedActivity) => storedActivity.id === newActivity.id
+    );
+
+    if (alreadyStored) {
+      return;
+    }
+
     if (
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       newActivity.attributes.created > storedActivities[0]!.attributes.created!
@@ -77,10 +85,7 @@ function addActivities(newActivities: Activity[]) {
         storedActivities[i].attributes.created! <
         newActivity?.attributes.created
       ) {
-        if (newActivity.id !== storedActivities[i].id) {
-          storedActivities.splice(i, 0, newActivity);
-        }
-
+        storedActivities.splice(i, 0, newActivity);
         return;
       }
     }
