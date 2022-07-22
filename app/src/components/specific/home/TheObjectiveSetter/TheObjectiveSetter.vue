@@ -31,7 +31,7 @@
           t("HomeView.TheObjectiveSetter.upgradeInfo", {
             currentGoal: currentObjective.toString(),
             nextGoal: nextObjective.toString(),
-            percent: nextObjectivePercent.toString(),
+            percent: Math.round(nextObjectivePercent).toString(),
           })
         }}
       </p>
