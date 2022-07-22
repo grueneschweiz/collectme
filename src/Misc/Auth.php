@@ -21,12 +21,25 @@ use WP_REST_Request;
 
 class Auth
 {
+    private static Auth $instance;
     private PersistentSession $persistentSession;
 
     public function __construct(
         private readonly PhpSession $phpSession,
         private readonly AuthCookie $authCookie,
     ) {
+        self::$instance = $this;
+    }
+
+    /**
+     * @throws CollectmeException
+     */
+    public static function getInstance(): Auth
+    {
+        if (!isset(self::$instance)) {
+            throw new CollectmeException('Auth not initialized.');
+        }
+        return self::$instance;
     }
 
     public function isAuthenticated(): bool
