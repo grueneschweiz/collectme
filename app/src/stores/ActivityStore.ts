@@ -160,5 +160,19 @@ export const useActivityStore = defineStore("ActivityStore", {
         this.isLoading = false;
       }
     },
+
+    removeNewestOfGroup(groupId: string) {
+      const newest = this.activities.find(
+        (activity) => activity.relationships.group.data.id === groupId
+      );
+
+      if (!newest) {
+        return;
+      }
+
+      this.activities = this.activities.filter(
+        (activity) => activity.id !== newest.id
+      );
+    },
   },
 });
