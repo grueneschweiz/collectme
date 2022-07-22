@@ -14,7 +14,10 @@
 
     <template #default>
       <figure class="collectme-my-contribution-step-achieved__figure">
-        <div class="collectme-my-contribution-step-achieved__chart">
+        <router-link
+          to="/home/set-goal"
+          class="collectme-my-contribution-step-achieved__chart"
+        >
           <BaseDoughnutChart
             class="collectme-my-contribution-step-achieved__chart-graph"
             :percent="Math.min(Math.round(fulfilled * 100), 100)"
@@ -28,7 +31,7 @@
             :class="`collectme-my-contribution-step-achieved__chart-img--${myCurrentObjectiveSettings.objective}`"
             ref="imageElement"
           />
-        </div>
+        </router-link>
         <figcaption
           class="collectme-my-contribution-step-achieved__caption"
           v-html="caption"
@@ -205,6 +208,13 @@ function throwConfetti() {
   width: clamp(4rem, 18vw, 8rem);
   flex-shrink: 0;
   position: relative;
+  box-shadow: none;
+}
+
+.collectme-my-contribution-step-achieved__chart:hover,
+.collectme-my-contribution-step-achieved__chart:focus {
+  background: none;
+  box-shadow: none;
 }
 
 .collectme-my-contribution-step-achieved__chart-img {
