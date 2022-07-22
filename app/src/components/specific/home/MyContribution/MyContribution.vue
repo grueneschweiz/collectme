@@ -1,14 +1,17 @@
 <template>
   <BaseLayoutCard class="collectme-my-contribution">
     <template #default>
-      <div class="collectme-my-contribution__header-img-wrapper">
+      <router-link
+        to="/home/set-goal"
+        class="collectme-my-contribution__header-img-wrapper"
+      >
         <img
           :src="objectiveSettings.img"
           alt="goal image"
           class="collectme-my-contribution__header-img"
           :class="`collectme-my-contribution__header-img--${objectiveSettings.objective}`"
         />
-      </div>
+      </router-link>
 
       <h3 class="collectme-my-contribution__title">
         {{ t("HomeView.MyContribution.title") }}
@@ -91,6 +94,7 @@ onMounted(() => {
   left: 50%;
   transform: translate(-50%, -50%);
   overflow: hidden;
+  box-shadow: 0 0 9px 2px var(--color-grey-1);
 }
 
 .collectme-my-contribution__header-img-wrapper::after {
