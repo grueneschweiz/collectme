@@ -32,26 +32,26 @@ class HtmlController
     /**
      * @throws \JsonException
      */
-    public function createUserFromToken(string $causeUuid): never
+    public function createUserFromToken(string $causeUuid): string
     {
         $token = trim($_GET['token'] ?? '');
         $email = trim($_GET['email'] ?? '');
 
         if (!TokenValidator::check($token) || !EmailValidator::check($email)) {
-            $this->redirectTo(get_permalink());
+            return $this->redirectTo(get_permalink(), $causeUuid);
         }
 
         $token = apply_filters('collectme_account_token', $token, $email);
 
         if (!$token) {
-            $this->redirectTo(get_permalink());
+            return $this->redirectTo(get_permalink(), $causeUuid);
         }
 
         try {
             $accountToken = AccountToken::getByEmailAndToken($email, $token);
         } catch (CollectmeDBException $e) {
             // token not found / invalid
-            $this->redirectTo(get_permalink());
+            return $this->redirectTo(get_permalink(), $causeUuid);
         }
 
         try {
@@ -62,19 +62,25 @@ class HtmlController
                 /** @noinspection ForgottenDebugOutputInspection */
                 wp_die($e->getMessage());
             } else {
-                $this->redirectTo(get_permalink());
+                return $this->redirectTo(get_permalink(), $causeUuid);
             }
         }
 
         $this->auth->getPersistentSession();
 
-        $this->redirectTo(get_permalink());
+        return $this->redirectTo(get_permalink(), $causeUuid);
     }
 
-    private function redirectTo(string $url): never
+    /**
+     * @throws \JsonException
+     */
+    private function redirectTo(string $url, string $causeUuid): string
     {
-        wp_redirect($url);
-        exit();
+        if (wp_redirect($url)) {
+            exit();
+        }
+
+        return $this->index($causeUuid);
     }
 
     /**
@@ -142,7 +148,7 @@ class HtmlController
                     // user activated session in same browser as he requested
                     // activation. so he is now logged in, and we can redirect
                     // him to the app.
-                    $this->redirectTo(get_permalink());
+                    return $this->redirectTo(get_permalink(), $causeUuid);
                 }
 
                 // user activated session in different browser than he
