@@ -46,6 +46,9 @@ class FrontendRouter
         return $this->htmlController->createUserFromToken($this->args['causeuuid']);
     }
 
+    /**
+     * @throws \JsonException
+     */
     private function activate(): string
     {
         return $this->htmlController->activateSession($this->args['causeuuid']);

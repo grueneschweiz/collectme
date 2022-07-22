@@ -32,26 +32,26 @@ class HtmlController
     /**
      * @throws \JsonException
      */
-    public function createUserFromToken(string $causeUuid): string
+    public function createUserFromToken(string $causeUuid): never
     {
         $token = trim($_GET['token'] ?? '');
         $email = trim($_GET['email'] ?? '');
 
         if (!TokenValidator::check($token) || !EmailValidator::check($email)) {
-            return $this->index($causeUuid);
+            $this->redirectTo(get_permalink());
         }
 
         $token = apply_filters('collectme_account_token', $token, $email);
 
         if (!$token) {
-            return $this->index($causeUuid);
+            $this->redirectTo(get_permalink());
         }
 
         try {
             $accountToken = AccountToken::getByEmailAndToken($email, $token);
         } catch (CollectmeDBException $e) {
             // token not found / invalid
-            return $this->index($causeUuid);
+            $this->redirectTo(get_permalink());
         }
 
         try {
@@ -62,13 +62,19 @@ class HtmlController
                 /** @noinspection ForgottenDebugOutputInspection */
                 wp_die($e->getMessage());
             } else {
-                return $this->index($causeUuid);
+                $this->redirectTo(get_permalink());
             }
         }
 
         $this->auth->getPersistentSession();
 
-        return $this->index($causeUuid);
+        $this->redirectTo(get_permalink());
+    }
+
+    private function redirectTo(string $url): never
+    {
+        wp_redirect($url);
+        exit();
     }
 
     /**
@@ -135,8 +141,8 @@ class HtmlController
                 if ($this->auth->isAuthenticated()) {
                     // user activated session in same browser as he requested
                     // activation. so he is now logged in, and we can redirect
-                    // him directly to the app.
-                    return $this->index($causeUuid);
+                    // him to the app.
+                    $this->redirectTo(get_permalink());
                 }
 
                 // user activated session in different browser than he
