@@ -6,7 +6,7 @@
 
     <template #default>
       <ActivityFeedCard
-        v-for="(activity, idx) in activities"
+        v-for="(activity, idx) in activityStore.activities"
         :activity="activity"
         :key="activity.id ?? idx"
         class="collectme-activity-feed__card"
@@ -16,7 +16,7 @@
         v-if="
           !activityStore.isLoading &&
           activityStore.next &&
-          activities.length &&
+          activityStore.activities.length &&
           !activityStore.error
         "
         outline
@@ -49,7 +49,9 @@
       </BaseAlert>
       <template
         v-if="
-          !activities.length && !activityStore.isLoading && !activityStore.error
+          !activityStore.activities.length &&
+          !activityStore.isLoading &&
+          !activityStore.error
         "
       >
         {{ t("HomeView.ActivityFeed.noActivity") }}
@@ -70,8 +72,6 @@ import { onBeforeUnmount, onMounted } from "vue";
 
 const activityStore = useActivityStore();
 activityStore.fetchFirst();
-
-const activities = activityStore.activities;
 
 let timer: ReturnType<typeof setInterval>;
 
