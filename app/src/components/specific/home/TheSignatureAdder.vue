@@ -63,6 +63,8 @@ const count = ref<undefined | number>();
 const validationStatus = ref<ValidationStatus>("unvalidated");
 const saving = ref<boolean>(false);
 
+let lastSignatureAdded: Signature;
+
 async function save(): Promise<void> {
   saving.value = true;
 
@@ -78,7 +80,7 @@ async function save(): Promise<void> {
     return;
   }
 
-  await useSignatureStore().create({
+  lastSignatureAdded = await useSignatureStore().create({
     id: null,
     type: "signature",
     attributes: {
@@ -116,6 +118,13 @@ function addSignaturesToGroup(groupId: string, signatures: number) {
   }
 }
 
+function removeSignaturesFromGroup(groupId: string, signatures: number) {
+  const group = useGroupStore().groups.get(groupId);
+  if (group) {
+    group.attributes.signatures -= signatures;
+  }
+}
+
 function notifySaveSuccess() {
   const number = count.value?.toString() ?? "0";
 
@@ -123,7 +132,22 @@ function notifySaveSuccess() {
     id: "signature-save-success",
     type: "success",
     shortDesc: t("HomeView.TheSignatureAdder.saved", { count: number }),
-    vanishAfter: 5000,
+    vanishAfter: 10000,
+    action: () => {
+      useSignatureStore()
+        .delete(lastSignatureAdded)
+        .then(() => {
+          removeSignaturesFromGroup(
+            lastSignatureAdded.relationships.group.data.id,
+            lastSignatureAdded.attributes.count
+          );
+          useActivityStore().removeNewestOfGroup(
+            lastSignatureAdded.relationships.group.data.id
+          );
+          useSnackbarStore().hide({ id: "signature-save-success" } as Snackbar);
+        });
+    },
+    actionLabel: t("HomeView.TheSignatureAdder.undo"),
   } as Snackbar);
 }
 

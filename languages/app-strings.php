@@ -119,6 +119,7 @@ return [
             'saving' => __('Saving...', 'collectme'),
             'saved' => __('{count} signatures added.', 'collectme'),
             'back' => __('Back without registering signatures', 'collectme'),
+            'undo' => __('Undo', 'collectme'),
         ],
 
         'TheActivationAwaitor' => [
