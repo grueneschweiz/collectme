@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Collectme\Model\Entities;
 
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Exceptions\CollectmeException;
+use Collectme\Misc\Auth;
 use Collectme\Model\Database\DBField;
 use Collectme\Model\Database\DBTable;
 use Collectme\Model\Entity;
@@ -30,6 +32,9 @@ class Group extends Entity
 
     #[ApiModelAttribute('signatures')]
     private int $signatures;
+
+    #[ApiModelAttribute('writeable')]
+    private bool $writeable;
 
     public function __construct(
         ?string $uuid,
@@ -131,6 +136,19 @@ SQL,
         }
 
         return $this->signatures;
+    }
+
+    protected function _convertToApiWriteable(): bool
+    {
+        if (!isset($this->writeable)) {
+            try {
+                $this->writeable = $this->userCanWrite((Auth::getInstance())->getUserUuid());
+            } catch (CollectmeException $e) {
+                $this->writeable = false;
+            }
+        }
+
+        return $this->writeable;
     }
 
     public function signatures(): int
