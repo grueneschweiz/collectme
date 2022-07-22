@@ -65,7 +65,7 @@ export const useGroupStore = defineStore("GroupStore", {
     myPersonalGroup: (state: GroupStoreState): Group | null => {
       let myGroup: Group | null = null;
       state.groups.forEach((group: Group) => {
-        if (group.attributes.type === "person") {
+        if (group.attributes.type === "person" && group.attributes.writeable) {
           myGroup = group;
         }
       });
