@@ -118,6 +118,7 @@ return [
             'submit' => __('Register Signatures', 'collectme'),
             'saving' => __('Saving...', 'collectme'),
             'saved' => __('{count} signatures added.', 'collectme'),
+            'sendBack' => __("Please hand in the signatures to your party as soon as possible. Or send them by mail to the address noted on the signature sheets. The sooner the better.", 'collectme'),
             'back' => __('Back without registering signatures', 'collectme'),
             'undo' => __('Undo', 'collectme'),
         ],

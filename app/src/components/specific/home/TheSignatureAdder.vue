@@ -132,6 +132,7 @@ function notifySaveSuccess() {
     id: "signature-save-success",
     type: "success",
     shortDesc: t("HomeView.TheSignatureAdder.saved", { count: number }),
+    longDesc: t("HomeView.TheSignatureAdder.sendBack"),
     vanishAfter: 10000,
     action: () => {
       undo().then(() => {
