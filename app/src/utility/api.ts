@@ -28,7 +28,11 @@ export interface ErrorResponse extends AxiosResponse {
 async function errorHandler(error: any) {
   console.log(error);
 
-  if (error && axios.isAxiosError(error) && error.response?.status === 401) {
+  if (
+    error &&
+    axios.isAxiosError(error) &&
+    (error.response?.status === 401 || error.response?.status === 403)
+  ) {
     if (router.currentRoute.value.path === "/login") {
       return Promise.reject(error);
     }
