@@ -44,5 +44,22 @@ export const useSignatureStore = defineStore("SignatureStore", {
         this.signatures.set(signature.id, signature);
       }
     },
+
+    async delete(signature: Signature) {
+      this.isLoading = true;
+
+      try {
+        await api(true).delete(`${endpointUrl}/${signature.id}`);
+        this.removeSignature(signature);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    removeSignature(signature: Signature) {
+      if (signature.id != null) {
+        this.signatures.delete(signature.id);
+      }
+    },
   },
 });
