@@ -134,21 +134,26 @@ function notifySaveSuccess() {
     shortDesc: t("HomeView.TheSignatureAdder.saved", { count: number }),
     vanishAfter: 10000,
     action: () => {
-      useSignatureStore()
-        .delete(lastSignatureAdded)
-        .then(() => {
-          removeSignaturesFromGroup(
-            lastSignatureAdded.relationships.group.data.id,
-            lastSignatureAdded.attributes.count
-          );
-          useActivityStore().removeNewestOfGroup(
-            lastSignatureAdded.relationships.group.data.id
-          );
-          useSnackbarStore().hide({ id: "signature-save-success" } as Snackbar);
-        });
+      undo().then(() => {
+        useSnackbarStore().hide({ id: "signature-save-success" } as Snackbar);
+      });
     },
     actionLabel: t("HomeView.TheSignatureAdder.undo"),
   } as Snackbar);
+}
+
+async function undo() {
+  await useSignatureStore()
+    .delete(lastSignatureAdded)
+    .then(() => {
+      removeSignaturesFromGroup(
+        lastSignatureAdded.relationships.group.data.id,
+        lastSignatureAdded.attributes.count
+      );
+      useActivityStore().remove(
+        lastSignatureAdded.relationships.activity.data.id
+      );
+    });
 }
 
 watch(count, (newValue) => {

@@ -161,17 +161,9 @@ export const useActivityStore = defineStore("ActivityStore", {
       }
     },
 
-    removeNewestOfGroup(groupId: string) {
-      const newest = this.activities.find(
-        (activity) => activity.relationships.group.data.id === groupId
-      );
-
-      if (!newest) {
-        return;
-      }
-
+    remove(activityId: string) {
       this.activities = this.activities.filter(
-        (activity) => activity.id !== newest.id
+        (activity) => activity.id !== activityId
       );
     },
   },
