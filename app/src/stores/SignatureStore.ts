@@ -28,8 +28,10 @@ export const useSignatureStore = defineStore("SignatureStore", {
     async create(signature: Signature) {
       this.isLoading = true;
 
+      let resp: SignatureResponseSuccess;
+
       try {
-        const resp = await api(true).post<
+        resp = await api(true).post<
           { data: Signature },
           SignatureResponseSuccess
         >(endpointUrl, { data: signature });
@@ -37,6 +39,8 @@ export const useSignatureStore = defineStore("SignatureStore", {
       } finally {
         this.isLoading = false;
       }
+
+      return resp.data.data as Signature;
     },
 
     addSignature(signature: Signature) {
