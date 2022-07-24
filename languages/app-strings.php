@@ -81,6 +81,11 @@ return [
             'submitByline' => __("You'll receive an e-mail with a link that signs you in. Keep this window open.", 'collectme'),
         ],
 
+        'OverviewStats' => [
+            /* Translators: Override with "State of the initiative" */
+            'title' => __('State of the collection', 'collectme'),
+        ],
+
         'ActivityFeed' => [
             'title' => __('Activity Feed', 'collectme'),
             'noActivity' => __('No activity yet.', 'collectme'),

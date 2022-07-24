@@ -1,6 +1,7 @@
 <template>
   <div class="collectme-home-view">
     <MyContribution :key="refreshKey" />
+    <OverviewStats :key="refreshKey" />
     <ActivityFeed :key="refreshKey" />
   </div>
   <RouterView @login="refreshKey++" />
@@ -10,6 +11,7 @@
 import { RouterView } from "vue-router";
 import MyContribution from "@/components/specific/home/MyContribution/MyContribution.vue";
 import ActivityFeed from "@/components/specific/home/ActivityFeed/ActivityFeed.vue";
+import OverviewStats from "@/components/specific/home/OverviewStats.vue";
 import { ref } from "vue";
 
 const refreshKey = ref(0);
