@@ -22,6 +22,7 @@
             class="collectme-my-contribution-step-achieved__chart-graph"
             :percent="Math.min(Math.round(fulfilled * 100), 100)"
             :stroke-width="6"
+            fill-color="var(--color-white)"
             @animation-finished="animateImage"
           />
           <img

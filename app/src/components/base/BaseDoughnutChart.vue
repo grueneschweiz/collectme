@@ -4,7 +4,7 @@
       <!-- Background circle -->
       <path
         :d="dBg"
-        fill="white"
+        :fill="fillColor"
         :stroke="backgroundColor"
         :stroke-width="strokeWidth"
       />
@@ -42,6 +42,10 @@ const props = defineProps({
   backgroundColor: {
     type: String,
     default: "var(--color-grey-2)",
+  },
+  fillColor: {
+    type: String,
+    default: "transparent",
   },
   strokeWidth: {
     type: Number,
