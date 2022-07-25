@@ -63,6 +63,11 @@ onMounted(() => {
   position: relative;
   margin-top: calc(75px + 2rem);
   padding-top: 75px;
+
+  /* min-height prevents overview component from appearing
+  (and thus triggering it's animations) while loading this
+  component */
+  min-height: 570px;
 }
 
 .collectme-my-contribution__header-img-wrapper {

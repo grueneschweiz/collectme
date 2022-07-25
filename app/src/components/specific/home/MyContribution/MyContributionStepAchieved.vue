@@ -21,8 +21,6 @@
           <BaseDoughnutChart
             class="collectme-my-contribution-step-achieved__chart-graph"
             :percent="Math.min(Math.round(fulfilled * 100), 100)"
-            :stroke-width="6"
-            fill-color="var(--color-white)"
             @animation-finished="animateImage"
           />
           <img
@@ -216,6 +214,10 @@ function throwConfetti() {
 .collectme-my-contribution-step-achieved__chart:focus {
   background: none;
   box-shadow: none;
+}
+
+.collectme-my-contribution-step-achieved__chart-graph {
+  stroke-width: 3px;
 }
 
 .collectme-my-contribution-step-achieved__chart-img {

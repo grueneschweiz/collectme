@@ -1,20 +1,22 @@
 <template>
   <div class="collectme-base-doughnut-chart">
-    <svg viewBox="0 0 200 200" style="stroke-linecap: butt">
+    <svg
+      :viewBox="`0 0 ${svgDefinitionWidth} ${svgDefinitionWidth}`"
+      ref="svg"
+      class="collectme-base-doughnut-chart__svg"
+    >
       <!-- Background circle -->
       <path
         :d="dBg"
-        :fill="fillColor"
-        :stroke="backgroundColor"
-        :stroke-width="strokeWidth"
+        vector-effect="non-scaling-stroke"
+        class="collectme-base-doughnut-chart__svg-background"
       />
+
       <!-- Move to start position, start drawing arc -->
       <path
         :d="d"
-        fill="transparent"
-        :stroke="foregroundColor"
-        :stroke-width="strokeWidth"
-        stroke-linecap="round"
+        vector-effect="non-scaling-stroke"
+        class="collectme-base-doughnut-chart__svg-foreground"
       />
     </svg>
   </div>
@@ -26,7 +28,7 @@
  * to Vue3 with composition api and typescript
  */
 
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 const emit = defineEmits(["animationFinished"]);
 
@@ -34,22 +36,6 @@ const props = defineProps({
   percent: {
     type: Number,
     default: 0,
-  },
-  foregroundColor: {
-    type: String,
-    default: "var(--color-primary)",
-  },
-  backgroundColor: {
-    type: String,
-    default: "var(--color-grey-2)",
-  },
-  fillColor: {
-    type: String,
-    default: "transparent",
-  },
-  strokeWidth: {
-    type: Number,
-    default: 10,
   },
   animationDelay: {
     type: Number,
@@ -61,8 +47,32 @@ const props = defineProps({
   },
 });
 
+const svg = ref<SVGElement>();
+
 const animatedValue = ref(0);
 let delayTimer: ReturnType<typeof setTimeout> | null;
+
+const intersectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      animate();
+    }
+  });
+});
+
+const svgDefinitionWidth = 100;
+const svgWidthRecalc = ref(0);
+
+const strokeWidth = computed(() => {
+  return svg.value
+    ? parseInt(window.getComputedStyle(svg.value).strokeWidth)
+    : 1;
+});
+
+const svgWidth = computed(() => {
+  svgWidthRecalc.value; // just here to trigger computation
+  return svg.value?.clientWidth ?? svgDefinitionWidth;
+});
 
 // If more than 50% filled we need to switch arc drawing mode from less than 180 deg to more than 180 deg
 const largeArc = computed(() => {
@@ -70,28 +80,32 @@ const largeArc = computed(() => {
 });
 
 const radius = computed(() => {
-  return 100 - props.strokeWidth / 2;
+  const scalingFactor = svgDefinitionWidth / svgWidth.value;
+  const scaledStrokeWidth = strokeWidth.value * scalingFactor;
+  return (svgDefinitionWidth - scaledStrokeWidth) / 2;
 });
 
 // Where to put x coordinate of center of circle
 const x = computed(() => {
-  return 100;
+  return svgDefinitionWidth / 2;
 });
 
 // Where to put y coordinate of center of circle
 const y = computed(() => {
-  return 100 - radius.value;
+  return svgDefinitionWidth / 2 - radius.value;
 });
 
 // Calculate X coordinate of end of arc (+ 100 to move it to middle of image)
 // add some rounding error to make arc not disappear at 100%
 const endX = computed(() => {
-  return -Math.sin(radians.value) * radius.value + 100 - 0.0001; // eslint-disable-line no-mixed-operators
+  return (
+    -Math.sin(radians.value) * radius.value + svgDefinitionWidth / 2 - 0.0001
+  ); // eslint-disable-line no-mixed-operators
 });
 
 // Calculate Y coordinate of end of arc (+ 100 to move it to middle of image)
 const endY = computed(() => {
-  return Math.cos(radians.value) * radius.value + 100; // eslint-disable-line no-mixed-operators
+  return Math.cos(radians.value) * radius.value + svgDefinitionWidth / 2; // eslint-disable-line no-mixed-operators
 });
 
 // Calculate length of arc in radians
@@ -118,7 +132,17 @@ const d = computed(() => {
 });
 
 onMounted(() => {
-  animate();
+  animateWhenVisible();
+
+  addEventListener("resize", recalcRadius);
+});
+
+onBeforeUnmount(() => {
+  if (delayTimer) {
+    clearTimeout(delayTimer);
+  }
+
+  removeEventListener("resize", recalcRadius);
 });
 
 watch(
@@ -134,6 +158,16 @@ watch(
     }, props.animationDelay);
   }
 );
+
+function recalcRadius() {
+  svgWidthRecalc.value++;
+}
+
+function animateWhenVisible() {
+  if (svg.value) {
+    intersectionObserver.observe(svg.value);
+  }
+}
 
 function animate() {
   const initialValue = animatedValue.value;
@@ -166,6 +200,19 @@ function animate() {
 .collectme-base-doughnut-chart {
   width: 100%;
   position: relative;
+}
+
+.collectme-base-doughnut-chart__svg {
+  fill: transparent;
+  stroke-linecap: round;
+}
+
+.collectme-base-doughnut-chart__svg-background {
+  stroke: var(--color-grey-2);
+}
+
+.collectme-base-doughnut-chart__svg-foreground {
+  stroke: var(--color-primary);
 }
 
 .collectme-base-doughnut-chart::after {

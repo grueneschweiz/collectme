@@ -8,14 +8,11 @@
       <div class="collectme-overview-stats__charts-wrapper">
         <BaseDoughnutChart
           class="collectme-overview-stats__chart collectme-overview-stats__chart--pledged"
-          percent="37"
-          stroke-width="9"
+          :percent="37"
         />
         <BaseDoughnutChart
           class="collectme-overview-stats__chart collectme-overview-stats__chart--registered"
-          percent="15"
-          foreground-color="var(--color-secondary)"
-          stroke-width="11"
+          :percent="15"
         />
 
         <div
@@ -63,6 +60,10 @@ import t from "@/utility/i18n";
   position: relative;
 }
 
+.collectme-overview-stats__chart {
+  stroke-width: 10px;
+}
+
 .collectme-overview-stats__chart::after {
   content: none;
 }
@@ -71,6 +72,12 @@ import t from "@/utility/i18n";
   position: absolute;
   top: 0;
   padding: 22px;
+}
+
+/*noinspection CssUnusedSymbol,CssMissingComma*/
+.collectme-overview-stats__chart--registered
+  .collectme-base-doughnut-chart__svg-foreground {
+  stroke: var(--color-secondary);
 }
 
 .collectme-overview-stats__desc-wrapper {
