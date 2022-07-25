@@ -61,6 +61,43 @@ SQL,
         return self::findByQuery($query);
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
+    public static function totalByCauseAndType(string $causeUuid, EnumGroupType $type): int
+    {
+        global $wpdb;
+
+        $objectivesTbl = self::getTableName();
+        $groupsTbl = Group::getTableName();
+
+        $query = $wpdb->prepare(<<<EOL
+SELECT SUM(max_objective) as pledged
+FROM (
+    SELECT MAX({$objectivesTbl}.objective) as max_objective
+    FROM {$objectivesTbl}
+    INNER JOIN {$groupsTbl} ON {$objectivesTbl}.groups_uuid = {$groupsTbl}.uuid
+    WHERE 
+        {$groupsTbl}.causes_uuid = '%s'
+        AND {$groupsTbl}.type = '%s'
+        AND {$objectivesTbl}.deleted_at IS NULL
+        AND {$groupsTbl}.deleted_at IS NULL
+    GROUP BY {$objectivesTbl}.groups_uuid
+) AS max_objectives
+EOL,
+            $causeUuid,
+            $type->value
+        );
+
+        $result = $wpdb->get_var($query);
+
+        if ($result === null) {
+            throw new CollectmeDBException('Could not get total pledged for cause:' . $wpdb->last_error);
+        }
+
+        return (int) $result;
+    }
+
     protected static function _convertFromObjective(string|int $objective): int
     {
         return (int)$objective;

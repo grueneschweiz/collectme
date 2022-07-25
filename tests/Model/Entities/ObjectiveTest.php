@@ -44,6 +44,106 @@ class ObjectiveTest extends TestCase
         $this->assertSame('Newsletter 220401', $objective->source);
     }
 
+    public function test_totalByCauseAndType(): void
+    {
+        $cause1 = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause1->save();
+
+        $cause2 = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause2->save();
+
+        $group1 = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            false,
+        );
+        $group1->save();
+
+        $group2 = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            false,
+        );
+        $group2->save();
+
+        $groupOrga = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::ORGANIZATION,
+            $cause1->uuid,
+            false,
+        );
+        $groupOrga->save();
+
+        $groupCause2 = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause2->uuid,
+            false,
+        );
+        $groupCause2->save();
+
+        $objective11 = new Objective(
+            null,
+            1,
+            $group1->uuid,
+            'Newsletter 220401'
+        );
+        $objective11->save();
+
+        $objective12 = new Objective(
+            null,
+            10,
+            $group1->uuid,
+            'Newsletter 220401'
+        );
+        $objective12->save();
+
+        $objective21 = new Objective(
+            null,
+            100,
+            $group2->uuid,
+            'Newsletter 220401'
+        );
+        $objective21->save();
+
+        $objectiveOrga = new Objective(
+            null,
+            1000,
+            $groupOrga->uuid,
+            'Newsletter 220401'
+        );
+        $objectiveOrga->save();
+
+        $objectiveCause2 = new Objective(
+            null,
+            10000,
+            $groupCause2->uuid,
+            'Newsletter 220401'
+        );
+        $objectiveCause2->save();
+
+        $totalCause1Person = Objective::totalByCauseAndType($cause1->uuid, EnumGroupType::PERSON);
+        $this->assertSame(110, $totalCause1Person);
+
+        $totalCause1Orga = Objective::totalByCauseAndType($cause1->uuid, EnumGroupType::ORGANIZATION);
+        $this->assertSame(1000, $totalCause1Orga);
+
+        $totalCause2Person = Objective::totalByCauseAndType($cause2->uuid, EnumGroupType::PERSON);
+        $this->assertSame(10000, $totalCause2Person);
+    }
+
     public function test_save(): void
     {
         $cause = new Cause(
