@@ -9,13 +9,31 @@ use const Collectme\OPTIONS_PREFIX;
 
 class Settings
 {
+    private static Settings $instance;
+
     private const STRING_OVERRIDES = 'string_overrides';
     private const OBJECTIVES = 'objectives';
     private const DEFAULT_OBJECTIVE = 'default_objective';
     private const EMAIL_CONFIG = 'email_config';
     private const CUSTOM_CSS = 'custom_css';
+    private const PLEDGE_SETTINGS = 'pledge_settings';
+    private const SIGNATURE_SETTINGS = 'signature_settings';
 
     private array $settings = [];
+
+    public function __construct()
+    {
+        self::$instance = $this;
+    }
+
+    public static function getInstance(): self
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
 
     public function getStringOverrides(string $causeUuid): array
     {
@@ -158,5 +176,37 @@ class Settings
     public function setDefaultObjective(array $defaultObjective, string $causeUuid): void
     {
         $this->set(self::DEFAULT_OBJECTIVE, $defaultObjective, $causeUuid);
+    }
+
+    public function getPledgeSettings(string $causeUuid): array
+    {
+        $settings = $this->get(self::PLEDGE_SETTINGS, $causeUuid) ?? [];
+        $defaults = [
+            'objective' => 100000,
+            'offset' => 0,
+        ];
+
+        return array_replace($defaults, $settings);
+    }
+
+    public function getSignatureSettings(string $causeUuid): array
+    {
+        $settings = $this->get(self::SIGNATURE_SETTINGS, $causeUuid) ?? [];
+        $defaults = [
+            'objective' => 100000,
+            'offset' => 0,
+        ];
+
+        return array_replace($defaults, $settings);
+    }
+
+    public function setPledgeSettings(array $settings, string $causeUuid): void
+    {
+        $this->set(self::PLEDGE_SETTINGS, $settings, $causeUuid);
+    }
+
+    public function setSignatureSettings(array $settings, string $causeUuid): void
+    {
+        $this->set(self::SIGNATURE_SETTINGS, $settings, $causeUuid);
     }
 }

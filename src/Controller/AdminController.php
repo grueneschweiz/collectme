@@ -45,6 +45,8 @@ class AdminController
                 $this->saveEmailConfigs($causeUuid)
                 && $this->saveObjectives($causeUuid)
                 && $this->saveDefaultObjective($causeUuid)
+                && $this->saveSignatureSettings($causeUuid)
+                && $this->savePledgeSettings($causeUuid)
                 && $this->saveCustomCss($causeUuid)
                 && $this->saveOverrides($causeUuid)
             ) {
@@ -158,7 +160,8 @@ class AdminController
         return true;
     }
 
-    private function saveDefaultObjective(string $causeUuid): bool {
+    private function saveDefaultObjective(string $causeUuid): bool
+    {
         $objective = $this->settings->getDefaultObjective($causeUuid);
 
         $img = $_POST['defaultObjective']['img'] ?? null;
@@ -174,6 +177,32 @@ class AdminController
         }
 
         $this->settings->setDefaultObjective($objective, $causeUuid);
+
+        return true;
+    }
+
+    private function saveSignatureSettings(string $causeUuid): bool
+    {
+        $objective = absint($_POST['signatures']['objective']);
+        $offset = absint($_POST['signatures']['offset']);
+
+        $this->settings->setSignatureSettings([
+            'objective' => $objective,
+            'offset' => $offset,
+        ], $causeUuid);
+
+        return true;
+    }
+
+    private function savePledgeSettings(string $causeUuid): bool
+    {
+        $objective = absint($_POST['pledges']['objective']);
+        $offset = absint($_POST['pledges']['offset']);
+
+        $this->settings->setPledgeSettings([
+            'objective' => $objective,
+            'offset' => $offset,
+        ], $causeUuid);
 
         return true;
     }
@@ -260,12 +289,12 @@ class AdminController
 
     private function initCodeEditor(string $causeUuid): void
     {
-        $settings = wp_enqueue_code_editor( [
+        $settings = wp_enqueue_code_editor([
             'type' => 'text/css',
-        ] );
+        ]);
 
         // if user disabled CodeMirror.
-        if ( false === $settings ) {
+        if (false === $settings) {
             return;
         }
 
@@ -274,7 +303,7 @@ class AdminController
             sprintf(
                 "jQuery( function() { wp.codeEditor.initialize( 'customCss-%s', %s ); } );",
                 $causeUuid,
-                wp_json_encode( $settings )
+                wp_json_encode($settings)
             )
         );
     }
