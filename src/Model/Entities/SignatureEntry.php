@@ -68,7 +68,7 @@ EOL,
 
         $result = $wpdb->get_var($query);
 
-        if ($result === null) {
+        if ($result === null && $wpdb->error) {
             throw new CollectmeDBException('Could not get total signatures for cause:' . $wpdb->last_error);
         }
 
@@ -78,5 +78,23 @@ EOL,
     protected static function _convertFromCount(string|int $count): int
     {
         return (int) $count;
+    }
+
+    public function save(): static
+    {
+        $entry = parent::save();
+
+        $group = Group::get($this->groupUuid);
+        Stat::clearCache($group->causeUuid);
+
+        return $entry;
+    }
+
+    public function delete(): void
+    {
+        parent::delete();
+
+        $group = Group::get($this->groupUuid);
+        Stat::clearCache($group->causeUuid);
     }
 }
