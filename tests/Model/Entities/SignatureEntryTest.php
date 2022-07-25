@@ -69,6 +69,130 @@ class SignatureEntryTest extends TestCase
         $this->assertSame($log->uuid, $entry->activityLogUuid);
     }
 
+    public function test_totalByCauseAndType(): void
+    {
+        $cause1 = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause1->save();
+
+        $cause2 = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause2->save();
+
+        $group1 = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            false,
+        );
+        $group1->save();
+
+        $group2 = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            false,
+        );
+        $group2->save();
+
+        $groupOrga = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::ORGANIZATION,
+            $cause1->uuid,
+            false,
+        );
+        $groupOrga->save();
+
+        $groupCause2 = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause2->uuid,
+            false,
+        );
+        $groupCause2->save();
+
+        $user = new User(
+            null,
+            wp_generate_uuid4() . '@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            'user cause test'
+        );
+        $user->save();
+
+        $log = new ActivityLog(
+            null,
+            EnumActivityType::PERSONAL_SIGNATURE,
+            123,
+            $cause1->uuid,
+            $group1->uuid
+        );
+        $log->save();
+
+        $entry11 = new SignatureEntry(
+            null,
+            $group1->uuid,
+            $user->uuid,
+            1,
+            $log->uuid
+        );
+        $entry11->save();
+
+        $entry12 = new SignatureEntry(
+            null,
+            $group1->uuid,
+            $user->uuid,
+            10,
+            $log->uuid
+        );
+        $entry12->save();
+
+        $entry21 = new SignatureEntry(
+            null,
+            $group2->uuid,
+            $user->uuid,
+            100,
+            $log->uuid
+        );
+        $entry21->save();
+
+        $entryOrga = new SignatureEntry(
+            null,
+            $groupOrga->uuid,
+            $user->uuid,
+            1000,
+            $log->uuid
+        );
+        $entryOrga->save();
+
+        $entryCause2= new SignatureEntry(
+            null,
+            $groupCause2->uuid,
+            $user->uuid,
+            10000,
+            $log->uuid
+        );
+        $entryCause2->save();
+
+        $totalCause1Person = SignatureEntry::totalByCauseAndType($cause1->uuid, EnumGroupType::PERSON);
+        $this->assertSame(111, $totalCause1Person);
+
+        $totalCause1Orga = SignatureEntry::totalByCauseAndType($cause1->uuid, EnumGroupType::ORGANIZATION);
+        $this->assertSame(1000, $totalCause1Orga);
+
+        $totalCause2Person = SignatureEntry::totalByCauseAndType($cause2->uuid, EnumGroupType::PERSON);
+        $this->assertSame(10000, $totalCause2Person);
+    }
+
     public function test_save(): void
     {
         $cause = new Cause(

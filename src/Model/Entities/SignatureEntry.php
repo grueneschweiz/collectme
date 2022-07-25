@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Model\Entities;
 
+use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Model\Database\DBField;
 use Collectme\Model\Database\DBTable;
 use Collectme\Model\Entity;
@@ -39,6 +40,39 @@ class SignatureEntry extends Entity
         ?\DateTime $deleted = null
     ) {
         parent::__construct($uuid, $created, $updated, $deleted);
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    public static function totalByCauseAndType(string $causeUuid, EnumGroupType $type): int
+    {
+        global $wpdb;
+
+        $signaturesTbl = self::getTableName();
+        $groupsTbl = Group::getTableName();
+
+        $query = $wpdb->prepare(<<<EOL
+SELECT SUM({$signaturesTbl}.count) as total 
+FROM {$signaturesTbl}
+INNER JOIN {$groupsTbl} ON {$signaturesTbl}.collected_by_groups_uuid = {$groupsTbl}.uuid
+WHERE 
+    {$groupsTbl}.causes_uuid = '%s'
+    AND {$groupsTbl}.type = '%s'
+    AND {$signaturesTbl}.deleted_at IS NULL
+    AND {$groupsTbl}.deleted_at IS NULL
+EOL,
+            $causeUuid,
+            $type->value
+        );
+
+        $result = $wpdb->get_var($query);
+
+        if ($result === null) {
+            throw new CollectmeDBException('Could not get total signatures for cause:' . $wpdb->last_error);
+        }
+
+        return (int) $result;
     }
 
     protected static function _convertFromCount(string|int $count): int
