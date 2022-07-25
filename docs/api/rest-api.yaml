@@ -166,7 +166,7 @@ components:
       properties:
         id:
           type: string
-          example: overview
+          example: overview-5883e513-082d-4b16-80b2-c21b6bc18ed4
           readOnly: true
         type:
           type: string
@@ -392,16 +392,26 @@ components:
       properties:
         pledged:
           type: number
-          example: 17.3
+          example: 0.173
           readOnly: true
+          description: | 
+            Fraction of needed pledges to actual pledges.
+            Only the highest pledge for each group (of type person) is counted.
+            Multiply by 100 to get the percentage.
         registered:
           type: number
-          example: 30.4
+          example: 0.304
           readOnly: true
+          description: |
+            Fraction of needed signatures to registered signatures.
+            Sum of all signatures from groups of type 'person'.
+            Multiply by 100 to get the percentage.
         updated:
           type: string
           format: date-time
           readOnly: true
+          description: |
+            Last time the statistics cache was updated.
 
     UserAttributes:
       type: object
@@ -614,6 +624,8 @@ components:
           readOnly: true
         attributes:
           $ref: '#/components/schemas/StatAttributes'
+        relationships:
+          $ref: '#/components/schemas/RelatedCause'
 
     User:
       required:
