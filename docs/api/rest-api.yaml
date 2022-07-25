@@ -52,6 +52,8 @@ tags:
     description: persistent sessions
   - name: groups
     description: signature groups
+  - name: stats
+    description: statistics
   - name: signatures
     description: signature entries
   - name: objectives
@@ -156,6 +158,19 @@ components:
         type:
           type: string
           example: signature
+          readOnly: true
+
+    StatBase:
+      type: object
+      required: [ id, type ]
+      properties:
+        id:
+          type: string
+          example: overview
+          readOnly: true
+        type:
+          type: string
+          example: stat
           readOnly: true
 
     UserBase:
@@ -368,6 +383,26 @@ components:
           nullable: true
           readOnly: true
 
+    StatAttributes:
+      type: object
+      required:
+        - pledged
+        - registered
+        - updated
+      properties:
+        pledged:
+          type: number
+          example: 17.3
+          readOnly: true
+        registered:
+          type: number
+          example: 30.4
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+
     UserAttributes:
       type: object
       required:
@@ -562,6 +597,24 @@ components:
             - $ref: '#/components/schemas/RelatedGroup'
             - $ref: '#/components/schemas/RelatedActivity'
 
+    Stat:
+      required:
+        - id
+        - type
+        - attributes
+      type: object
+      properties:
+        id:
+          type: string
+          example: overview
+          readOnly: true
+        type:
+          type: string
+          example: stat
+          readOnly: true
+        attributes:
+          $ref: '#/components/schemas/StatAttributes'
+
     User:
       required:
         - id
@@ -754,6 +807,17 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/SignatureBase'
+
+    RelatedStat:
+      type: object
+      required: [ stat ]
+      properties:
+        stat:
+          type: object
+          required: [ data ]
+          properties:
+            data:
+              $ref: '#/components/schemas/StatBase'
 
     RelatedUser:
       type: object
@@ -1186,6 +1250,28 @@ paths:
                         - $ref: '#/components/schemas/Role'
         '401':
           $ref: '#/components/responses/Unauthorized'
+      security:
+        - cookieAuth: [ ]
+
+  /api/causes/{uuid}/stats:
+    parameters:
+      - $ref: '#/components/parameters/uuid'
+
+    get:
+      tags:
+        - stats
+      summary: Statistics
+      description: Percentage of pledged and registered signatures
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Stat'
       security:
         - cookieAuth: [ ]
 
