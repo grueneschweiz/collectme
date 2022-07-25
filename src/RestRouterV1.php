@@ -10,6 +10,7 @@ use Collectme\Controller\GroupController;
 use Collectme\Controller\ObjectiveController;
 use Collectme\Controller\SessionController;
 use Collectme\Controller\SignatureController;
+use Collectme\Controller\StatController;
 use Collectme\Controller\UserController;
 use Collectme\Controller\Validators\UuidValidator;
 use Collectme\Misc\Auth;
@@ -23,6 +24,7 @@ class RestRouterV1
         private readonly UserController $userController,
         private readonly SessionController $sessionController,
         private readonly GroupController $groupController,
+        private readonly StatController $statController,
         private readonly SignatureController $signatureController,
         private readonly ObjectiveController $objectiveController,
         private readonly ActivityLogController $activityLogController,
@@ -35,6 +37,7 @@ class RestRouterV1
         $this->registerAuthRoutes();
         $this->registerSessionRoutes();
         $this->registerGroupRoutes();
+        $this->registerStatRoutes();
         $this->registerSignatureRoutes();
         $this->registerObjectiveRoutes();
         $this->registerActivityLogRoutes();
@@ -103,6 +106,24 @@ class RestRouterV1
             [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this->groupController, 'findByCause'],
+                'permission_callback' => [$this->auth, 'isAuthenticatedAndHasValidNonce'],
+                'args' => [
+                    'uuid' => [
+                        'validate_callback' => [UuidValidator::class, 'check']
+                    ]
+                ],
+            ]
+        );
+    }
+
+    public function registerStatRoutes(): void
+    {
+        register_rest_route(
+            REST_V1_NAMESPACE,
+            '/causes/(?P<uuid>[a-zA-Z0-9-]{36})/stats',
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$this->statController, 'index'],
                 'permission_callback' => [$this->auth, 'isAuthenticatedAndHasValidNonce'],
                 'args' => [
                     'uuid' => [
