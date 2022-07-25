@@ -75,6 +75,12 @@ import t from "@/utility/i18n";
 }
 
 /*noinspection CssUnusedSymbol,CssMissingComma*/
+.collectme-overview-stats__chart--pledged
+  .collectme-base-doughnut-chart__svg-foreground {
+  stroke: var(--color-primary);
+}
+
+/*noinspection CssUnusedSymbol,CssMissingComma*/
 .collectme-overview-stats__chart--registered
   .collectme-base-doughnut-chart__svg-foreground {
   stroke: var(--color-secondary);
@@ -113,5 +119,51 @@ import t from "@/utility/i18n";
   font-size: clamp(0.75rem, 2.5vw, 0.875rem);
   line-height: 1.15em;
   color: var(--color-grey-3);
+}
+
+@media all and (min-width: 480px) {
+  .collectme-overview-stats__charts-wrapper {
+    display: grid;
+    grid-template-columns:
+      [chart] minmax(150px, 250px)
+      [desc] clamp(200px, 40vw, 250px);
+    grid-template-rows: [row-start] 1fr 1fr [row-end];
+    gap: clamp(1rem, 0.4vw, 2rem);
+    margin: 0 auto;
+    width: fit-content;
+  }
+
+  .collectme-overview-stats__chart {
+    grid-column: chart;
+    grid-row-start: row-start;
+    grid-row-end: row-end;
+    align-self: center;
+    position: static;
+  }
+
+  .collectme-overview-stats__desc-wrapper {
+    position: static;
+    transform: none;
+    grid-column: desc;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 250px;
+    text-align: center;
+    /*gap: clamp(0.5rem, 0.8vw, 1rem);*/
+  }
+
+  .collectme-overview-stats__desc-wrapper--pledged {
+    align-self: end;
+  }
+
+  .collectme-overview-stats__desc-wrapper--entered {
+    align-self: start;
+  }
+
+  .collectme-overview-stats__desc-num {
+    font-size: clamp(1rem, calc(1rem + ((100vw - 480px) * 0.125)), 3rem);
+  }
 }
 </style>
