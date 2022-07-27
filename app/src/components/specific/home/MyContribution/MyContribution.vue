@@ -84,6 +84,13 @@ onMounted(() => {
   box-shadow: 0 0 9px 2px var(--color-grey-1);
 }
 
+.collectme-my-contribution__header-img-wrapper:hover,
+.collectme-my-contribution__header-img-wrapper:focus {
+  background: white;
+  box-shadow: 0 0 9px 2px var(--color-grey-1);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
 .collectme-my-contribution__header-img-wrapper::after {
   content: "";
   display: block;

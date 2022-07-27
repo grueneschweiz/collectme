@@ -216,6 +216,12 @@ function throwConfetti() {
   box-shadow: none;
 }
 
+.collectme-my-contribution-step-achieved__chart:hover img,
+.collectme-my-contribution-step-achieved__chart:focus img {
+  transform: translate(-50%, -50%) scale(1.2);
+  filter: drop-shadow(1px 3px 1px rgba(120, 120, 120, 0.4));
+}
+
 .collectme-my-contribution-step-achieved__chart-graph {
   stroke-width: 3px;
 }
@@ -256,6 +262,7 @@ function throwConfetti() {
   }
   50% {
     transform: translate(-50%, -50%) scale(1.2);
+    filter: drop-shadow(1px 3px 1px rgba(120, 120, 120, 0.4));
   }
   100% {
     transform: translate(-50%, -50%) scale(1);
