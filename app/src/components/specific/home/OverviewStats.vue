@@ -48,11 +48,10 @@
 
       <div class="collectme-overview-stats__share">
         <p class="collectme-overview-stats__share-paragraph">
-          Danke für deinen Beitrag 💚
+          {{ t("HomeView.OverviewStats.thanks") }}
         </p>
         <p class="collectme-overview-stats__share-paragraph">
-          Das Ziel erreichen wir nur gemeinsam. Lade deine Freunde ein und schon
-          sind wir dem Ziel einen Schritt näher.
+          {{ t("HomeView.OverviewStats.inviteFriends") }}
         </p>
         <BaseShare
           :url="shareUrl"
@@ -166,7 +165,7 @@ onBeforeUnmount(() => {
 }
 
 .collectme-overview-stats__share-paragraph {
-  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem) !important;
   line-height: 1.4em;
   color: var(--color-grey-3);
   margin: 0.5rem 0;
@@ -203,7 +202,10 @@ onBeforeUnmount(() => {
     align-items: center;
     max-width: 250px;
     text-align: center;
-    /*gap: clamp(0.5rem, 0.8vw, 1rem);*/
+  }
+
+  .collectme-overview-stats__desc {
+    line-height: 1.4em;
   }
 
   .collectme-overview-stats__desc-wrapper--pledged {

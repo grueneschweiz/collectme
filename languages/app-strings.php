@@ -97,6 +97,8 @@ return [
             'enteredDesc' => __('of the pledged signatures were entered.', 'collectme'),
             /* Translators: Example: 31% of the required signatures were promised. */
             'pledgedDesc' => __('of the required signatures were promised.', 'collectme'),
+            'thanks' => __('Thank you for your contribution 💚', 'collectme'),
+            'inviteFriends' => __('We can only reach the goal together. Invite your friends and we are already one step closer.', 'collectme'),
             /* Translators: Override with "I'm taking part in the collection challenge for the cause. Do you support it too?" */
             'shareMsg' => __("I'm taking part in the collection challenge. Do you support it too?", 'collectme'),
             'shareEmailSubject' => __("Let's master the collection challenge for the cause together.", 'collectme')
