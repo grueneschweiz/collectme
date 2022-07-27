@@ -58,6 +58,7 @@ import { useActivityStore } from "@/stores/ActivityStore";
 import router from "@/router";
 import { useSnackbarStore } from "@/stores/SnackbarStore";
 import type { Snackbar } from "@/stores/SnackbarStore";
+import { useStatStore } from "@/stores/StatStore";
 
 const count = ref<undefined | number>();
 const validationStatus = ref<ValidationStatus>("unvalidated");
@@ -104,9 +105,10 @@ async function save(): Promise<void> {
 
   // update dependant stores
   addSignaturesToGroup(myGroupId, number);
-  await useActivityStore().update();
   saving.value = false;
   notifySaveSuccess();
+  await useActivityStore().update();
+  await useStatStore().fetch();
 
   router.back();
 }
