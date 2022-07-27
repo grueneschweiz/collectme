@@ -96,7 +96,8 @@ onBeforeUnmount(() => {
 }
 
 .collectme-activity-feed-card__message {
-  line-height: 1.3125em;
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+  line-height: 1.4em;
   color: var(--color-text);
 }
 </style>
