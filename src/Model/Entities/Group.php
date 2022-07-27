@@ -153,15 +153,17 @@ SQL,
 
     public function signatures(): int
     {
-        global $wpdb;
+        if (!isset($this->signatures)) {
+            global $wpdb;
 
-        $this->signatures = (int)$wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT SUM(count) FROM " . SignatureEntry::getTableName() .
-                " WHERE collected_by_groups_uuid = '%s'",
-                $this->uuid
-            )
-        );
+            $this->signatures = (int)$wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT SUM(count) FROM " . SignatureEntry::getTableName() .
+                    " WHERE collected_by_groups_uuid = '%s'",
+                    $this->uuid
+                )
+            );
+        }
 
         return $this->signatures;
     }
