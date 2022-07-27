@@ -214,39 +214,4 @@ function animate() {
 .collectme-base-doughnut-chart__svg-foreground {
   stroke: var(--color-primary);
 }
-
-.collectme-base-doughnut-chart::after {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: conic-gradient(
-    transparent,
-    white 15deg,
-    transparent 15deg,
-    transparent 360deg
-  );
-  animation: rotation 3s linear infinite;
-}
-
-@keyframes rotation {
-  0% {
-    transform: rotate(-15deg);
-    opacity: 0.3;
-  }
-  30% {
-    opacity: 0.3;
-  }
-  40% {
-    transform: rotate(345deg);
-    opacity: 0;
-  }
-  100% {
-    transform: rotate(345deg);
-    opacity: 0;
-  }
-}
 </style>
