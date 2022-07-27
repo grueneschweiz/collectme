@@ -98,6 +98,30 @@ EOL,
         return (int) $result;
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
+    public static function findHighestOfGroup(string $groupUuid): array
+    {
+        global $wpdb;
+
+        $objectivesTbl = self::getTableName();
+
+        $query = $wpdb->prepare(<<<EOL
+SELECT * 
+FROM $objectivesTbl
+WHERE
+    groups_uuid = '%s'
+    AND deleted_at IS NULL
+ORDER BY objective DESC
+LIMIT 1;
+EOL,
+            $groupUuid,
+        );
+
+        return self::findByQuery($query);
+    }
+
     protected static function _convertFromObjective(string|int $objective): int
     {
         return (int)$objective;

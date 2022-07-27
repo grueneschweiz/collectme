@@ -294,4 +294,67 @@ class ObjectiveTest extends TestCase
         $this->assertSame($objectiveGroup1->uuid, $objectives[0]->uuid);
     }
 
+    public function test_findHighestOfGroup(): void {
+        $cause = new Cause(
+            null,
+            'test_'.wp_generate_password(),
+        );
+        $cause->save();
+
+        $group1 = new Group(
+            null,
+            'test_'.wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group1->save();
+
+        $group2 = new Group(
+            null,
+            'test_'.wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group2->save();
+
+        $objective1 = new Objective(
+            null,
+            100,
+            $group1->uuid,
+            'Newsletter 220401'
+        );
+        $objective1->save();
+
+        $objective2 = new Objective(
+            null,
+            200,
+            $group1->uuid,
+            'Newsletter 220401'
+        );
+        $objective2->save();
+
+        $objectiveDeleted = new Objective(
+            null,
+            500,
+            $group1->uuid,
+            'Newsletter 220401'
+        );
+        $objectiveDeleted->save();
+        $objectiveDeleted->delete();
+
+        $objectiveOther = new Objective(
+            null,
+            500,
+            $group2->uuid,
+            'Newsletter 220401'
+        );
+        $objectiveOther->save();
+
+        $objectives = Objective::findHighestOfGroup($group1->uuid);
+
+        $this->assertCount(1, $objectives);
+        $this->assertSame($objective2->uuid, $objectives[0]->uuid);
+    }
 }
