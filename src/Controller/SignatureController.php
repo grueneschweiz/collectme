@@ -19,6 +19,7 @@ use Collectme\Model\Entities\ActivityLog;
 use Collectme\Model\Entities\EnumActivityType;
 use Collectme\Model\Entities\EnumGroupType;
 use Collectme\Model\Entities\Group;
+use Collectme\Model\Entities\Objective;
 use Collectme\Model\Entities\SignatureEntry;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -99,14 +100,35 @@ class SignatureController extends WP_REST_Controller
         );
 
         try {
-            $entry = DB::transactional(static function () use ($entryProps, $group) {
-                $log = new ActivityLog(
-                    null,
-                    $group->type === EnumGroupType::PERSON ? EnumActivityType::PERSONAL_SIGNATURE : EnumActivityType::ORGANIZATION_SIGNATURE,
-                    $entryProps['count'],
-                    $group->causeUuid,
-                    $group->uuid,
-                );
+            $objective = Objective::findHighestOfGroup($group->uuid);
+        } catch (CollectmeDBException) {
+            $objective = null;
+        }
+
+        if (!empty($objective)
+            && $group->type === EnumGroupType::PERSON
+            && $group->signatures() < $objective[0]->objective
+            && ($group->signatures() + $entryProps['count']) >= $objective[0]->objective)
+        {
+            $log = new ActivityLog(
+                null,
+                EnumActivityType::PERSONAL_GOAL_ACHIEVED,
+                $entryProps['count'],
+                $group->causeUuid,
+                $group->uuid,
+            );
+        } else {
+            $log = new ActivityLog(
+                null,
+                $group->type === EnumGroupType::PERSON ? EnumActivityType::PERSONAL_SIGNATURE : EnumActivityType::ORGANIZATION_SIGNATURE,
+                $entryProps['count'],
+                $group->causeUuid,
+                $group->uuid,
+            );
+        }
+
+        try {
+            $entry = DB::transactional(static function () use ($log, $entryProps) {
                 $log->save();
 
                 /** @noinspection PhpParamsInspection */
