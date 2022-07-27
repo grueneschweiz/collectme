@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Collectme\Misc;
 
+use Collectme\Model\Entities\Stat;
+
 use const Collectme\ASSET_PATH_REL;
 use const Collectme\OPTIONS_PREFIX;
 
@@ -203,10 +205,12 @@ class Settings
     public function setPledgeSettings(array $settings, string $causeUuid): void
     {
         $this->set(self::PLEDGE_SETTINGS, $settings, $causeUuid);
+        Stat::clearCache($causeUuid);
     }
 
     public function setSignatureSettings(array $settings, string $causeUuid): void
     {
         $this->set(self::SIGNATURE_SETTINGS, $settings, $causeUuid);
+        Stat::clearCache($causeUuid);
     }
 }
