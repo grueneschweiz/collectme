@@ -11,17 +11,17 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import type { Stat } from './stat';
+import type { StatBase } from './stat-base';
 /**
  * 
  * @export
- * @interface InlineResponse2002
+ * @interface RelatedStatStat
  */
-export interface InlineResponse2002 {
+export interface RelatedStatStat {
     /**
      * 
-     * @type {Stat}
-     * @memberof InlineResponse2002
+     * @type {StatBase}
+     * @memberof RelatedStatStat
      */
-    data?: Stat;
+    data: StatBase;
 }

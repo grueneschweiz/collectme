@@ -11,17 +11,28 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import type { Stat } from './stat';
 /**
  * 
  * @export
- * @interface InlineResponse2002
+ * @interface StatAttributes
  */
-export interface InlineResponse2002 {
+export interface StatAttributes {
     /**
-     * 
-     * @type {Stat}
-     * @memberof InlineResponse2002
+     * Fraction of needed pledges to actual pledges. Only the highest pledge for each group (of type person) is counted. Multiply by 100 to get the percentage. 
+     * @type {number}
+     * @memberof StatAttributes
      */
-    data?: Stat;
+    pledged: number;
+    /**
+     * Fraction of needed signatures to registered signatures. Sum of all signatures from groups of type 'person'. Multiply by 100 to get the percentage. 
+     * @type {number}
+     * @memberof StatAttributes
+     */
+    registered: number;
+    /**
+     * Last time the statistics cache was updated. 
+     * @type {Date}
+     * @memberof StatAttributes
+     */
+    updated: Date;
 }

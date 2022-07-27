@@ -11,17 +11,36 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import type { Stat } from './stat';
+import type { RelatedCause } from './related-cause';
+import type { StatAttributes } from './stat-attributes';
 /**
  * 
  * @export
- * @interface InlineResponse2002
+ * @interface Stat
  */
-export interface InlineResponse2002 {
+export interface Stat {
     /**
      * 
-     * @type {Stat}
-     * @memberof InlineResponse2002
+     * @type {string}
+     * @memberof Stat
      */
-    data?: Stat;
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Stat
+     */
+    type: string;
+    /**
+     * 
+     * @type {StatAttributes}
+     * @memberof Stat
+     */
+    attributes: StatAttributes;
+    /**
+     * 
+     * @type {RelatedCause}
+     * @memberof Stat
+     */
+    relationships?: RelatedCause;
 }

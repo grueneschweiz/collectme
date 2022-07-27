@@ -11,17 +11,31 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import type { Stat } from './stat';
+import type { Activity } from './activity';
+import type { Group } from './group';
+import type { PaginationLinks } from './pagination-links';
 /**
  * 
  * @export
- * @interface InlineResponse2002
+ * @interface InlineResponse2003
  */
-export interface InlineResponse2002 {
+export interface InlineResponse2003 {
     /**
      * 
-     * @type {Stat}
-     * @memberof InlineResponse2002
+     * @type {Array<Activity>}
+     * @memberof InlineResponse2003
      */
-    data?: Stat;
+    data?: Array<Activity>;
+    /**
+     * 
+     * @type {PaginationLinks}
+     * @memberof InlineResponse2003
+     */
+    links?: PaginationLinks;
+    /**
+     * 
+     * @type {Array<Group>}
+     * @memberof InlineResponse2003
+     */
+    included?: Array<Group>;
 }
