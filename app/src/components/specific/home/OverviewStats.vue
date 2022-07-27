@@ -8,11 +8,11 @@
       <div class="collectme-overview-stats__charts-wrapper">
         <BaseDoughnutChart
           class="collectme-overview-stats__chart collectme-overview-stats__chart--pledged"
-          :percent="37"
+          :percent="pledgedPercent"
         />
         <BaseDoughnutChart
           class="collectme-overview-stats__chart collectme-overview-stats__chart--registered"
-          :percent="15"
+          :percent="registeredPercent"
         />
 
         <div
@@ -21,12 +21,12 @@
           <span
             class="collectme-overview-stats__desc-num collectme-overview-stats__desc-num--pledged"
           >
-            37%
+            {{ Math.round(pledgedPercent) }}%
           </span>
           <span
             class="collectme-overview-stats__desc collectme-overview-stats__desc--pledged"
           >
-            der nötigen Unterschriften wurden versprochen
+            {{ t("HomeView.OverviewStats.pledgedDesc") }}
           </span>
         </div>
 
@@ -36,12 +36,12 @@
           <span
             class="collectme-overview-stats__desc-num collectme-overview-stats__desc-num--entered"
           >
-            15%
+            {{ Math.round(registeredPercent) }}%
           </span>
           <span
             class="collectme-overview-stats__desc collectme-overview-stats__desc--entered"
           >
-            der versprochenen Unterschriften wurden eingetragen
+            {{ t("HomeView.OverviewStats.enteredDesc") }}
           </span>
         </div>
       </div>
@@ -53,6 +53,28 @@
 import BaseLayoutCard from "@/components/base/BaseLayoutCard.vue";
 import BaseDoughnutChart from "@/components/base/BaseDoughnutChart.vue";
 import t from "@/utility/i18n";
+import { useStatStore } from "@/stores/StatStore";
+import { computed, onBeforeUnmount, onMounted } from "vue";
+
+const statStore = useStatStore();
+statStore.fetch();
+
+const pledgedPercent = computed(
+  () => (statStore.stat?.attributes.pledged ?? 0) * 100
+);
+const registeredPercent = computed(
+  () => (statStore.stat?.attributes.registered ?? 0) * 100
+);
+
+let timer: ReturnType<typeof setInterval>;
+
+onMounted(() => {
+  timer = setInterval(statStore.fetch, 60000);
+});
+
+onBeforeUnmount(() => {
+  clearInterval(timer);
+});
 </script>
 
 <style>

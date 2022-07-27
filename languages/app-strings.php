@@ -84,6 +84,10 @@ return [
         'OverviewStats' => [
             /* Translators: Override with "State of the initiative" */
             'title' => __('State of the collection', 'collectme'),
+            /* Translators: Example: 15% of the pledged signatures were entered. */
+            'enteredDesc' => __('of the pledged signatures were entered.', 'collectme'),
+            /* Translators: Example: 31% of the required signatures were promised. */
+            'pledgedDesc' => __('of the required signatures were promised.', 'collectme'),
         ],
 
         'ActivityFeed' => [
