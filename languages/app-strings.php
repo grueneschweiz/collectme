@@ -14,7 +14,16 @@ return [
             'invalidData' => __('Invalid data.', 'collectme'),
             'invalidFields' => __('Please double check the following fields before resubmitting the form: {fields}', 'collectme'),
         ],
+
+        'BaseShare' => [
+            'share' => __('Share', 'collectme'),
+
+            'BaseShareLinkCopy' => [
+                'copied' => __('Copied!', 'collectme'),
+            ]
+        ],
     ],
+
     'HomeView' => [
         'MyContribution' => [
             /* Translators: Override with "My contribution to the cause" */
@@ -88,6 +97,9 @@ return [
             'enteredDesc' => __('of the pledged signatures were entered.', 'collectme'),
             /* Translators: Example: 31% of the required signatures were promised. */
             'pledgedDesc' => __('of the required signatures were promised.', 'collectme'),
+            /* Translators: Override with "I'm taking part in the collection challenge for the cause. Do you support it too?" */
+            'shareMsg' => __("I'm taking part in the collection challenge. Do you support it too?", 'collectme'),
+            'shareEmailSubject' => __("Let's master the collection challenge for the cause together.", 'collectme')
         ],
 
         'ActivityFeed' => [

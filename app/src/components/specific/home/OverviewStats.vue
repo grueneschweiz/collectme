@@ -45,6 +45,21 @@
           </span>
         </div>
       </div>
+
+      <div class="collectme-overview-stats__share">
+        <p class="collectme-overview-stats__share-paragraph">
+          Danke für deinen Beitrag 💚
+        </p>
+        <p class="collectme-overview-stats__share-paragraph">
+          Das Ziel erreichen wir nur gemeinsam. Lade deine Freunde ein und schon
+          sind wir dem Ziel einen Schritt näher.
+        </p>
+        <BaseShare
+          :url="shareUrl"
+          :shareMsg="t('HomeView.OverviewStats.shareMsg')"
+          :emailSubject="t('HomeView.OverviewStats.shareEmailSubject')"
+        />
+      </div>
     </template>
   </BaseLayoutCard>
 </template>
@@ -55,6 +70,9 @@ import BaseDoughnutChart from "@/components/base/BaseDoughnutChart.vue";
 import t from "@/utility/i18n";
 import { useStatStore } from "@/stores/StatStore";
 import { computed, onBeforeUnmount, onMounted } from "vue";
+import BaseShare from "@/components/base/BaseShare/BaseShare.vue";
+
+const shareUrl = collectme.appUrl;
 
 const statStore = useStatStore();
 statStore.fetch();
@@ -141,6 +159,18 @@ onBeforeUnmount(() => {
   font-size: clamp(0.75rem, 2.5vw, 0.875rem);
   line-height: 1.15em;
   color: var(--color-grey-3);
+}
+
+.collectme-overview-stats__share {
+  margin-top: clamp(1rem, 6vw, 3rem);
+}
+
+.collectme-overview-stats__share-paragraph {
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+  line-height: 1.4em;
+  color: var(--color-grey-3);
+  margin: 0.5rem 0;
+  text-align: center;
 }
 
 @media all and (min-width: 480px) {
