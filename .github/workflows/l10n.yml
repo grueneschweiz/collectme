@@ -53,7 +53,7 @@ jobs:
         run: |
           git add languages/collectme.pot
           git commit -m "[L10N] Update pot file"
-          git push origin ${{ github.ref_name }}
+          git push
         if: env.CHANGES
 
 #      - name: Sync with crowdin
