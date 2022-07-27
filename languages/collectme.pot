@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-07-14T18:22:57+02:00\n"
+"POT-Creation-Date: 2022-07-27T17:43:54+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: collectme\n"
@@ -69,266 +69,326 @@ msgstr ""
 msgid "Please double check the following fields before resubmitting the form: {fields}"
 msgstr ""
 
-#. Translators: Override with "My contribution to the cause"
-#: languages/app-strings.php:21
-msgid "My contribution"
+#: languages/app-strings.php:19
+msgid "Share"
 msgstr ""
 
 #: languages/app-strings.php:22
+msgid "Copied!"
+msgstr ""
+
+#. Translators: Override with "My contribution to the cause"
+#: languages/app-strings.php:30
+msgid "My contribution"
+msgstr ""
+
+#: languages/app-strings.php:31
 msgid "Please sign-in to enter your personal signatures."
 msgstr ""
 
-#: languages/app-strings.php:23
-#: languages/app-strings.php:79
+#: languages/app-strings.php:32
+#: languages/app-strings.php:89
 msgid "Sign in"
 msgstr ""
 
-#: languages/app-strings.php:24
+#: languages/app-strings.php:33
 msgid "No password required"
 msgstr ""
 
-#: languages/app-strings.php:27
+#: languages/app-strings.php:36
 msgid "Successfully connected"
 msgstr ""
 
-#: languages/app-strings.php:28
+#: languages/app-strings.php:37
 msgid "Hello {firstName}"
 msgstr ""
 
-#: languages/app-strings.php:32
+#: languages/app-strings.php:41
 msgid "Goal set"
 msgstr ""
 
-#: languages/app-strings.php:33
+#: languages/app-strings.php:42
 msgid "Set a goal"
 msgstr ""
 
 #. Translators: Override with "You pledged {count} signatures for the cause on {date}."
-#: languages/app-strings.php:35
+#: languages/app-strings.php:44
 msgid "You pledged {count} signatures on {date}."
 msgstr ""
 
-#: languages/app-strings.php:36
+#: languages/app-strings.php:45
 msgid "Set Goal"
 msgstr ""
 
-#: languages/app-strings.php:40
+#: languages/app-strings.php:49
 msgid "First signatures collected"
 msgstr ""
 
-#: languages/app-strings.php:41
-msgid "Collect your fist signatures"
+#: languages/app-strings.php:50
+msgid "Collect your first signatures"
 msgstr ""
 
-#: languages/app-strings.php:42
+#: languages/app-strings.php:51
 msgid "Mark done"
 msgstr ""
 
-#: languages/app-strings.php:43
+#: languages/app-strings.php:52
 msgid "Glorious. Keep going..."
 msgstr ""
 
-#: languages/app-strings.php:47
-#: languages/app-strings.php:60
-#: languages/app-strings.php:110
+#: languages/app-strings.php:56
+#: languages/app-strings.php:70
+#: languages/app-strings.php:136
 msgid "Register signatures"
 msgstr ""
 
-#: languages/app-strings.php:48
+#: languages/app-strings.php:57
+msgid "First signatures registered"
+msgstr ""
+
+#: languages/app-strings.php:58
 msgid "Enter now"
 msgstr ""
 
-#: languages/app-strings.php:49
-msgid "Enter more signatures in the next step."
+#: languages/app-strings.php:59
+msgid "Enter more signatures with the button on the bottom."
 msgstr ""
 
-#: languages/app-strings.php:53
+#: languages/app-strings.php:63
 msgid "Achieve goal"
 msgstr ""
 
-#: languages/app-strings.php:54
+#: languages/app-strings.php:64
 msgid "Achieved {percent}% of goal"
 msgstr ""
 
-#: languages/app-strings.php:55
+#: languages/app-strings.php:65
 msgid "You've already collected and registered <strong>{count} out of {goal}</strong> signatures."
 msgstr ""
 
-#: languages/app-strings.php:56
+#: languages/app-strings.php:66
 msgid "Congratulations! You've achieved your goal and <strong>collected {count}</strong> signatures."
 msgstr ""
 
-#: languages/app-strings.php:57
+#: languages/app-strings.php:67
 msgid "Complete the previous steps, and you will see your achievements here."
 msgstr ""
 
 #. Translators: Override with "The cause gives thanks!"
-#: languages/app-strings.php:59
+#: languages/app-strings.php:69
 msgid "Thank you!"
 msgstr ""
 
-#: languages/app-strings.php:61
+#: languages/app-strings.php:71
 msgid "Register more signatures"
 msgstr ""
 
-#: languages/app-strings.php:62
+#: languages/app-strings.php:72
 msgid "Upgrade goal"
 msgstr ""
 
-#: languages/app-strings.php:67
+#: languages/app-strings.php:77
 msgid "Full Access"
 msgstr ""
 
-#: languages/app-strings.php:68
+#: languages/app-strings.php:78
 msgid "Sign-in with your email address (no password required) to enter signatures and see the current state of the collection."
 msgstr ""
 
-#: languages/app-strings.php:72
-#: views/admin/settings.php:92
+#: languages/app-strings.php:82
+#: views/admin/settings.php:188
 msgid "E-Mail"
 msgstr ""
 
-#: languages/app-strings.php:73
+#: languages/app-strings.php:83
 msgid "The same e-mail address where you receive our newsletter."
 msgstr ""
 
-#: languages/app-strings.php:74
+#: languages/app-strings.php:84
 msgid "E-Mail address is not valid."
 msgstr ""
 
-#: languages/app-strings.php:75
+#: languages/app-strings.php:85
 msgid "First Name"
 msgstr ""
 
-#: languages/app-strings.php:76
+#: languages/app-strings.php:86
 msgid "First name not valid."
 msgstr ""
 
-#: languages/app-strings.php:77
+#: languages/app-strings.php:87
 msgid "Last Name"
 msgstr ""
 
-#: languages/app-strings.php:78
+#: languages/app-strings.php:88
 msgid "Last name not valid."
 msgstr ""
 
-#: languages/app-strings.php:80
+#: languages/app-strings.php:90
 msgid "You'll receive an e-mail with a link that signs you in. Keep this window open."
 msgstr ""
 
-#: languages/app-strings.php:84
+#. Translators: Override with "State of the initiative"
+#: languages/app-strings.php:95
+msgid "State of the collection"
+msgstr ""
+
+#. Translators: Example: 15% of the pledged signatures were entered.
+#: languages/app-strings.php:97
+msgid "of the pledged signatures were entered."
+msgstr ""
+
+#. Translators: Example: 31% of the required signatures were promised.
+#: languages/app-strings.php:99
+msgid "of the required signatures were promised."
+msgstr ""
+
+#: languages/app-strings.php:100
+msgid "Thank you for your contribution 💚"
+msgstr ""
+
+#: languages/app-strings.php:101
+msgid "We can only reach the goal together. Invite your friends and we are already one step closer."
+msgstr ""
+
+#. Translators: Override with "I'm taking part in the collection challenge for the cause. Do you support it too?"
+#: languages/app-strings.php:103
+msgid "I'm taking part in the collection challenge. Do you support it too?"
+msgstr ""
+
+#: languages/app-strings.php:104
+msgid "Let's master the collection challenge for the cause together."
+msgstr ""
+
+#: languages/app-strings.php:108
 msgid "Activity Feed"
 msgstr ""
 
-#: languages/app-strings.php:85
+#: languages/app-strings.php:109
 msgid "No activity yet."
 msgstr ""
 
-#: languages/app-strings.php:86
+#: languages/app-strings.php:110
 msgid "{firstName} promised {count} signatures."
 msgstr ""
 
-#: languages/app-strings.php:87
+#: languages/app-strings.php:111
 msgid "{firstName} collected {count} signatures."
 msgstr ""
 
-#: languages/app-strings.php:88
+#: languages/app-strings.php:112
 msgid "{count} signatures were entered for {organization}."
 msgstr ""
 
-#: languages/app-strings.php:89
+#: languages/app-strings.php:113
 msgid "{firstName} just achieved its goal of {count} signatures."
 msgstr ""
 
-#: languages/app-strings.php:90
+#: languages/app-strings.php:114
 msgid "{firstName} is going to collect {count} signatures."
 msgstr ""
 
-#: languages/app-strings.php:91
+#: languages/app-strings.php:115
 msgid "Load more"
 msgstr ""
 
 #. Translators: Override with "My Goal for the Cause"
-#: languages/app-strings.php:96
+#: languages/app-strings.php:120
 msgid "My Goal"
 msgstr ""
 
 #. Translators: Override with "Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute to the cause."
-#: languages/app-strings.php:98
+#: languages/app-strings.php:122
 msgid "Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute."
 msgstr ""
 
-#: languages/app-strings.php:99
-#: views/admin/settings.php:203
-msgid "Hot"
-msgstr ""
-
-#: languages/app-strings.php:100
-msgid "Achieved"
-msgstr ""
-
-#: languages/app-strings.php:101
-msgid "Selected"
-msgstr ""
-
-#: languages/app-strings.php:104
-msgid "I promise {count} signatures."
-msgstr ""
-
-#: languages/app-strings.php:105
-#: languages/app-strings.php:116
-msgid "Saving..."
-msgstr ""
-
-#: languages/app-strings.php:111
-msgid "Enter the number of <strong>new signatures</strong> you've collected. They will be added to the already registered signatures."
-msgstr ""
-
-#: languages/app-strings.php:112
-msgid "Number of new signatures"
-msgstr ""
-
-#: languages/app-strings.php:113
-msgid "Number of recent collected signatures, that haven't been registered yet."
-msgstr ""
-
-#: languages/app-strings.php:114
-msgid "Invalid number."
-msgstr ""
-
-#: languages/app-strings.php:115
-msgid "Register Signatures"
-msgstr ""
-
-#: languages/app-strings.php:117
-msgid "{count} signatures added."
-msgstr ""
-
-#: languages/app-strings.php:118
-msgid "Back without registering signatures"
-msgstr ""
-
-#: languages/app-strings.php:122
-msgid "You've got mail"
-msgstr ""
-
 #: languages/app-strings.php:123
-msgid "<strong>Do not close this window</strong>. We've emailed you a link that will activate your login here in this window."
+msgid "Already collected signatures count toward the goal. So if you increase your goal from {currentGoal} to {nextGoal} signatures, you start already with {percent}%."
 msgstr ""
 
 #: languages/app-strings.php:124
-msgid "Emails are sometimes slow. It may take a minute or two until it reaches your inbox."
+msgid "Regardless of your promise here, every signature you collect always counts for your section/canton."
 msgstr ""
 
 #: languages/app-strings.php:125
-msgid "Send again"
+#: views/admin/settings.php:299
+msgid "Hot"
 msgstr ""
 
 #: languages/app-strings.php:126
-msgid "Retry sending login email to: {email}"
+msgid "Achieved"
 msgstr ""
 
 #: languages/app-strings.php:127
+msgid "Selected"
+msgstr ""
+
+#: languages/app-strings.php:130
+msgid "I promise {count} signatures."
+msgstr ""
+
+#: languages/app-strings.php:131
+#: languages/app-strings.php:142
+msgid "Saving..."
+msgstr ""
+
+#: languages/app-strings.php:137
+msgid "Enter the number of <strong>new signatures</strong> you've collected. They will be added to the already registered signatures."
+msgstr ""
+
+#: languages/app-strings.php:138
+msgid "Number of new signatures"
+msgstr ""
+
+#: languages/app-strings.php:139
+msgid "Number of recent collected signatures, that haven't been registered yet."
+msgstr ""
+
+#: languages/app-strings.php:140
+msgid "Invalid number."
+msgstr ""
+
+#: languages/app-strings.php:141
+msgid "Register Signatures"
+msgstr ""
+
+#: languages/app-strings.php:143
+msgid "{count} signatures added."
+msgstr ""
+
+#: languages/app-strings.php:144
+msgid "Please hand in the signatures to your party as soon as possible. Or send them by mail to the address noted on the signature sheets. The sooner the better."
+msgstr ""
+
+#: languages/app-strings.php:145
+msgid "Back without registering signatures"
+msgstr ""
+
+#: languages/app-strings.php:146
+msgid "Undo"
+msgstr ""
+
+#: languages/app-strings.php:150
+msgid "You've got mail"
+msgstr ""
+
+#: languages/app-strings.php:151
+msgid "<strong>Do not close this window</strong>. We've emailed you a link that will activate your login here in this window."
+msgstr ""
+
+#: languages/app-strings.php:152
+msgid "Emails are sometimes slow. It may take a minute or two until it reaches your inbox."
+msgstr ""
+
+#: languages/app-strings.php:153
+msgid "Send again"
+msgstr ""
+
+#: languages/app-strings.php:154
+msgid "Retry sending login email to: {email}"
+msgstr ""
+
+#: languages/app-strings.php:155
 msgid "invalid e-mail address"
 msgstr ""
 
@@ -341,43 +401,48 @@ msgstr ""
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: src/Controller/AdminController.php:49
+#: src/Controller/AdminController.php:53
 msgid "Saved!"
 msgstr ""
 
-#: src/Controller/AdminController.php:92
+#: src/Controller/AdminController.php:100
 msgid "Invalid email config."
 msgstr ""
 
-#: src/Controller/AdminController.php:117
+#: src/Controller/AdminController.php:125
 msgid "Invalid objective key."
 msgstr ""
 
-#: src/Controller/AdminController.php:126
+#: src/Controller/AdminController.php:134
 msgid "Invalid goal."
 msgstr ""
 
-#: src/Controller/AdminController.php:136
+#: src/Controller/AdminController.php:144
+#: src/Controller/AdminController.php:169
 msgid "Invalid image url."
 msgstr ""
 
-#: src/Controller/AdminController.php:180
+#: src/Controller/AdminController.php:215
+msgid "Markup is not allowed in CSS."
+msgstr ""
+
+#: src/Controller/AdminController.php:251
 msgid "Cause deleted."
 msgstr ""
 
-#: src/Controller/AdminController.php:185
+#: src/Controller/AdminController.php:256
 msgid "Failed to delete cause."
 msgstr ""
 
-#: src/Controller/AdminController.php:197
+#: src/Controller/AdminController.php:268
 msgid "Failed to create cause: Invalid name."
 msgstr ""
 
-#: src/Controller/AdminController.php:207
+#: src/Controller/AdminController.php:278
 msgid "Cause created."
 msgstr ""
 
-#: src/Controller/AdminController.php:212
+#: src/Controller/AdminController.php:283
 msgid "Failed to create cause."
 msgstr ""
 
@@ -407,20 +472,25 @@ msgid ""
 "%3$s"
 msgstr ""
 
-#: src/Misc/Settings.php:81
+#: src/Misc/Settings.php:103
 msgid "Small"
 msgstr ""
 
-#: src/Misc/Settings.php:89
+#: src/Misc/Settings.php:111
 msgid "Medium"
 msgstr ""
 
-#: src/Misc/Settings.php:97
+#: src/Misc/Settings.php:119
 msgid "Large"
 msgstr ""
 
-#: src/Misc/Settings.php:105
+#: src/Misc/Settings.php:127
 msgid "Extra large"
+msgstr ""
+
+#: src/Misc/Settings.php:168
+#: views/admin/settings.php:330
+msgid "Default"
 msgstr ""
 
 #: views/activation-error.php:2
@@ -487,70 +557,124 @@ msgstr ""
 msgid "Create cause"
 msgstr ""
 
-#: views/admin/settings.php:97
-msgid "Sender name"
+#: views/admin/settings.php:91
+msgid "Signatures"
+msgstr ""
+
+#: views/admin/settings.php:95
+msgid "Number of signatures needed"
 msgstr ""
 
 #: views/admin/settings.php:109
-msgid "The sender name for emails sent by this cause (e.g. login emails)."
+msgid "The number of signatures to be registered. For an initiative this would typically be 105'000."
 msgstr ""
 
 #: views/admin/settings.php:116
-msgid "Sender address"
+msgid "Additional signatures collected"
 msgstr ""
 
-#: views/admin/settings.php:128
-msgid "The sender address for emails sent by this cause (e.g. login emails)."
+#: views/admin/settings.php:130
+msgid "This number is added to the sum of the registered signatures. Typically you'd enter the number of signatures received by mailings (and thus not yet registered in this tool) here."
 msgstr ""
 
-#: views/admin/settings.php:135
-msgid "Reply-To address"
+#: views/admin/settings.php:139
+msgid "Pledges"
 msgstr ""
 
-#: views/admin/settings.php:147
-msgid "The destination address if people reply."
+#: views/admin/settings.php:143
+msgid "Number of signatures to be pledged"
 msgstr ""
 
 #: views/admin/settings.php:157
-msgid "Goals"
+msgid "The number of signatures you'd expect people to pledge for. It is possibly equal to the number of signatures needed."
 msgstr ""
 
-#: views/admin/settings.php:158
-msgid "Caution: Changing the goals after launching the cause will break the user experience."
+#: views/admin/settings.php:164
+msgid "Additional pledges"
 msgstr ""
 
-#: views/admin/settings.php:168
-msgid "Goal"
+#: views/admin/settings.php:178
+msgid "This number is added to the total of the pledges. Typically you'd enter the number of signatures expected to collect by mailings or other organizations."
 msgstr ""
 
-#: views/admin/settings.php:179
-msgid "Number of signatures to collect."
+#: views/admin/settings.php:193
+msgid "Sender name"
 msgstr ""
 
-#: views/admin/settings.php:186
-msgid "Image URL"
-msgstr ""
-
-#: views/admin/settings.php:196
-msgid "Fully qualified URL to the image. Clear to reset to default."
+#: views/admin/settings.php:205
+msgid "The sender name for emails sent by this cause (e.g. login emails)."
 msgstr ""
 
 #: views/admin/settings.php:212
+msgid "Sender address"
+msgstr ""
+
+#: views/admin/settings.php:224
+msgid "The sender address for emails sent by this cause (e.g. login emails)."
+msgstr ""
+
+#: views/admin/settings.php:231
+msgid "Reply-To address"
+msgstr ""
+
+#: views/admin/settings.php:243
+msgid "The destination address if people reply."
+msgstr ""
+
+#: views/admin/settings.php:253
+msgid "Goals"
+msgstr ""
+
+#: views/admin/settings.php:254
+msgid "Caution: Changing the goals after launching the cause will break the user experience."
+msgstr ""
+
+#: views/admin/settings.php:264
+msgid "Goal"
+msgstr ""
+
+#: views/admin/settings.php:275
+msgid "Number of signatures to collect."
+msgstr ""
+
+#: views/admin/settings.php:282
+#: views/admin/settings.php:337
+msgid "Image URL"
+msgstr ""
+
+#: views/admin/settings.php:292
+#: views/admin/settings.php:347
+msgid "Fully qualified URL to the image. Clear to reset to default."
+msgstr ""
+
+#: views/admin/settings.php:308
 msgid "Add \"hot\" ribbon to goal."
 msgstr ""
 
-#: views/admin/settings.php:219
+#: views/admin/settings.php:315
 msgid "Active"
 msgstr ""
 
-#: views/admin/settings.php:228
+#: views/admin/settings.php:324
 msgid "Goal is active (visible and selectable)"
 msgstr ""
 
-#: views/admin/settings.php:239
+#: views/admin/settings.php:331
+msgid "This is shown before any goal is selected."
+msgstr ""
+
+#: views/admin/settings.php:357
+msgid "Custom CSS"
+msgstr ""
+
+#: views/admin/settings.php:362
+msgid "CSS entered here will be applied to every page this cause is displayed."
+msgstr ""
+
+#: views/admin/settings.php:369
 msgid "Overrides"
 msgstr ""
 
-#: views/admin/settings.php:315
+#: views/admin/settings.php:445
 msgid "Save %s settings"
 msgstr ""
