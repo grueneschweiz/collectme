@@ -20,6 +20,12 @@ class HtmlControllerTest extends TestCase
 
     public function test_activateSession__success__sameBrowser(): void
     {
+        $GLOBALS['post'] = wp_insert_post([
+            'post_title' => 'collectme_test_'.wp_generate_uuid4(),
+            'post_content' => 'this is the collectme page',
+            'post_status' => 'publish',
+        ]);
+
         $user = new User(
             null,
             wp_generate_uuid4().'@example.com',
@@ -67,6 +73,11 @@ class HtmlControllerTest extends TestCase
 
         $_GET['token'] = $activationSecret;
         $_GET['session'] = $session->uuid;
+
+        add_filter('wp_redirect', static function($location, $status) {
+            self::assertEquals(302, $status);
+            return false;
+        }, 10, 2 );
 
         $html = $htmlController->activateSession($cause->uuid);
         $this->assertStringContainsString('id="collectme-app"', $html);

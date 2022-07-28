@@ -4,16 +4,38 @@ declare(strict_types=1);
 
 namespace Collectme\Misc;
 
+use Collectme\Model\Entities\Stat;
+
 use const Collectme\ASSET_PATH_REL;
 use const Collectme\OPTIONS_PREFIX;
 
 class Settings
 {
+    private static Settings $instance;
+
     private const STRING_OVERRIDES = 'string_overrides';
     private const OBJECTIVES = 'objectives';
+    private const DEFAULT_OBJECTIVE = 'default_objective';
     private const EMAIL_CONFIG = 'email_config';
+    private const CUSTOM_CSS = 'custom_css';
+    private const PLEDGE_SETTINGS = 'pledge_settings';
+    private const SIGNATURE_SETTINGS = 'signature_settings';
 
     private array $settings = [];
+
+    public function __construct()
+    {
+        self::$instance = $this;
+    }
+
+    public static function getInstance(): self
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
 
     public function getStringOverrides(string $causeUuid): array
     {
@@ -124,5 +146,71 @@ class Settings
             'fromAddress' => "website@$domain",
             'replyToAddress' => get_bloginfo('admin_email'),
         ];
+    }
+
+    public function setCustomCss(string $css, string $causeUuid): void
+    {
+        $this->set(self::CUSTOM_CSS, [$css], $causeUuid);
+    }
+
+    public function getCustomCss(string $causeUuid): string
+    {
+        $customCss = $this->get(self::CUSTOM_CSS, $causeUuid);
+
+        return $customCss[0] ?? '';
+    }
+
+    public function getDefaultObjective(string $causeUuid): array
+    {
+        $defaultObjective = $this->get(self::DEFAULT_OBJECTIVE, $causeUuid) ?? [];
+        $defaults = [
+            'id' => 'default',
+            'name' => __('Default', 'collectme'),
+            'enabled' => true,
+            'objective' => 0,
+            'img' => plugin_dir_url(COLLECTME_PLUGIN_NAME) . ASSET_PATH_REL . '/img/goal-default.png',
+            'hot' => false,
+        ];
+
+        return array_replace($defaults, $defaultObjective);
+    }
+
+    public function setDefaultObjective(array $defaultObjective, string $causeUuid): void
+    {
+        $this->set(self::DEFAULT_OBJECTIVE, $defaultObjective, $causeUuid);
+    }
+
+    public function getPledgeSettings(string $causeUuid): array
+    {
+        $settings = $this->get(self::PLEDGE_SETTINGS, $causeUuid) ?? [];
+        $defaults = [
+            'objective' => 100000,
+            'offset' => 0,
+        ];
+
+        return array_replace($defaults, $settings);
+    }
+
+    public function getSignatureSettings(string $causeUuid): array
+    {
+        $settings = $this->get(self::SIGNATURE_SETTINGS, $causeUuid) ?? [];
+        $defaults = [
+            'objective' => 100000,
+            'offset' => 0,
+        ];
+
+        return array_replace($defaults, $settings);
+    }
+
+    public function setPledgeSettings(array $settings, string $causeUuid): void
+    {
+        $this->set(self::PLEDGE_SETTINGS, $settings, $causeUuid);
+        Stat::clearCache($causeUuid);
+    }
+
+    public function setSignatureSettings(array $settings, string $causeUuid): void
+    {
+        $this->set(self::SIGNATURE_SETTINGS, $settings, $causeUuid);
+        Stat::clearCache($causeUuid);
     }
 }

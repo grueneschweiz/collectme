@@ -110,6 +110,38 @@ class GroupTest extends TestCase
         $this->assertSame(30, $dbGroup->signatures());
     }
 
+    public function test_get__withWriteable(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $group = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group->save();
+
+        $user = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::DE,
+            'user cause test'
+        );
+        $user->save();
+
+        $dbGroup = Group::get($group->uuid);
+
+        $this->assertFalse($dbGroup->toApiModel()->attributes['writeable']);
+    }
+
     public function test_save(): void
     {
         $cause = new Cause(

@@ -1,28 +1,30 @@
 <template>
-  <BaseStepElement
-      :status="status"
-      :next="next"
-  >
+  <BaseStepElement :status="status" :next="next">
     <template #title>
-      {{t('HomeView.MyContribution.MyContributionStepConnected.connected')}}
+      {{ t("HomeView.MyContribution.MyContributionStepConnected.connected") }}
     </template>
     <template #default>
-      {{t('HomeView.MyContribution.MyContributionStepConnected.hello', {firstName: user?.attributes.firstName ?? ''})}}
+      {{
+        t("HomeView.MyContribution.MyContributionStepConnected.hello", {
+          firstName: user?.attributes.firstName ?? "",
+        })
+      }}
+      👋
     </template>
   </BaseStepElement>
 </template>
 
 <script setup lang="ts">
-import type {PropType} from 'vue';
-import type {StepStatus} from "@/components/base/BaseStepElement/BaseStepElement";
-import BaseStepElement from '@/components/base/BaseStepElement/BaseStepElement.vue';
+import type { PropType } from "vue";
+import type { StepStatus } from "@/components/base/BaseStepElement/BaseStepElement";
+import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.vue";
 import t from "@/utility/i18n";
-import type {User} from "@/models/generated";
+import type { User } from "@/models/generated";
 
-const props = defineProps({
+defineProps({
   status: {
     type: String as PropType<StepStatus>,
-    required: true
+    required: true,
   },
   prev: {
     type: String as PropType<StepStatus>,
@@ -36,11 +38,8 @@ const props = defineProps({
   },
   user: {
     type: Object as PropType<User>,
-  }
+  },
 });
-
 </script>
 
-<style>
-
-</style>
+<style></style>

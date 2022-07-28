@@ -38,14 +38,20 @@ class HtmlController
         $email = trim($_GET['email'] ?? '');
 
         if (!TokenValidator::check($token) || !EmailValidator::check($email)) {
-            return $this->index($causeUuid);
+            return $this->redirectTo(get_permalink(), $causeUuid);
+        }
+
+        $token = apply_filters('collectme_account_token', $token, $email);
+
+        if (!$token) {
+            return $this->redirectTo(get_permalink(), $causeUuid);
         }
 
         try {
             $accountToken = AccountToken::getByEmailAndToken($email, $token);
         } catch (CollectmeDBException $e) {
             // token not found / invalid
-            return $this->index($causeUuid);
+            return $this->redirectTo(get_permalink(), $causeUuid);
         }
 
         try {
@@ -56,11 +62,23 @@ class HtmlController
                 /** @noinspection ForgottenDebugOutputInspection */
                 wp_die($e->getMessage());
             } else {
-                return $this->index($causeUuid);
+                return $this->redirectTo(get_permalink(), $causeUuid);
             }
         }
 
         $this->auth->getPersistentSession();
+
+        return $this->redirectTo(get_permalink(), $causeUuid);
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    private function redirectTo(string $url, string $causeUuid): string
+    {
+        if (wp_redirect($url)) {
+            exit();
+        }
 
         return $this->index($causeUuid);
     }
@@ -78,6 +96,7 @@ class HtmlController
             'appUrlAuthentication' => wp_hash(get_permalink(), 'nonce'),
             'assetBaseUrl' => plugin_dir_url(COLLECTME_PLUGIN_NAME) . ASSET_PATH_REL,
             'cause' => $causeUuid,
+            'defaultObjective' => $this->settings->getDefaultObjective($causeUuid),
             'encodedAdminEmail' => base64_encode(get_bloginfo('admin_email')), // yeah, yeah, spam. but it's good enough
             'locale' => get_locale(),
             'nonce' => wp_create_nonce('wp_rest'),
@@ -85,8 +104,11 @@ class HtmlController
             't' => $translations,
         ];
 
+        $customCss = preg_replace('/\s+/', ' ', $this->settings->getCustomCss($causeUuid));
+
         return '<div id="collectme-app"></div>'
             . $this->assetLoader->getStylesHtml()
+            . '<style>' . $customCss . '</style>'
             . $this->assetLoader->getScriptDataHtml('collectme', $data)
             . $this->assetLoader->getScriptsHtml();
     }
@@ -125,8 +147,8 @@ class HtmlController
                 if ($this->auth->isAuthenticated()) {
                     // user activated session in same browser as he requested
                     // activation. so he is now logged in, and we can redirect
-                    // him directly to the app.
-                    return $this->index($causeUuid);
+                    // him to the app.
+                    return $this->redirectTo(get_permalink(), $causeUuid);
                 }
 
                 // user activated session in different browser than he

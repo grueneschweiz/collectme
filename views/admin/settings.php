@@ -88,6 +88,102 @@ use Collectme\Model\Entities\Cause;
                 <tbody>
 
                 <tr>
+                    <th scope="row"><?php echo esc_html($cause->name) . ' ' . __('Signatures', 'collectme') ?></th>
+                    <td>
+                        <div>
+                            <label for="signatures[objective]">
+                                <?php _e('Number of signatures needed', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="signatures[objective]"
+                                    id="signatures[objective]"
+                                    type="number"
+                                    class="regular-text"
+                                    max="10000000"
+                                    min="0"
+                                    step="1"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getSignatureSettings($cause->uuid)['objective']) ?>"
+                            >
+                            <p class="description"><?php _e(
+                                    "The number of signatures to be registered. For an initiative this would typically be 105'000.",
+                                    'collectme'
+                                ) ?></p>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label for="signatures[offset]">
+                                <?php _e('Additional signatures collected', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="signatures[offset]"
+                                    id="signatures[offset]"
+                                    type="number"
+                                    class="regular-text"
+                                    max="10000000"
+                                    min="0"
+                                    step="1"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getSignatureSettings($cause->uuid)['offset']) ?>"
+                            >
+                            <p class="description"><?php _e(
+                                    "This number is added to the sum of the registered signatures. Typically you'd enter the number of signatures received by mailings (and thus not yet registered in this tool) here.",
+                                    'collectme'
+                                ) ?></p>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><?php echo esc_html($cause->name) . ' ' . __('Pledges', 'collectme') ?></th>
+                    <td>
+                        <div>
+                            <label for="pledges[objective]">
+                                <?php _e('Number of signatures to be pledged', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="pledges[objective]"
+                                    id="pledges[objective]"
+                                    type="number"
+                                    class="regular-text"
+                                    max="10000000"
+                                    min="0"
+                                    step="1"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getPledgeSettings($cause->uuid)['objective']) ?>"
+                            >
+                            <p class="description"><?php _e(
+                                    "The number of signatures you'd expect people to pledge for. It is possibly equal to the number of signatures needed.",
+                                    'collectme'
+                                ) ?></p>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label for="pledges[offset]">
+                                <?php _e('Additional pledges', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="pledges[offset]"
+                                    id="pledges[offset]"
+                                    type="number"
+                                    class="regular-text"
+                                    max="10000000"
+                                    min="0"
+                                    step="1"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getPledgeSettings($cause->uuid)['offset']) ?>"
+                            >
+                            <p class="description"><?php _e(
+                                    "This number is added to the total of the pledges. Typically you'd enter the number of signatures expected to collect by mailings or other organizations.",
+                                    'collectme'
+                                ) ?></p>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
                     <th scope="row">
                         <?php echo esc_html($cause->name) . ' ' . __('E-Mail', 'collectme') ?>
                     </th>
@@ -163,7 +259,7 @@ use Collectme\Model\Entities\Cause;
                     <td>
                         <?php foreach ($settings->getObjectives($cause->uuid) as $key => $objective): ?>
                             <h4><?php echo $objective['name'] ?></h4>
-                            <div>
+                            <div style="margin-top: 1em;">
                                 <p>
                                     <?php _e('Goal', 'collectme') ?>
                                 </p>
@@ -231,6 +327,40 @@ use Collectme\Model\Entities\Cause;
                                     ) ?></label>
                             </div>
                         <?php endforeach; ?>
+                        <h4><?php _e('Default', 'collectme') ?></h4>
+                        <p class="description"><?php _e(
+                                'This is shown before any goal is selected.',
+                                'collectme'
+                            ) ?></p>
+                        <div style="margin-top: 1em;">
+                            <label for="defaultObjective[img]">
+                                <?php _e('Image URL', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="defaultObjective[img]"
+                                    id="defaultObjective[img]"
+                                    type="text"
+                                    class="large-text"
+                                    value="<?php echo esc_attr($settings->getDefaultObjective($cause->uuid)['img']) ?>"
+                            >
+                            <p class="description"><?php _e(
+                                    'Fully qualified URL to the image. Clear to reset to default.',
+                                    'collectme'
+                                ) ?></p>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <?php _e('Custom CSS', 'collectme') ?>
+                    </th>
+                    <td>
+                        <textarea style="resize: both;" name="customCss" id="customCss-<?php echo $cause->uuid ?>"><?php echo $settings->getCustomCss($cause->uuid) ?></textarea>
+                        <p class="description">
+                            <label for="customCss-<?php echo $cause->uuid ?>"><?php _e('CSS entered here will be applied to every page this cause is displayed.', 'collectme') ?></label>
+                        </p>
                     </td>
                 </tr>
 

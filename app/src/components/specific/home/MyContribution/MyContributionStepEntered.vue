@@ -1,17 +1,17 @@
 <template>
-  <BaseStepElement
-      :status="status"
-      :prev="prev"
-      :next="next"
-  >
+  <BaseStepElement :status="status" :prev="prev" :next="next">
     <template #title>
-      {{t('HomeView.MyContribution.MyContributionStepEntered.title')}}
+      <template v-if="status !== 'completed'">
+        {{
+          t("HomeView.MyContribution.MyContributionStepEntered.titlePending")
+        }}
+      </template>
+      <template v-else>
+        {{ t("HomeView.MyContribution.MyContributionStepEntered.titleDone") }}
+      </template>
     </template>
 
-    <template
-        v-if="status !== 'completed'"
-        #default
-    >
+    <template v-if="status !== 'completed'" #default>
       <BaseButton
         size="sm"
         :secondary="status !== 'pending'"
@@ -19,30 +19,27 @@
         outline
         @click="$router.push('/home/enter-signatures')"
       >
-        {{t('HomeView.MyContribution.MyContributionStepEntered.enterFirst')}}
+        {{ t("HomeView.MyContribution.MyContributionStepEntered.enterFirst") }}
       </BaseButton>
     </template>
 
-    <template
-      v-else
-      #default
-    >
-      {{t('HomeView.MyContribution.MyContributionStepEntered.enterMoreMsg')}}
+    <template v-else #default>
+      {{ t("HomeView.MyContribution.MyContributionStepEntered.enterMoreMsg") }}
     </template>
   </BaseStepElement>
 </template>
 
 <script setup lang="ts">
-import type {PropType} from 'vue';
-import type {StepStatus} from "@/components/base/BaseStepElement/BaseStepElement";
-import BaseStepElement from '@/components/base/BaseStepElement/BaseStepElement.vue';
-import BaseButton from '@/components/base/BaseButton.vue';
+import type { PropType } from "vue";
+import type { StepStatus } from "@/components/base/BaseStepElement/BaseStepElement";
+import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.vue";
+import BaseButton from "@/components/base/BaseButton.vue";
 import t from "@/utility/i18n";
 
-const props = defineProps({
+defineProps({
   status: {
     type: String as PropType<StepStatus>,
-    required: true
+    required: true,
   },
   prev: {
     type: String as PropType<StepStatus>,
@@ -57,11 +54,8 @@ const props = defineProps({
   signatures: {
     type: Number,
     required: true,
-  }
+  },
 });
-
 </script>
 
-<style>
-
-</style>
+<style></style>

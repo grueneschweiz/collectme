@@ -16,18 +16,30 @@ use Collectme\Model\Entities\PersistentSession;
 use Collectme\Model\Entities\Role;
 use Collectme\Model\Entities\User;
 use Collectme\Model\PhpSession;
-
 use WP_REST_Request;
 
 
 class Auth
 {
+    private static Auth $instance;
     private PersistentSession $persistentSession;
 
     public function __construct(
         private readonly PhpSession $phpSession,
         private readonly AuthCookie $authCookie,
     ) {
+        self::$instance = $this;
+    }
+
+    /**
+     * @throws CollectmeException
+     */
+    public static function getInstance(): Auth
+    {
+        if (!isset(self::$instance)) {
+            throw new CollectmeException('Auth not initialized.');
+        }
+        return self::$instance;
     }
 
     public function isAuthenticated(): bool
@@ -190,7 +202,8 @@ class Auth
      */
     private function setupUserForCause(User $user, string $causeUuid): void
     {
-        DB::transactional(static function () use ($user, $causeUuid) {
+        $group = null;
+        DB::transactional(static function () use (&$user, &$group, $causeUuid) {
             $group = new Group(
                 null,
                 $user->firstName,
@@ -209,9 +222,9 @@ class Auth
             $role->save();
 
             $user->addCause($causeUuid);
-
-            return $user;
         });
+
+        do_action('collectme_after_user_setup', $user, $group->uuid, $causeUuid);
     }
 
     /**

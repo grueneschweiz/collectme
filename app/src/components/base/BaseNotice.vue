@@ -2,29 +2,27 @@
   <div class="collectme-base-notice">
     <slot></slot>
     <BaseButtonClose
-        v-if="props.dismissible"
-        @click="$emit('dismiss')"
-        class="collectme-base-notice__dismiss"
+      v-if="props.dismissible"
+      @click="$emit('dismiss')"
+      class="collectme-base-notice__dismiss"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import BaseButtonClose from '@/components/base/BaseButtonClose.vue'
+import BaseButtonClose from "@/components/base/BaseButtonClose.vue";
 
 defineEmits<{
-  (e: 'dismiss'): void
-}>()
-
+  (e: "dismiss"): void;
+}>();
 
 const props = defineProps({
   dismissible: {
     type: Boolean,
     required: false,
-    default: true
+    default: true,
   },
-})
-
+});
 </script>
 
 <style>

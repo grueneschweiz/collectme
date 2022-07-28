@@ -1,62 +1,47 @@
 <template>
-  <BaseStepElement
-      :status="status"
-      :prev="prev"
-      :next="next"
-  >
-    <template
-        #title
-        v-if="objective"
-    >
-      {{t('HomeView.MyContribution.MyContributionStepObjective.goalSet')}}
+  <BaseStepElement :status="status" :prev="prev" :next="next">
+    <template #title v-if="objective">
+      {{ t("HomeView.MyContribution.MyContributionStepObjective.goalSet") }}
     </template>
-    <template
-        #title
-        v-else
-    >
-      {{t('HomeView.MyContribution.MyContributionStepObjective.setGoal')}}
+    <template #title v-else>
+      {{ t("HomeView.MyContribution.MyContributionStepObjective.setGoal") }}
     </template>
 
-    <template
-        #default
-        v-if="objective"
-    >
-      {{t(
-        'HomeView.MyContribution.MyContributionStepObjective.goal',
-        {
-          'date': (new Date(objective.attributes.created)).toLocaleDateString(),
-          'count': objective.attributes.objective.toString(),
-        }
-    )}}
+    <template #default v-if="objective">
+      {{
+        t("HomeView.MyContribution.MyContributionStepObjective.goal", {
+          date: new Date(objective.attributes.created).toLocaleDateString(),
+          count: objective.attributes.objective.toString(),
+        })
+      }}
     </template>
-    <template
-        #default
-        v-else
-    >
+    <template #default v-else>
       <BaseButton
-          size="sm"
-          secondary
-          outline
-          @click="$router.push('/home/set-goal')"
+        size="sm"
+        secondary
+        outline
+        @click="$router.push('/home/set-goal')"
       >
-        {{t('HomeView.MyContribution.MyContributionStepObjective.setGoalBtn')}}
+        {{
+          t("HomeView.MyContribution.MyContributionStepObjective.setGoalBtn")
+        }}
       </BaseButton>
     </template>
   </BaseStepElement>
 </template>
 
 <script setup lang="ts">
-import type {PropType} from 'vue';
-import type {StepStatus} from "@/components/base/BaseStepElement/BaseStepElement";
-import BaseStepElement from '@/components/base/BaseStepElement/BaseStepElement.vue';
+import type { PropType } from "vue";
+import type { StepStatus } from "@/components/base/BaseStepElement/BaseStepElement";
+import BaseStepElement from "@/components/base/BaseStepElement/BaseStepElement.vue";
 import t from "@/utility/i18n";
-import type {Objective} from "@/models/generated";
-import BaseButton from '@/components/base/BaseButton.vue';
+import type { Objective } from "@/models/generated";
+import BaseButton from "@/components/base/BaseButton.vue";
 
-const props = defineProps({
+defineProps({
   status: {
     type: String as PropType<StepStatus>,
-    required: true
+    required: true,
   },
   prev: {
     type: String as PropType<StepStatus>,
@@ -70,10 +55,8 @@ const props = defineProps({
   },
   objective: {
     type: Object as PropType<Objective>,
-  }
+  },
 });
 </script>
 
-<style>
-
-</style>
+<style></style>

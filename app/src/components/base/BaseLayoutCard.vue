@@ -14,9 +14,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <style>
 .collectme-base-card {
@@ -29,5 +27,7 @@
 
 .collectme-base-card__title {
   margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 </style>

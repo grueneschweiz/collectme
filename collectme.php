@@ -35,8 +35,14 @@ require 'vendor/autoload.php';
 
 function collectme_get_container(): \DI\Container
 {
+    if (defined('COLLECTME_DEPENDENCY_CONFIG_PATH')) {
+        $configPath = COLLECTME_DEPENDENCY_CONFIG_PATH;
+    } else {
+        $configPath = COLLECTME_BASE_PATH . '/dependency-config.php';
+    }
+
     $builder = new \DI\ContainerBuilder();
-    $builder->addDefinitions(COLLECTME_BASE_PATH.'/dependency-config.php');
+    $builder->addDefinitions($configPath);
 
     if (!(defined('WP_DEBUG') && WP_DEBUG)) {
         $builder->enableCompilation(__DIR__ . '/tmp');

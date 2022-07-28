@@ -4,9 +4,7 @@
   </Transition>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <!--suppress CssUnusedSymbol -->
 <style>

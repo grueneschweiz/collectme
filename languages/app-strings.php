@@ -14,7 +14,16 @@ return [
             'invalidData' => __('Invalid data.', 'collectme'),
             'invalidFields' => __('Please double check the following fields before resubmitting the form: {fields}', 'collectme'),
         ],
+
+        'BaseShare' => [
+            'share' => __('Share', 'collectme'),
+
+            'BaseShareLinkCopy' => [
+                'copied' => __('Copied!', 'collectme'),
+            ]
+        ],
     ],
+
     'HomeView' => [
         'MyContribution' => [
             /* Translators: Override with "My contribution to the cause" */
@@ -38,15 +47,16 @@ return [
 
             'MyContributionStepCollected' => [
                 'titleDone' => __('First signatures collected', 'collectme'),
-                'titlePending' => __('Collect your fist signatures', 'collectme'),
+                'titlePending' => __('Collect your first signatures', 'collectme'),
                 'collectedBtn' => __('Mark done', 'collectme'),
                 'collectedMsg' => __('Glorious. Keep going...', 'collectme'),
             ],
 
             'MyContributionStepEntered' => [
-                'title' => __('Register signatures', 'collectme'),
+                'titlePending' => __('Register signatures', 'collectme'),
+                'titleDone' => __('First signatures registered', 'collectme'),
                 'enterFirst' => __('Enter now', 'collectme'),
-                'enterMoreMsg' => __('Enter more signatures in the next step.', 'collectme'),
+                'enterMoreMsg' => __('Enter more signatures with the button on the bottom.', 'collectme'),
             ],
 
             'MyContributionStepAchieved' => [
@@ -80,6 +90,20 @@ return [
             'submitByline' => __("You'll receive an e-mail with a link that signs you in. Keep this window open.", 'collectme'),
         ],
 
+        'OverviewStats' => [
+            /* Translators: Override with "State of the initiative" */
+            'title' => __('State of the collection', 'collectme'),
+            /* Translators: Example: 15% of the pledged signatures were entered. */
+            'enteredDesc' => __('of the pledged signatures were entered.', 'collectme'),
+            /* Translators: Example: 31% of the required signatures were promised. */
+            'pledgedDesc' => __('of the required signatures were promised.', 'collectme'),
+            'thanks' => __('Thank you for your contribution 💚', 'collectme'),
+            'inviteFriends' => __('We can only reach the goal together. Invite your friends and we are already one step closer.', 'collectme'),
+            /* Translators: Override with "I'm taking part in the collection challenge for the cause. Do you support it too?" */
+            'shareMsg' => __("I'm taking part in the collection challenge. Do you support it too?", 'collectme'),
+            'shareEmailSubject' => __("Let's master the collection challenge for the cause together.", 'collectme')
+        ],
+
         'ActivityFeed' => [
             'title' => __('Activity Feed', 'collectme'),
             'noActivity' => __('No activity yet.', 'collectme'),
@@ -96,6 +120,8 @@ return [
             'title' => __('My Goal', 'collectme'),
             /* Translators: Override with "Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute to the cause." */
             'intro' => __('Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute.', 'collectme'),
+            'upgradeInfo' => __('Already collected signatures count toward the goal. So if you increase your goal from {currentGoal} to {nextGoal} signatures, you start already with {percent}%.','collectme'),
+            'quotaInfo' => __('Regardless of your promise here, every signature you collect always counts for your section/canton.','collectme'),
             'ribbonHot' => __('Hot', 'collectme'),
             'ribbonDone' => __('Achieved', 'collectme'),
             'ribbonSelected' => __('Selected', 'collectme'),
@@ -115,7 +141,9 @@ return [
             'submit' => __('Register Signatures', 'collectme'),
             'saving' => __('Saving...', 'collectme'),
             'saved' => __('{count} signatures added.', 'collectme'),
+            'sendBack' => __("Please hand in the signatures to your party as soon as possible. Or send them by mail to the address noted on the signature sheets. The sooner the better.", 'collectme'),
             'back' => __('Back without registering signatures', 'collectme'),
+            'undo' => __('Undo', 'collectme'),
         ],
 
         'TheActivationAwaitor' => [

@@ -1,0 +1,27 @@
+changelog:
+  exclude:
+    labels:
+      - release
+
+  categories:
+    - title: ":rotating_light: Security"
+      labels:
+        - security
+
+    - title: ":tada: New Features"
+      labels:
+        - feat
+
+    - tile: ":wrench: Changes"
+      labels:
+        - ux
+        - deps
+        - l10n
+
+    - title: ":bug: Bug Fixes"
+      labels:
+        - fix
+
+    - title: Other Changes
+      labels:
+        - "*"

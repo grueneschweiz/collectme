@@ -13,6 +13,7 @@ use Collectme\Model\Entities\EnumGroupType;
 use Collectme\Model\Entities\EnumLang;
 use Collectme\Model\Entities\EnumPermission;
 use Collectme\Model\Entities\Group;
+use Collectme\Model\Entities\Objective;
 use Collectme\Model\Entities\Role;
 use Collectme\Model\Entities\SignatureEntry;
 use Collectme\Model\Entities\User;
@@ -264,6 +265,212 @@ class SignatureControllerTest extends TestCase
         $this->assertSame('signature', $data['data']['type']);
         $this->assertNotEmpty($data['data']['id']);
         $this->assertNotEmpty($data['data']['relationships']['activity']['data']['id']);
+    }
+
+    public function test_add__achieveObjective(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $group = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group->save();
+
+        $user = new User(
+            null,
+            wp_generate_uuid4() . '@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            'user cause test'
+        );
+        $user->save();
+
+        $log = new ActivityLog(
+            null,
+            EnumActivityType::PERSONAL_SIGNATURE,
+            90,
+            $cause->uuid,
+            $group->uuid
+        );
+        $log->save();
+
+        $signature = new SignatureEntry(
+            null,
+            $group->uuid,
+            $user->uuid,
+            99,
+            $log->uuid
+        );
+        $signature->save();
+
+        $role = new Role(
+            null,
+            $user->uuid,
+            $group->uuid,
+            EnumPermission::READ_WRITE,
+        );
+        $role->save();
+
+        $objective = new Objective(
+            null,
+            100,
+            $group->uuid,
+            'test'
+        );
+        $objective->save();
+
+        $apiData = [
+            'data' => [
+                'type' => 'signature',
+                'attributes' => [
+                    'count' => 1,
+                ],
+                'relationships' => [
+                    'user' => [
+                        'data' => [
+                            'type' => 'user',
+                            'id' => $user->uuid,
+                        ],
+                    ],
+                    'group' => [
+                        'data' => [
+                            'type' => 'group',
+                            'id' => $group->uuid,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $authMock = $this->createMock(Auth::class);
+        $authMock->expects($this->once())
+            ->method('getUserUuid')
+            ->willReturn($user->uuid);
+
+        $request = new \WP_REST_Request();
+        $request->set_body(wp_json_encode($apiData));
+        $request->set_header('Content-Type', 'application/json');
+
+        $controller = new SignatureController($authMock);
+
+        $response = $controller->add($request);
+        $data = json_decode(json_encode($response->get_data()), true);
+
+        $activity = ActivityLog::get($data['data']['relationships']['activity']['data']['id']);
+
+        $this->assertEquals(EnumActivityType::PERSONAL_GOAL_ACHIEVED, $activity->type);
+    }
+
+    public function test_add__notAchieveObjective(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $group = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group->save();
+
+        $user = new User(
+            null,
+            wp_generate_uuid4() . '@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            'user cause test'
+        );
+        $user->save();
+
+        $log = new ActivityLog(
+            null,
+            EnumActivityType::PERSONAL_SIGNATURE,
+            90,
+            $cause->uuid,
+            $group->uuid
+        );
+        $log->save();
+
+        $signature = new SignatureEntry(
+            null,
+            $group->uuid,
+            $user->uuid,
+            100,
+            $log->uuid
+        );
+        $signature->save();
+
+        $role = new Role(
+            null,
+            $user->uuid,
+            $group->uuid,
+            EnumPermission::READ_WRITE,
+        );
+        $role->save();
+
+        $objective = new Objective(
+            null,
+            100,
+            $group->uuid,
+            'test'
+        );
+        $objective->save();
+
+        $apiData = [
+            'data' => [
+                'type' => 'signature',
+                'attributes' => [
+                    'count' => 1,
+                ],
+                'relationships' => [
+                    'user' => [
+                        'data' => [
+                            'type' => 'user',
+                            'id' => $user->uuid,
+                        ],
+                    ],
+                    'group' => [
+                        'data' => [
+                            'type' => 'group',
+                            'id' => $group->uuid,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $authMock = $this->createMock(Auth::class);
+        $authMock->expects($this->once())
+            ->method('getUserUuid')
+            ->willReturn($user->uuid);
+
+        $request = new \WP_REST_Request();
+        $request->set_body(wp_json_encode($apiData));
+        $request->set_header('Content-Type', 'application/json');
+
+        $controller = new SignatureController($authMock);
+
+        $response = $controller->add($request);
+        $data = json_decode(json_encode($response->get_data()), true);
+
+        $activity = ActivityLog::get($data['data']['relationships']['activity']['data']['id']);
+
+        $this->assertEquals(EnumActivityType::PERSONAL_SIGNATURE, $activity->type);
     }
 
     public function test_delete__success(): void

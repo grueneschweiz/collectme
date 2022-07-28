@@ -74,6 +74,23 @@ class AccountToken extends Entity
     }
 
     /**
+     * @throws CollectmeDBException
+     */
+    public static function getByEmail(string $email): self
+    {
+        global $wpdb;
+
+        $query = $wpdb->prepare(
+            "SELECT * FROM " . self::getTableName() .
+            " WHERE email = '%s' AND valid_until > NOW() AND deleted_at IS NULL " .
+            " ORDER BY valid_until DESC, created_at DESC LIMIT 1",
+            $email
+        );
+
+        return self::getByQuery($query);
+    }
+
+    /**
      * Convert lang string to enum
      *
      * @param string $lang

@@ -1,17 +1,17 @@
 <template>
   <div
-      class="collectme-base-alert"
-      :class="{
-          'collectme-base-alert--success': success,
-          'collectme-base-alert--error': error
-      }"
+    class="collectme-base-alert"
+    :class="{
+      'collectme-base-alert--success': success,
+      'collectme-base-alert--error': error,
+    }"
   >
     <div
-        v-if="closable"
-        class="collectme-base-alert__close"
-        @click="$emit('close')"
+      v-if="closable"
+      class="collectme-base-alert__close"
+      @click="$emit('close')"
     >
-      <BaseButtonClose :secondary="error"/>
+      <BaseButtonClose :secondary="error" />
     </div>
     <div class="collectme-base-alert__message">
       <slot></slot>
@@ -22,9 +22,9 @@
 <script setup lang="ts">
 import BaseButtonClose from "@/components/base/BaseButtonClose.vue";
 
-defineEmits(['close']);
+defineEmits(["close"]);
 
-const props = defineProps({
+defineProps({
   closable: {
     type: Boolean,
     default: true,
@@ -36,12 +36,11 @@ const props = defineProps({
   error: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 </script>
 
 <style>
-
 .collectme-base-alert {
   padding: clamp(10px, 10px + 10 * (100vw - 375px) / 1305, 20px);
   border-radius: 3px;

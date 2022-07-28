@@ -27,8 +27,8 @@ note right: session not activated
 Database --> ServerApp : PersistentSession
 ServerApp -> Email     : ActivationSecret
 ServerApp --> Browser  : ""WP_COLLECTME_AUTH"" Cookie\nPersistentSession
-Email -> OtherBrowser  : ActivationSecret
-OtherBrowser -> ServerApp: ""GET /sessions/{uuid}?token=***""
+Email -> OtherBrowser  : ""GET /app?action=activate&token...""
+OtherBrowser -> ServerApp: ""GET /app?action=activate&token...""
 ServerApp -> Database  : activatePersistentSession
 
 == Login\n<size:10>authenticate by ""WP_COLLECTME_AUTH"" cookie</size> ==
