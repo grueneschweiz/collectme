@@ -58,5 +58,5 @@ jobs:
         with:
           files: /tmp/collectme.zip
           draft: true
-          generate_release_notes: true
+#          generate_release_notes: true
           name: "${{ env.VERSION }}"
