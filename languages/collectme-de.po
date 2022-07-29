@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2022-07-27T17:43:54+02:00\n"
-"PO-Revision-Date: 2022-07-29 08:59\n"
+"PO-Revision-Date: 2022-07-29 08:58\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -545,7 +545,7 @@ msgstr ""
 
 #: views/admin/settings.php:65
 msgid "Create new cause"
-msgstr "Neues Anliegen erstellen"
+msgstr ""
 
 #: views/admin/settings.php:69
 msgid "Name"
@@ -557,7 +557,7 @@ msgstr ""
 
 #: views/admin/settings.php:77
 msgid "Create cause"
-msgstr "Anliegen erstellen"
+msgstr ""
 
 #: views/admin/settings.php:91
 msgid "Signatures"
