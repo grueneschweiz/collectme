@@ -2,26 +2,33 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Collectme 2.0.0\n"
+"Project-Id-Version: collectme\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/collectme\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Last-Translator: \n"
+"Language-Team: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-07-29T12:07:45+02:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2022-07-27T17:43:54+02:00\n"
+"PO-Revision-Date: 2022-07-29 10:15\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: collectme\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: collectme\n"
+"X-Crowdin-Project-ID: 529702\n"
+"X-Crowdin-Language: de\n"
+"X-Crowdin-File: /languages/collectme.pot\n"
+"X-Crowdin-File-ID: 112\n"
+"Language: de_DE\n"
 
 #. Plugin Name of the plugin
 #: src/AdminRouter.php:20
 msgid "Collectme"
-msgstr ""
+msgstr "Collectme"
 
 #. Plugin URI of the plugin
 msgid "https://github.com/grueneschweiz/collectme"
-msgstr ""
+msgstr "https://github.com/grueneschweiz/collectme"
 
 #. Description of the plugin
 msgid "Handle signature collections with ease."
@@ -29,19 +36,19 @@ msgstr ""
 
 #. Author of the plugin
 msgid "Cyrill Bolliger"
-msgstr ""
+msgstr "Cyrill Bolliger"
 
 #. Author URI of the plugin
 msgid "https://github.com/cyrillbolliger"
-msgstr ""
+msgstr "https://github.com/cyrillbolliger"
 
 #: languages/app-strings.php:8
 msgid "Nooo... 🙈"
-msgstr ""
+msgstr "Neeeein... 🙈"
 
 #: languages/app-strings.php:9
 msgid "Some goblins blocked the data flow. Please try again."
-msgstr ""
+msgstr "Kobolde blockierten den Datenfluss. Bitte versuche es erneut."
 
 #: languages/app-strings.php:10
 msgid "Shame on me!"
@@ -55,7 +62,7 @@ msgstr ""
 #: views/activation-error.php:4
 #: views/activation-timeout.php:4
 msgid "Try again"
-msgstr ""
+msgstr "Erneut versuchen"
 
 #: languages/app-strings.php:13
 msgid "Not authenticated. Please login."
@@ -218,11 +225,11 @@ msgstr ""
 
 #: languages/app-strings.php:87
 msgid "Last Name"
-msgstr ""
+msgstr "Nachname"
 
 #: languages/app-strings.php:88
 msgid "Last name not valid."
-msgstr ""
+msgstr "Nachname ungültig."
 
 #: languages/app-strings.php:90
 msgid "You'll receive an e-mail with a link that signs you in. Keep this window open."
@@ -458,15 +465,10 @@ msgstr ""
 
 #. Translators: %1$s will be replaced with the users first name, %2$s the login link, %3$s the sender name. Keep the empty lines.
 #: src/Misc/LoginEmail.php:57
-msgid ""
-"Hello %1$s\n"
-"\n"
-"Click the following link to login:\n"
-"\n"
-"%2$s\n"
-"\n"
-"Please note, that you will be logged-in in the browser of the device you triggered this email. This may be different from the browser that opens when you click this link.\n"
-"\n"
+msgid "Hello %1$s\n\n"
+"Click the following link to login:\n\n"
+"%2$s\n\n"
+"Please note, that you will be logged-in in the browser of the device you triggered this email. This may be different from the browser that opens when you click this link.\n\n"
 "Feel free to reply to this email, if you have any questions.\n"
 "Yours sincerely,\n"
 "%3$s"
@@ -474,7 +476,7 @@ msgstr ""
 
 #: src/Misc/Settings.php:103
 msgid "Small"
-msgstr ""
+msgstr "Klein"
 
 #: src/Misc/Settings.php:111
 msgid "Medium"
@@ -482,20 +484,20 @@ msgstr ""
 
 #: src/Misc/Settings.php:119
 msgid "Large"
-msgstr ""
+msgstr "Gross"
 
 #: src/Misc/Settings.php:127
 msgid "Extra large"
-msgstr ""
+msgstr "Extra gross"
 
 #: src/Misc/Settings.php:168
 #: views/admin/settings.php:330
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
 #: views/activation-error.php:2
 msgid "Oh là là"
-msgstr ""
+msgstr "Oh là là"
 
 #: views/activation-error.php:3
 msgid "We failed to activate your login. Please try again."
@@ -547,7 +549,7 @@ msgstr ""
 
 #: views/admin/settings.php:69
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: views/admin/settings.php:72
 msgid "The name is only for internal use and not visible to the public. Keep it short."
@@ -559,11 +561,11 @@ msgstr ""
 
 #: views/admin/settings.php:91
 msgid "Signatures"
-msgstr ""
+msgstr "Unterschriften"
 
 #: views/admin/settings.php:95
 msgid "Number of signatures needed"
-msgstr ""
+msgstr "Anzahl benötigter Unterschriften"
 
 #: views/admin/settings.php:109
 msgid "The number of signatures to be registered. For an initiative this would typically be 105'000."
@@ -653,7 +655,7 @@ msgstr ""
 
 #: views/admin/settings.php:315
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #: views/admin/settings.php:324
 msgid "Goal is active (visible and selectable)"
@@ -678,3 +680,4 @@ msgstr ""
 #: views/admin/settings.php:445
 msgid "Save %s settings"
 msgstr ""
+

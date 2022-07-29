@@ -1,5 +1,8 @@
 # Collectme V2
 
+[![.github/workflows/tests.yml](https://github.com/grueneschweiz/collectme/actions/workflows/tests.yml/badge.svg)](https://github.com/grueneschweiz/collectme/actions/workflows/tests.yml)
+[![Crowdin](https://badges.crowdin.net/collectme/localized.svg)](https://crowdin.com/project/collectme)
+
 The community loves to promise signatures in pledges. We love signatures. This WordPress plugin helps to push the
 community to fulfill their promises. It mixes some gamification elements with pressure by control, and it makes
 achievements visible to the community.
@@ -24,7 +27,7 @@ For folks that just want to use employ the plugin on their site.
 
 1. Populate the `wp_collectme_account_tokens` table with the data of the users you want to log in automatically.
    The `token` must contain exactly 64 alpha-numeric characters (e.g. SHA256 hash).
-2. You may then send the users their personal link, which must look like follows: 
+2. You may then send the users their personal link, which must look like follows:
    `https://example.com/post-with-collectme-shortcode?action=create&email=<email>&token=<token>`
 
 **Variant:** You may also use the `collectme_get_account_token` filter and craft your own token validation function.
@@ -35,6 +38,7 @@ See [/docs/link-auth-with-mailchimp.md](/docs/link-auth-with-mailchimp.md) for a
 The action `collectme_after_user_setup` is built for this purpose. It fires every time a user is added to a cause.
 
 Example:
+
 ```php
 add_action( 'collectme_after_user_setup', function( 
         \Collectme\Model\Entities\User $user,
@@ -63,16 +67,15 @@ add_action( 'collectme_after_user_setup', function(
 }, 10, 3 );
 ```
 
-
 ## Dev Guide
 
 For the cool kids that want to contribute :sunglasses:
 
 ### Architecture
 
-The plugin is primarily built as single page application (SPA) using Vue.js and the WordPress REST API. 
+The plugin is primarily built as single page application (SPA) using Vue.js and the WordPress REST API.
 
-The REST API is specified in [OpenAPI 3.0](https://spec.openapis.org/oas/v3.0.3.html) format (the specification: 
+The REST API is specified in [OpenAPI 3.0](https://spec.openapis.org/oas/v3.0.3.html) format (the specification:
 [docs/api/rest-api.yaml](docs/api/rest-api.yaml)). It is [JSON:API Spec](https://jsonapi.org/format/1.0/) compliant.
 
 The settings page and the SPAs home are classic HTML pages and not Vue components. The SPAs home also handles part of
@@ -158,11 +161,11 @@ See [app/package.json](app/package.json) for details.
 
 ### WordPress
 
-To get good IDE integration and nice tooling with [Composer](https://getcomposer.org) Autoloading, the PHP parts of the 
+To get good IDE integration and nice tooling with [Composer](https://getcomposer.org) Autoloading, the PHP parts of the
 plugin use [PSR-4](https://www.php-fig.org/psr/psr-4/) and [PSR-12](https://www.php-fig.org/psr/psr-12/) instead of the
 [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/).
 
-For the sake of testability, we use dependency injection with [PHP-DI](https://php-di.org/). Testing is done with 
+For the sake of testability, we use dependency injection with [PHP-DI](https://php-di.org/). Testing is done with
 [PHPUnit](https://phpunit.readthedocs.io/en/9.5/).
 
 The plugin need at least PHP 8.1.
@@ -192,10 +195,14 @@ tests.
 #### WordPress-Cli
 
 The WordPress container also contains the [WP-CLI](https://make.wordpress.org/cli/handbook/). Currently it is only used
-to extract the plugin translation template (`.pot` file):
+to extract the plugin translation template (`.pot` file) and to compile the `.mo` files:
 
 ```
+# extract translations
 docker-compose run wordpress bash -c 'XDEBUG_MODE=off php -d memory_limit=1G $(which wp) --allow-root i18n make-pot wp-content/plugins/collectme/ wp-content/plugins/collectme/languages/collectme.pot --slug=collectme --domain=collectme --exclude=tmp,vendor --skip-js --skip-block-json --skip-theme-json && chown 1000:1000 wp-content/plugins/collectme/languages/collectme.pot'
+
+# generate mo files
+docker-compose run wordpress bash -c 'XDEBUG_MODE=off $(which wp) --allow-root i18n make-mo wp-content/plugins/collectme/languages'
 ```
 
 #### Composer
@@ -208,14 +215,14 @@ docker-compose run wordpress composer --working-dir=wp-content/plugins/collectme
 
 ### Mailhog
 
-Mails sent by the Plugin are caught by [Mailhog](https://mailhog.dev/) and accessible under 
+Mails sent by the Plugin are caught by [Mailhog](https://mailhog.dev/) and accessible under
 [localhost:8020](http://localhost:8020).
 
 ### Swagger
 
 #### Editor
 
-In browser editor and preview for the [openapi](https://www.openapis.org) definition of our 
+In browser editor and preview for the [openapi](https://www.openapis.org) definition of our
 [rest-api](/docs/api/rest-api.yaml).
 
 ```
@@ -240,7 +247,7 @@ Helpful resources:
   sed -i -r 's/(\s)Date(\s)/\1string\2/g' gen/models/*.ts
   rsync -av --delete gen/models/ app/src/models/generated
   ```
-  
+
 - Generate API docs in [/docs/api/index.html](/docs/api/index.html)
   ```bash
   docker-compose run swagger-codegen generate -i /tmp/swagger/input/rest-api.yaml -o /tmp/swagger/output -l html2 
@@ -253,3 +260,22 @@ Helpful resources:
 - `docker-compose run swagger-codegen langs`
 - `docker-compose run swagger-codegen generate`
 - [Swagger-Codegen](https://github.com/swagger-api/swagger-codegen) on GitHub
+
+### L10N - Crowdin
+
+Localization is done with gettext and [Crowdin](https://crowdin.com/project/collectme). The workflow:
+
+1. Use translation functions as usual (
+   see [How to Internationalize Your Plugin](https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/))
+2. Create a pull request
+3. The translation template (.pot file) is generated and uploaded to Crowdin by the GitHub action [l10n.yml](/.github/workflows/l10n.yml).
+4. Translate in [Crowdin](https://crowdin.com/project/collectme)
+5. Merge pull request into main
+6. The translations are downloaded from Crowdin, mo-files are compiled and committed to by the GitHub action [l10n.yml](/.github/workflows/l10n.yml).
+
+See also [crowdin.yml](/crowdin.yml).
+
+#### Translate JS
+
+- use [app/src/utility/i18n.ts](/app/src/utility/i18n.ts) as translation function
+- provide the strings in [languages/app-strings.php](/languages/app-strings.php)
