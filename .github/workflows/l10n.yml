@@ -1,5 +1,10 @@
 on:
   workflow_call:
+    secrets:
+      CROWDIN_PROJECT_ID:
+        required: true
+      CROWDIN_PERSONAL_TOKEN:
+        required: true
 
 jobs:
   template:
