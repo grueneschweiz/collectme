@@ -6,9 +6,9 @@ namespace Collectme\Misc;
 
 use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Exceptions\CollectmeException;
-
 use Collectme\Model\Entities\Cause;
 
+use const Collectme\OPTION_KEY_DB_VERSION;
 use const Collectme\OPTION_KEY_PLUGIN_VERSION;
 use const Collectme\OPTIONS_PREFIX;
 
@@ -58,9 +58,12 @@ class Installer
             return;
         }
 
-        foreach($causes as $cause) {
-            delete_option(OPTIONS_PREFIX . $cause->uuid );
+        foreach ($causes as $cause) {
+            delete_option(OPTIONS_PREFIX . $cause->uuid);
         }
+
+        delete_option(OPTION_KEY_PLUGIN_VERSION);
+        delete_option(OPTION_KEY_DB_VERSION);
     }
 
     /**

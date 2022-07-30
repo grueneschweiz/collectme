@@ -40,6 +40,7 @@ jobs:
       - name: Package files
         run: |
           mkdir /tmp/collectme
+          rsync -av --exclude=README.md ./database /tmp/database
           rsync -av --exclude=index.html --exclude=favicon.ico ./dist /tmp/collectme
           rsync -av ./languages /tmp/collectme
           rsync -av ./src /tmp/collectme
