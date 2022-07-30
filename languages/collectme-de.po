@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2022-07-30T10:12:29+02:00\n"
-"PO-Revision-Date: 2022-07-30 08:12\n"
+"PO-Revision-Date: 2022-07-30 08:15\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -311,7 +311,7 @@ msgstr "Jede Unterschrift stärkt uns. <strong>Wähle dein Sammelziel</strong> u
 
 #: languages/app-strings.php:123
 msgid "Already collected signatures count towards the goal. So if you increase your goal from {currentGoal} to {nextGoal} signatures, you start already with {percent}%."
-msgstr ""
+msgstr "Bereits gesammelte Unterschriften werden dem Ziel angerechnet. Wenn du also dein Ziel von {currentGoal} auf {nextGoal} Unterschriften erhöhst, beginnst du bereits mit {percent}%."
 
 #: languages/app-strings.php:124
 msgid "Regardless of your promise here, every signature you collect always counts for your section/canton."
