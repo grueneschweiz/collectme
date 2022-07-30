@@ -25,18 +25,11 @@ const DIST_DIR = 'dist';
 const PATH_MANIFEST = COLLECTME_BASE_PATH . '/' . DIST_DIR . '/manifest.json';
 
 /**
- * Path to the translated strings for the frontend
+ * Translation related
  */
-const PATH_APP_STRINGS = COLLECTME_BASE_PATH . '/languages/app-strings.php';
-
-/**
- * Path to the .pot file
- */
-const PATH_POT_FILE = COLLECTME_BASE_PATH . '/languages/collectme.pot';
-
-/**
- * Default context for translations
- */
+const TRANSLATION_DIR = 'languages';
+const PATH_APP_STRINGS = COLLECTME_BASE_PATH . '/' . TRANSLATION_DIR . '/app-strings.php';
+const PATH_POT_FILE = COLLECTME_BASE_PATH . '/' . TRANSLATION_DIR . '/collectme.pot';
 const I18N_DEFAULT_CONTEXT = 'collectme';
 
 /**
@@ -120,8 +113,9 @@ class Collectme
         add_action('admin_menu', [$this->adminRouter, 'init']);
 
         /**
-         * Translation overrides
+         * Translations and overrides
          */
+        add_action('init', [$this->translator, 'loadTextdomain']);
         add_filter('gettext_collectme', [$this->translator, 'overrideGettext'], 10, 2);
         add_filter('gettext_with_context_collectme', [$this->translator, 'overrideGettextWithContext'], 10, 3);
         add_filter('ngettext_collectme', [$this->translator, 'overrideNGettext'], 10, 4);

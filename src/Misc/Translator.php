@@ -7,6 +7,7 @@ namespace Collectme\Misc;
 use Collectme\Collectme;
 
 use const Collectme\I18N_DEFAULT_CONTEXT;
+use const Collectme\TRANSLATION_DIR;
 
 class Translator
 {
@@ -16,6 +17,34 @@ class Translator
     public function __construct(
         private readonly Settings $settings
     ) {
+    }
+
+    public function loadTextdomain(): void
+    {
+        $translationDir = dirname(plugin_basename(COLLECTME_PLUGIN_NAME)) . '/' . TRANSLATION_DIR;
+
+        $loaded = load_plugin_textdomain(
+            'collectme',
+            false,
+            $translationDir
+        );
+
+        // retry without country code ('de' instead of 'de_DE')
+        if (!$loaded) {
+            add_filter('plugin_locale', function (string $locale, string $domain) {
+                if ('collectme' === $domain) {
+                    return substr($locale, 0, 2);
+                }
+
+                return $locale;
+            }, 10, 2);
+
+            load_plugin_textdomain(
+                'collectme',
+                false,
+                $translationDir
+            );
+        }
     }
 
     public function overrideNGettext(
@@ -34,7 +63,7 @@ class Translator
         string $text
     ): string {
         $cause = Collectme::getCauseUuid();
-        if (! $cause) {
+        if (!$cause) {
             return $translation;
         }
 
@@ -99,7 +128,7 @@ class Translator
         string $context
     ): string {
         $cause = Collectme::getCauseUuid();
-        if (! $cause) {
+        if (!$cause) {
             return $translation;
         }
 
