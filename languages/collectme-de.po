@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2022-07-27T17:43:54+02:00\n"
-"PO-Revision-Date: 2022-07-29 08:58\n"
+"PO-Revision-Date: 2022-07-29 10:15\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -44,11 +44,11 @@ msgstr "https://github.com/cyrillbolliger"
 
 #: languages/app-strings.php:8
 msgid "Nooo... 🙈"
-msgstr ""
+msgstr "Neeeein... 🙈"
 
 #: languages/app-strings.php:9
 msgid "Some goblins blocked the data flow. Please try again."
-msgstr ""
+msgstr "Kobolde blockierten den Datenfluss. Bitte versuche es erneut."
 
 #: languages/app-strings.php:10
 msgid "Shame on me!"
