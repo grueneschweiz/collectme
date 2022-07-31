@@ -14,6 +14,8 @@ use Collectme\Misc\Translator;
 use Collectme\Model\Entities\Cause;
 use Gettext\Loader\PoLoader;
 
+use Gettext\Translation;
+
 use const Collectme\I18N_DEFAULT_CONTEXT;
 use const Collectme\PATH_POT_FILE;
 
@@ -73,7 +75,21 @@ class AdminController
         usort($causes, static fn($b, $a) => $a->created <=> $b->created);
 
         $poLoader = new PoLoader();
-        $stringTemplates = $poLoader->loadFile(PATH_POT_FILE);
+        $stringTemplates = $poLoader
+            ->loadFile(PATH_POT_FILE)
+            ->getTranslations();
+
+        // Show translations that should be overridden first
+        uasort($stringTemplates, static function(Translation $a, Translation $b) {
+            $aOverride = stripos(implode('; ', $a->getExtractedComments()->toArray()), 'Translators: Override');
+            $bOverride = stripos(implode('; ', $b->getExtractedComments()->toArray()), 'Translators: Override');
+
+            return match(true) {
+                false === $aOverride && $bOverride !== false => 1,
+                false !== $aOverride && $bOverride === false => -1,
+                default => 0
+            };
+        });
 
         $translator = $this->translator;
         $defaultContext = I18N_DEFAULT_CONTEXT;
