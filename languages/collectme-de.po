@@ -9,8 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-07-31T16:33:48+02:00\n"
-"PO-Revision-Date: 2022-07-31 14:34\n"
+"POT-Creation-Date: 2022-07-31T18:04:34+02:00\n"
+"PO-Revision-Date: 2022-07-31 16:04\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -179,7 +179,7 @@ msgstr "Herzlichen Glückwunsch! Du hast dein Ziel erreicht und <strong>{count} 
 
 #: languages/app-strings.php:67
 msgid "Complete the previous steps, and you will see your achievements here."
-msgstr "Schliesse die vorherigen Schritte ab und du wirst deine Erfolge hier sehen."
+msgstr "Schliesse die vorherigen Schritte ab und du wirst hier deine Erfolge sehen."
 
 #. Translators: Override with "The cause gives thanks!"
 #: languages/app-strings.php:69
@@ -188,7 +188,7 @@ msgstr "Vielen Dank!"
 
 #: languages/app-strings.php:71
 msgid "Register more signatures"
-msgstr "Mehr Unterschriften eintragen"
+msgstr "Weitere Unterschriften eintragen"
 
 #: languages/app-strings.php:72
 msgid "Upgrade goal"
@@ -261,7 +261,7 @@ msgstr "Wir können das Ziel nur gemeinsam erreichen. Lade deine Freunde ein und
 #. Translators: Override with "I'm taking part in the collection challenge for the cause. Do you support it too?"
 #: languages/app-strings.php:103
 msgid "I'm taking part in the collection challenge. Do you support it too?"
-msgstr "Ich nehme an der Sammelchallenge teil. Unterstützt du sie auch?"
+msgstr "Ich nehme an der Sammelchallenge teil. Unterstützst du sie auch?"
 
 #: languages/app-strings.php:104
 msgid "Let's master the collection challenge for the cause together."
@@ -404,52 +404,52 @@ msgstr "E-Mail-Adresse ungültig"
 msgid "Collectme Settings"
 msgstr "Collectme Einstellungen"
 
-#: src/Controller/AdminController.php:34
+#: src/Controller/AdminController.php:35
 msgid "You do not have sufficient permissions to access this page."
 msgstr "Du hast keine Zugriffsberechtigung für diese Seite."
 
-#: src/Controller/AdminController.php:53
+#: src/Controller/AdminController.php:54
 msgid "Saved!"
 msgstr "Gespeichert!"
 
-#: src/Controller/AdminController.php:100
+#: src/Controller/AdminController.php:115
 msgid "Invalid email config."
 msgstr "Ungültige E-Mail-Konfiguration."
 
-#: src/Controller/AdminController.php:125
+#: src/Controller/AdminController.php:140
 msgid "Invalid objective key."
 msgstr "Ungültiges Ziel."
 
-#: src/Controller/AdminController.php:134
+#: src/Controller/AdminController.php:149
 msgid "Invalid goal."
 msgstr "Ungültiges Ziel."
 
-#: src/Controller/AdminController.php:144
-#: src/Controller/AdminController.php:169
+#: src/Controller/AdminController.php:159
+#: src/Controller/AdminController.php:184
 msgid "Invalid image url."
 msgstr "Ungültige Bild-Url."
 
-#: src/Controller/AdminController.php:215
+#: src/Controller/AdminController.php:232
 msgid "Markup is not allowed in CSS."
 msgstr "Markup ist in CSS nicht erlaubt."
 
-#: src/Controller/AdminController.php:251
+#: src/Controller/AdminController.php:268
 msgid "Cause deleted."
 msgstr "Anliegen gelöscht."
 
-#: src/Controller/AdminController.php:256
+#: src/Controller/AdminController.php:273
 msgid "Failed to delete cause."
 msgstr "Anliegen konnte nicht gelöscht werden."
 
-#: src/Controller/AdminController.php:268
+#: src/Controller/AdminController.php:285
 msgid "Failed to create cause: Invalid name."
 msgstr "Anliegen konnte nicht erstellt werden: Ungültiger Name."
 
-#: src/Controller/AdminController.php:278
+#: src/Controller/AdminController.php:295
 msgid "Cause created."
 msgstr "Anliegen erstellt."
 
-#: src/Controller/AdminController.php:283
+#: src/Controller/AdminController.php:300
 msgid "Failed to create cause."
 msgstr "Anliegen konnte nicht erstellt werden."
 
@@ -480,23 +480,23 @@ msgstr "Hallo %1$s\n\n"
 "Mit freundlichen Grüssen,\n"
 "%3$s"
 
-#: src/Misc/Settings.php:104
+#: src/Misc/Settings.php:71
 msgid "Small"
 msgstr "Klein"
 
-#: src/Misc/Settings.php:112
+#: src/Misc/Settings.php:79
 msgid "Medium"
 msgstr "Mittel"
 
-#: src/Misc/Settings.php:120
+#: src/Misc/Settings.php:87
 msgid "Large"
 msgstr "Gross"
 
-#: src/Misc/Settings.php:128
+#: src/Misc/Settings.php:95
 msgid "Extra large"
 msgstr "Extra gross"
 
-#: src/Misc/Settings.php:169
+#: src/Misc/Settings.php:174
 #: views/admin/settings.php:330
 msgid "Default"
 msgstr "Standard"
