@@ -371,6 +371,10 @@ use Collectme\Model\Entities\Cause;
 
                     <td>
                         <?php
+                        if (function_exists('pll_current_language') && pll_current_language('locale')) {
+                            switch_to_locale(pll_current_language('locale'));
+                        }
+
                         /** @var Gettext\Translation $stringTemplate */
                         foreach ($stringTemplates as $stringTemplate) {
                             if ($stringTemplate->isDisabled()) {
@@ -414,6 +418,7 @@ use Collectme\Model\Entities\Cause;
                                         $string,
                                         $stringTemplate->getContext()
                                     ) ?? '';
+                                $default = esc_attr__($string, 'collectme');
 
                                 echo '<div style="margin-bottom: 1em;">';
                                 echo "<p><label for='override[$contextKey][$stringKey]'>" . esc_html(
@@ -421,16 +426,17 @@ use Collectme\Model\Entities\Cause;
                                     ) . "</label> <span style='margin-top: 0; font-size: 0.875em; color: #888888; line-height: 1em;'>" . esc_html(
                                         $contextDesc
                                     ) . "</span></p>";
-                                echo "<textarea id='override[$contextKey][$stringKey]' name='override[$contextKey][$stringKey]' rows='$rows' cols='50' class='large-text' placeholder='" . esc_attr__(
-                                        $string,
-                                        'collectme'
-                                    ) . "'>$override</textarea>";
+                                echo "<textarea id='override[$contextKey][$stringKey]' name='override[$contextKey][$stringKey]' rows='$rows' cols='50' class='large-text' placeholder='$default'>$override</textarea>";
                                 echo "<p style='margin-top: 0; font-size: 0.875em; line-height: 1em;'>" . esc_html(
                                         $comments
                                     ) . "</p>";
                                 echo "<p style='margin-top: 0; font-size: 0.875em; color: #888888; line-height: 1em; float: right; margin-right: 0.5rem;'>$references</p>";
                                 echo '</div>';
                             }
+                        }
+
+                        if (function_exists('pll_current_language') && pll_current_language('locale')) {
+                            restore_previous_locale();
                         }
                         ?>
                     </td>
