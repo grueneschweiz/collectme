@@ -1,5 +1,10 @@
 <template>
-  <a :href="url" class="collectme-base-share-button">
+  <a
+    :href="url"
+    class="collectme-base-share-button"
+    target="_blank"
+    rel="nofollow"
+  >
     <div class="collectme-base-share-button__svg">
       <slot />
     </div>
