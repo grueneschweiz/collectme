@@ -101,7 +101,8 @@ return [
             'inviteFriends' => __('We can only reach the goal together. Invite your friends and we are already one step closer.', 'collectme'),
             /* Translators: Override with "I'm taking part in the collection challenge for the cause. Do you support it too?" */
             'shareMsg' => __("I'm taking part in the collection challenge. Do you support it too?", 'collectme'),
-            'shareEmailSubject' => __("Let's master the collection challenge for the cause together.", 'collectme')
+            /* Translators: Override with "Let's master the collection challenge for the cause together" */
+            'shareEmailSubject' => __("Let's master the collection challenge together", 'collectme')
         ],
 
         'ActivityFeed' => [
