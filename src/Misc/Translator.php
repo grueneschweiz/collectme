@@ -104,7 +104,14 @@ class Translator
     private function getLanguageCode(): string
     {
         if (!isset($this->lang)) {
-            $this->lang = substr(get_locale(), 0, 2);
+            if (
+                function_exists('pll_current_language')
+                && pll_current_language()
+            ) {
+                $this->lang = pll_current_language();
+            } else {
+                $this->lang = substr(get_locale(), 0, 2);
+            }
         }
 
         return $this->lang;
