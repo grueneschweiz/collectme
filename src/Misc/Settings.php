@@ -90,6 +90,7 @@ class Settings
 
     private function set(string $key, array $values, string $causeUuid): void
     {
+        $this->settings[$causeUuid] = get_option(OPTIONS_PREFIX . $causeUuid, []);
         $this->settings[$causeUuid][$key] = $values;
 
         update_option(OPTIONS_PREFIX . $causeUuid, $this->settings[$causeUuid], false);
