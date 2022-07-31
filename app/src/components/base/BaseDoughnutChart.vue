@@ -54,7 +54,7 @@ let delayTimer: ReturnType<typeof setTimeout> | null;
 
 const intersectionObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
-    if (entry.isIntersecting) {
+    if (entry.isIntersecting && animatedValue.value === 0) {
       animate();
     }
   });

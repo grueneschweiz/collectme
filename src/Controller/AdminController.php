@@ -13,6 +13,7 @@ use Collectme\Misc\Settings;
 use Collectme\Misc\Translator;
 use Collectme\Model\Entities\Cause;
 use Gettext\Loader\PoLoader;
+use Gettext\Translation;
 
 use const Collectme\I18N_DEFAULT_CONTEXT;
 use const Collectme\PATH_POT_FILE;
@@ -73,7 +74,21 @@ class AdminController
         usort($causes, static fn($b, $a) => $a->created <=> $b->created);
 
         $poLoader = new PoLoader();
-        $stringTemplates = $poLoader->loadFile(PATH_POT_FILE);
+        $stringTemplates = $poLoader
+            ->loadFile(PATH_POT_FILE)
+            ->getTranslations();
+
+        // Show translations that should be overridden first
+        uasort($stringTemplates, static function (Translation $a, Translation $b) {
+            $aOverride = stripos(implode('; ', $a->getExtractedComments()->toArray()), 'Translators: Override');
+            $bOverride = stripos(implode('; ', $b->getExtractedComments()->toArray()), 'Translators: Override');
+
+            return match (true) {
+                false === $aOverride && $bOverride !== false => 1,
+                false !== $aOverride && $bOverride === false => -1,
+                default => 0
+            };
+        });
 
         $translator = $this->translator;
         $defaultContext = I18N_DEFAULT_CONTEXT;
@@ -165,14 +180,16 @@ class AdminController
         $objective = $this->settings->getDefaultObjective($causeUuid);
 
         $img = $_POST['defaultObjective']['img'] ?? null;
-        if (!UrlValidator::check($img, 'http')) {
+        if (!empty($img) && !UrlValidator::check($img, 'http')) {
             echo '<div class="notice notice-error is-dismissible"><p>' . __(
                     'Invalid image url.',
                     'collectme'
                 ) . '</p></div>';
             return false;
         }
-        if (!empty($img)) {
+        if (empty($img)) {
+            $objective = $this->settings->getDefaultObjectiveDefaults();
+        } else {
             $objective['img'] = $img;
         }
 

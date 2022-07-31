@@ -150,6 +150,10 @@ onBeforeUnmount(() => {
   transition-timing-function: ease-in-out;
   transition-duration: var(--transition-speed-normal);
   transition-property: font-size, top, font-weight;
+  max-width: calc(100% - 1.5rem);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /*noinspection CssUnusedSymbol*/
