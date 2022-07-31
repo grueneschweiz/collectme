@@ -11,8 +11,6 @@ use const Collectme\OPTIONS_PREFIX;
 
 class Settings
 {
-    private static Settings $instance;
-
     private const STRING_OVERRIDES = 'string_overrides';
     private const OBJECTIVES = 'objectives';
     private const DEFAULT_OBJECTIVE = 'default_objective';
@@ -20,7 +18,7 @@ class Settings
     private const CUSTOM_CSS = 'custom_css';
     private const PLEDGE_SETTINGS = 'pledge_settings';
     private const SIGNATURE_SETTINGS = 'signature_settings';
-
+    private static Settings $instance;
     private array $settings = [];
 
     public function __construct()
@@ -65,37 +63,6 @@ class Settings
         return array_replace_recursive($defaults, $objectives);
     }
 
-    public function getEmailConfig(string $causeUuid): array
-    {
-        $config = $this->get(self::EMAIL_CONFIG, $causeUuid) ?? [];
-        $defaults = $this->getEmailConfigDefaults();
-
-        return array_replace_recursive($defaults, $config);
-    }
-
-    public function setStringOverrides(array $overrides, string $causeUuid): void
-    {
-        $this->set(self::STRING_OVERRIDES, $overrides, $causeUuid);
-    }
-
-    public function setObjectives(array $objectives, string $causeUuid): void
-    {
-        $this->set(self::OBJECTIVES, $objectives, $causeUuid);
-    }
-
-    public function setEmailConfig(array $config, string $causeUuid): void
-    {
-        $this->set(self::EMAIL_CONFIG, $config, $causeUuid);
-    }
-
-    private function set(string $key, array $values, string $causeUuid): void
-    {
-        $this->settings[$causeUuid] = get_option(OPTIONS_PREFIX . $causeUuid, []);
-        $this->settings[$causeUuid][$key] = $values;
-
-        update_option(OPTIONS_PREFIX . $causeUuid, $this->settings[$causeUuid], false);
-    }
-
     public function getObjectivesDefaults(): array
     {
         return [
@@ -134,12 +101,20 @@ class Settings
         ];
     }
 
+    public function getEmailConfig(string $causeUuid): array
+    {
+        $config = $this->get(self::EMAIL_CONFIG, $causeUuid) ?? [];
+        $defaults = $this->getEmailConfigDefaults();
+
+        return array_replace_recursive($defaults, $config);
+    }
+
     public function getEmailConfigDefaults(): array
     {
         $domain = preg_replace(
             '/^www\./',
             '',
-            wp_parse_url( network_home_url(), PHP_URL_HOST ) ?? 'example.com'
+            wp_parse_url(network_home_url(), PHP_URL_HOST) ?? 'example.com'
         );
 
         return [
@@ -147,6 +122,29 @@ class Settings
             'fromAddress' => "website@$domain",
             'replyToAddress' => get_bloginfo('admin_email'),
         ];
+    }
+
+    public function setStringOverrides(array $overrides, string $causeUuid): void
+    {
+        $this->set(self::STRING_OVERRIDES, $overrides, $causeUuid);
+    }
+
+    private function set(string $key, array $values, string $causeUuid): void
+    {
+        $this->settings[$causeUuid] = get_option(OPTIONS_PREFIX . $causeUuid, []);
+        $this->settings[$causeUuid][$key] = $values;
+
+        update_option(OPTIONS_PREFIX . $causeUuid, $this->settings[$causeUuid], false);
+    }
+
+    public function setObjectives(array $objectives, string $causeUuid): void
+    {
+        $this->set(self::OBJECTIVES, $objectives, $causeUuid);
+    }
+
+    public function setEmailConfig(array $config, string $causeUuid): void
+    {
+        $this->set(self::EMAIL_CONFIG, $config, $causeUuid);
     }
 
     public function setCustomCss(string $css, string $causeUuid): void
@@ -164,7 +162,14 @@ class Settings
     public function getDefaultObjective(string $causeUuid): array
     {
         $defaultObjective = $this->get(self::DEFAULT_OBJECTIVE, $causeUuid) ?? [];
-        $defaults = [
+        $defaults = $this->getDefaultObjectiveDefaults();
+
+        return array_replace($defaults, $defaultObjective);
+    }
+
+    public function getDefaultObjectiveDefaults(): array
+    {
+        return [
             'id' => 'default',
             'name' => __('Default', 'collectme'),
             'enabled' => true,
@@ -172,8 +177,6 @@ class Settings
             'img' => plugin_dir_url(COLLECTME_PLUGIN_NAME) . ASSET_PATH_REL . '/img/goal-default.png',
             'hot' => false,
         ];
-
-        return array_replace($defaults, $defaultObjective);
     }
 
     public function setDefaultObjective(array $defaultObjective, string $causeUuid): void
