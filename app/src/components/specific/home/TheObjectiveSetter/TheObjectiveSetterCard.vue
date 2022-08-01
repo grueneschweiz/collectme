@@ -130,10 +130,13 @@ function saveObjective() {
 }
 
 .collectme-the-objective-setter-card__img {
-  margin: 0.5rem;
-  max-width: calc(100% - 1rem);
-  max-height: calc(100% - 1rem);
+  padding: 0 0.5rem 0.5rem;
+  max-width: 100%;
+  max-height: 100%;
   flex: none;
+  /* fix size for safari */
+  /*noinspection CssInvalidPropertyValue*/
+  height: -webkit-fill-available;
 }
 
 .collectme-the-objective-setter-card__subline {
