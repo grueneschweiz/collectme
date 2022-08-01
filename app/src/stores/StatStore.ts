@@ -32,7 +32,7 @@ export const useStatStore = defineStore("StatStore", {
       this.isLoading = true;
 
       try {
-        await api(true)
+        await api(false)
           .get(endpointUrl)
           .then((resp: StatResponseSuccess) => (this.stat = resp.data.data));
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
