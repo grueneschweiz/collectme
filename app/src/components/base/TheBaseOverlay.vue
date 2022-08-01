@@ -1,5 +1,5 @@
 <template>
-  <div class="collectme-the-base-overlay">
+  <div class="collectme-the-base-overlay" ref="container">
     <header
       v-if="$slots.header || props.closeable"
       class="collectme-the-base-overlay__header"
@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import BaseButtonClose from "@/components/base/BaseButtonClose.vue";
-import { onBeforeUnmount, onMounted } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
 defineEmits<{
   (e: "close"): void;
@@ -40,8 +40,21 @@ const props = defineProps({
   },
 });
 
+const container = ref<HTMLDivElement>();
+
+function adjustHeightForSafariMobile() {
+  if (!container.value) {
+    return;
+  }
+
+  if (container.value?.offsetHeight > window.innerHeight) {
+    container.value?.classList.add("collectme-the-base-overlay--mobile-safari");
+  }
+}
+
 onMounted(() => {
   document.querySelector("body")?.classList.add("collectme-overlay-open");
+  adjustHeightForSafariMobile();
 });
 
 onBeforeUnmount(() => {
@@ -66,8 +79,18 @@ onBeforeUnmount(() => {
   overflow-y: scroll;
 }
 
+/*noinspection CssUnusedSymbol*/
+.collectme-the-base-overlay--mobile-safari {
+  max-height: calc(100vh - 140px);
+}
+
 .admin-bar .collectme-the-base-overlay {
-  height: calc(100vh - 246px);
+  height: calc(100vh - 86px);
+}
+
+/*noinspection CssUnusedSymbol*/
+.admin-bar .collectme-the-base-overlay--mobile-safari {
+  max-height: calc(100vh - 186px);
 }
 
 .collectme-the-base-overlay__header {
