@@ -60,9 +60,10 @@
         <p class="collectme-overview-stats__share-paragraph">
           {{ t("HomeView.OverviewStats.thanks") }}
         </p>
-        <p class="collectme-overview-stats__share-paragraph">
-          {{ t("HomeView.OverviewStats.inviteFriends") }}
-        </p>
+        <p
+          class="collectme-overview-stats__share-paragraph"
+          v-html="t('HomeView.OverviewStats.inviteFriends')"
+        ></p>
         <BaseShare
           :url="shareUrl"
           :shareMsg="t('HomeView.OverviewStats.shareMsg')"

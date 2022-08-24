@@ -108,11 +108,13 @@ class HtmlController
 
         $customCss = preg_replace('/\s+/', ' ', $this->settings->getCustomCss($causeUuid));
 
-        return '<div id="collectme-app"></div>'
+        return '<!-- lesverts-noautop -->'
+            . '<div id="collectme-app"></div>'
             . $this->assetLoader->getStylesHtml()
             . '<style>' . $customCss . '</style>'
             . $this->assetLoader->getScriptDataHtml('collectme', $data)
-            . $this->assetLoader->getScriptsHtml();
+            . $this->assetLoader->getScriptsHtml()
+            . '<!-- lesverts-end-noautop -->';
     }
 
     /**
