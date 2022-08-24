@@ -95,8 +95,10 @@ class Auth
         }
 
         // note login
-        ++$validSession->loginCounter;
-        $validSession->lastLogin = date_create();
+        if ($validSession->lastLogin < date_create('-10 seconds', Util::getTimeZone())) {
+            ++$validSession->loginCounter;
+        }
+        $validSession->lastLogin = date_create('now', Util::getTimeZone());
         $validSession = $validSession->save();
 
         // set session
