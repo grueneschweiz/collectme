@@ -113,7 +113,7 @@ class SignatureController extends WP_REST_Controller
             $log = new ActivityLog(
                 null,
                 EnumActivityType::PERSONAL_GOAL_ACHIEVED,
-                $entryProps['count'],
+                $objective[0]->objective,
                 $group->causeUuid,
                 $group->uuid,
             );
