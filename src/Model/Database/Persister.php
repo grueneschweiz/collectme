@@ -147,6 +147,9 @@ trait Persister
         return $wpdb->prefix . DB_PREFIX . $tableBaseName;
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
     private function getFormatStrings(array $data): array
     {
         $formatStrings = [];
@@ -209,6 +212,9 @@ trait Persister
         return static::getByQuery($query);
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
     protected static function getByQuery(string $query): static
     {
         global $wpdb;

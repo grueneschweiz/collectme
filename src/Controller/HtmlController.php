@@ -32,6 +32,7 @@ class HtmlController
 
     /**
      * @throws \JsonException
+     * @throws CollectmeDBException
      */
     public function createUserFromToken(string $causeUuid): string
     {

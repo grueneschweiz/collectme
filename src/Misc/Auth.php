@@ -42,12 +42,18 @@ class Auth
         return self::$instance;
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
     public function isAuthenticated(): bool
     {
         $session = $this->getPersistentSession();
         return $session && $session->isActive();
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
     public function getPersistentSession(): ?PersistentSession
     {
         if (!isset($this->persistentSession)) {
@@ -72,6 +78,9 @@ class Auth
         $this->persistentSession = $persistentSession;
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
     private function loginWithAuthCookie(): void
     {
         $authCookie = $this->authCookie->get();
@@ -289,6 +298,9 @@ class Auth
         $this->phpSession->reset();
     }
 
+    /**
+     * @throws CollectmeException
+     */
     public function getUserUuid(): string
     {
         $session = $this->getPersistentSession();
