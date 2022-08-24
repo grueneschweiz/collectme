@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Collectme\Model\Entities;
 
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Misc\Util;
 use Collectme\Model\Database\DBField;
 use Collectme\Model\Database\DBTable;
 use Collectme\Model\DateProperty;
@@ -96,7 +97,7 @@ class PersistentSession extends Entity
             return false;
         }
 
-        return $this->activated <= date_create();
+        return $this->activated <= date_create('now', Util::getTimeZone());
     }
 
     public function isClosed(): bool
@@ -105,6 +106,6 @@ class PersistentSession extends Entity
             return false;
         }
 
-        return $this->closed <= date_create();
+        return $this->closed <= date_create('now', Util::getTimeZone());
     }
 }

@@ -6,6 +6,7 @@ namespace Collectme\Model\Entities;
 
 use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Misc\Settings;
+use Collectme\Misc\Util;
 use Collectme\Model\DateProperty;
 use Collectme\Model\JsonApi\ApiConverter;
 use Collectme\Model\JsonApi\ApiConvertible;
@@ -68,7 +69,7 @@ class Stat implements ApiConvertible
             return null;
         }
 
-        $stat['updated'] = date_create($stat['updated']);
+        $stat['updated'] = date_create($stat['updated'], Util::getTimeZone());
 
         return new self(...$stat);
     }
@@ -99,7 +100,7 @@ class Stat implements ApiConvertible
             ($pledged + $pledgeOffset) / $pledgeObjective,
             ($registered + $signatureOffset) / $signatureObjective,
             $causeUuid,
-            date_create(),
+            date_create('now', Util::getTimeZone()),
         );
 
         $stat->cache();

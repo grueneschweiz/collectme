@@ -7,6 +7,8 @@ namespace Collectme\Model;
 use Collectme\Controller\Validators\AuthCookieValidator;
 use Collectme\Misc\Cookie;
 
+use Collectme\Misc\Util;
+
 use const Collectme\AUTH_COOKIE_KEY;
 use const Collectme\AUTH_COOKIE_TTL;
 
@@ -28,7 +30,7 @@ class AuthCookie
         $this->cookie->set(
             AUTH_COOKIE_KEY,
             "$sessionUuid $sessionSecret",
-            date_create(AUTH_COOKIE_TTL)->getTimestamp()
+            date_create(AUTH_COOKIE_TTL, Util::getTimeZone())->getTimestamp()
         );
     }
 

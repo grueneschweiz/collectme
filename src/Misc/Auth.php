@@ -114,9 +114,9 @@ class Auth
      */
     public function createPersistentSession(User $user, bool $activated): void
     {
-        $activationSecret = wp_generate_password(64, false, false);
-        $sessionSecret = wp_generate_password(64, false, false);
-        $activatedAt = $activated ? date_create() : null;
+        $activationSecret = wp_generate_password(64, false);
+        $sessionSecret = wp_generate_password(64, false);
+        $activatedAt = $activated ? date_create('now', Util::getTimeZone()) : null;
 
         $session = new PersistentSession(
             null,
@@ -280,7 +280,7 @@ class Auth
             throw new CollectmeException('Can not logout from session if not logged in.');
         }
 
-        $session->closed = date_create('-1 second');
+        $session->closed = date_create('-1 second', Util::getTimeZone());
         $session->save();
 
         $this->authCookie->invalidate();

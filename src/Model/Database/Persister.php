@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Collectme\Model\Database;
 
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Misc\Util;
 use Collectme\Model\DateTimeTypeHandler;
 
 use const Collectme\DB_PREFIX;
@@ -316,7 +317,7 @@ trait Persister
      */
     public function delete(): void
     {
-        $this->deleted = date_create();
+        $this->deleted = date_create('-1 second', Util::getTimeZone());
 
         $this->update();
     }
