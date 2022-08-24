@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Collectme\Model;
 
+use PHPMailer\PHPMailer\Exception;
+
 trait DateTimeTypeHandler
 {
     private static \DateTimeZone $timezone;
@@ -37,7 +39,11 @@ trait DateTimeTypeHandler
     private static function getTimeZone(): \DateTimeZone
     {
         if (!isset(self::$timezone)) {
-            self::$timezone = new \DateTimeZone(get_option('timezone_string'));
+            try {
+                self::$timezone = new \DateTimeZone(get_option('timezone_string'));
+            } catch (\Exception) {
+                self::$timezone = new \DateTimeZone(date_default_timezone_get());
+            }
         }
 
         return self::$timezone;
