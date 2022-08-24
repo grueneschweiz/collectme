@@ -121,7 +121,7 @@ return [
             'title' => __('My Goal', 'collectme'),
             /* Translators: Override with "Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute to the cause." */
             'intro' => __('Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute.', 'collectme'),
-            'upgradeInfo' => __('Already collected signatures count towards the goal. So if you increase your goal from {currentGoal} to {nextGoal} signatures, you start already with {percent}%.','collectme'),
+            'upgradeInfo' => __('Already collected signatures count towards the new goal. So if you increase your goal from {currentGoal} to {nextGoal} signatures, you start already with {percent}%.','collectme'),
             'quotaInfo' => __('Regardless of your promise here, every signature you collect always counts for your section/canton.','collectme'),
             'ribbonHot' => __('Hot', 'collectme'),
             'ribbonDone' => __('Achieved', 'collectme'),
