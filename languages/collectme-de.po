@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2022-08-24T16:11:53+02:00\n"
-"PO-Revision-Date: 2022-08-24 14:12\n"
+"PO-Revision-Date: 2022-08-24 14:28\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -247,7 +247,7 @@ msgstr "der versprochenen Unterschriften wurden eingetragen."
 
 #: languages/app-strings.php:98
 msgid "From all the signatures that were promised in the form of a personal goal, {percent}% are already collected and entered."
-msgstr ""
+msgstr "Von allen Unterschriften, die in Form eines persönlichen Ziels versprochen wurden, sind bis jetzt {percent}% gesammelt und eingetragen worden."
 
 #. Translators: Example: 31% of the required signatures were promised.
 #: languages/app-strings.php:100
@@ -256,7 +256,7 @@ msgstr "der erforderlichen Unterschriften wurde versprochen."
 
 #: languages/app-strings.php:101
 msgid "If all the pledged signatures are collected, we as GREENS will have reached {percent}% of our collection goal."
-msgstr ""
+msgstr "Wenn alle versprochenen Unterschriften gesammelt sind, haben wir als GRÜNE {percent}% unseres Sammelziels erreicht."
 
 #: languages/app-strings.php:102
 msgid "Thank you for your contribution 💚"
@@ -274,7 +274,7 @@ msgstr "Ich nehme an der Sammelchallenge teil. Unterstützst du sie auch?"
 #. Translators: Override with "Let's master the collection challenge for the cause together"
 #: languages/app-strings.php:107
 msgid "Let's master the collection challenge together"
-msgstr ""
+msgstr "Lass uns die Unterschriftensammlung gemeinsam meistern"
 
 #: languages/app-strings.php:111
 msgid "Activity Feed"
@@ -320,7 +320,7 @@ msgstr "Jede Unterschrift stärkt uns. <strong>Wähle dein Sammelziel</strong> u
 
 #: languages/app-strings.php:126
 msgid "Already collected signatures count towards the new goal. So if you increase your goal from {currentGoal} to {nextGoal} signatures, you start already with {percent}%."
-msgstr ""
+msgstr "Bereits gesammelte Unterschriften werden dem neuen Ziel angerechnet. Wenn du also dein Ziel von {currentGoal} auf {nextGoal} Unterschriften erhöhst, beginnst du bereits mit {percent}%."
 
 #: languages/app-strings.php:127
 msgid "Regardless of your promise here, every signature you collect always counts for your section/canton."
