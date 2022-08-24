@@ -27,6 +27,11 @@
             class="collectme-overview-stats__desc collectme-overview-stats__desc--pledged"
           >
             {{ t("HomeView.OverviewStats.pledgedDesc") }}
+            <BaseTooltip outline>{{
+              t("HomeView.OverviewStats.pledgedTooltip", {
+                percent: Math.round(pledgedPercent).toString(),
+              })
+            }}</BaseTooltip>
           </span>
         </div>
 
@@ -42,6 +47,11 @@
             class="collectme-overview-stats__desc collectme-overview-stats__desc--entered"
           >
             {{ t("HomeView.OverviewStats.enteredDesc") }}
+            <BaseTooltip outline>{{
+              t("HomeView.OverviewStats.enteredTooltip", {
+                percent: Math.round(registeredPercent).toString(),
+              })
+            }}</BaseTooltip>
           </span>
         </div>
       </div>
@@ -70,6 +80,7 @@ import t from "@/utility/i18n";
 import { useStatStore } from "@/stores/StatStore";
 import { computed, onBeforeUnmount, onMounted } from "vue";
 import BaseShare from "@/components/base/BaseShare/BaseShare.vue";
+import BaseTooltip from "@/components/base/BaseTooltip.vue";
 
 const shareUrl = collectme.appUrl;
 

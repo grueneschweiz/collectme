@@ -95,8 +95,10 @@ return [
             'title' => __('State of the collection', 'collectme'),
             /* Translators: Example: 15% of the pledged signatures were entered. */
             'enteredDesc' => __('of the pledged signatures were entered.', 'collectme'),
+            'enteredTooltip' => __('From all the signatures that were promised in the form of a personal goal, {percent}% are already collected and entered.', 'collectme'),
             /* Translators: Example: 31% of the required signatures were promised. */
             'pledgedDesc' => __('of the required signatures were promised.', 'collectme'),
+            'pledgedTooltip' => __('If all the pledged signatures are collected, we as GREENS will have reached {percent}% of our collection goal.', 'collectme'),
             'thanks' => __('Thank you for your contribution 💚', 'collectme'),
             'inviteFriends' => __('We can only reach the goal together. Invite your friends and we are already one step closer.', 'collectme'),
             /* Translators: Override with "I'm taking part in the collection challenge for the cause. Do you support it too?" */
