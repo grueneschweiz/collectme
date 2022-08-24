@@ -39,6 +39,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "wordpress"
       MYSQL_ROOT_PASSWORD: ""
+      TZ: "Europe/Zurich"
     ports:
       # exposed for direct access via IDE
       - "8306:3306"

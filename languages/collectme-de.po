@@ -9,8 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-07-31T18:04:34+02:00\n"
-"PO-Revision-Date: 2022-07-31 16:04\n"
+"POT-Creation-Date: 2022-08-24T16:11:53+02:00\n"
+"PO-Revision-Date: 2022-08-24 14:28\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -145,7 +145,7 @@ msgstr "Grossartig. Weiter so..."
 
 #: languages/app-strings.php:56
 #: languages/app-strings.php:70
-#: languages/app-strings.php:136
+#: languages/app-strings.php:139
 msgid "Register signatures"
 msgstr "Unterschriften eintragen"
 
@@ -245,157 +245,166 @@ msgstr "Stand der Unterschriftensammlung"
 msgid "of the pledged signatures were entered."
 msgstr "der versprochenen Unterschriften wurden eingetragen."
 
+#: languages/app-strings.php:98
+msgid "From all the signatures that were promised in the form of a personal goal, {percent}% are already collected and entered."
+msgstr "Von allen Unterschriften, die in Form eines persönlichen Ziels versprochen wurden, sind bis jetzt {percent}% gesammelt und eingetragen worden."
+
 #. Translators: Example: 31% of the required signatures were promised.
-#: languages/app-strings.php:99
+#: languages/app-strings.php:100
 msgid "of the required signatures were promised."
 msgstr "der erforderlichen Unterschriften wurde versprochen."
 
-#: languages/app-strings.php:100
+#: languages/app-strings.php:101
+msgid "If all the pledged signatures are collected, we as GREENS will have reached {percent}% of our collection goal."
+msgstr "Wenn alle versprochenen Unterschriften gesammelt sind, haben wir als GRÜNE {percent}% unseres Sammelziels erreicht."
+
+#: languages/app-strings.php:102
 msgid "Thank you for your contribution 💚"
 msgstr "Danke für deinen Beitrag 💚"
 
-#: languages/app-strings.php:101
+#: languages/app-strings.php:103
 msgid "We can only reach the goal together. Invite your friends and we are already one step closer."
-msgstr "Wir können das Ziel nur gemeinsam erreichen. Lade deine Freunde ein und schon sind wir einen Schritt weiter."
+msgstr "Wir können das Ziel nur gemeinsam erreichen. Lade deine Freund*innen ein und schon sind wir einen Schritt weiter."
 
 #. Translators: Override with "I'm taking part in the collection challenge for the cause. Do you support it too?"
-#: languages/app-strings.php:103
+#: languages/app-strings.php:105
 msgid "I'm taking part in the collection challenge. Do you support it too?"
 msgstr "Ich nehme an der Sammelchallenge teil. Unterstützst du sie auch?"
 
-#: languages/app-strings.php:104
-msgid "Let's master the collection challenge for the cause together."
-msgstr "Lass uns die Unterschriftensammlung für das Anliegen gemeinsam meistern."
+#. Translators: Override with "Let's master the collection challenge for the cause together"
+#: languages/app-strings.php:107
+msgid "Let's master the collection challenge together"
+msgstr "Lass uns die Unterschriftensammlung gemeinsam meistern"
 
-#: languages/app-strings.php:108
+#: languages/app-strings.php:111
 msgid "Activity Feed"
-msgstr "Aktivitätsverlauf"
+msgstr "Aktivitätenverlauf"
 
-#: languages/app-strings.php:109
+#: languages/app-strings.php:112
 msgid "No activity yet."
 msgstr "Noch keine Aktivitäten."
 
-#: languages/app-strings.php:110
+#: languages/app-strings.php:113
 msgid "{firstName} promised {count} signatures."
 msgstr "{firstName} hat {count} Unterschriften versprochen."
 
-#: languages/app-strings.php:111
+#: languages/app-strings.php:114
 msgid "{firstName} collected {count} signatures."
 msgstr "{firstName} hat {count} Unterschriften gesammelt."
 
-#: languages/app-strings.php:112
+#: languages/app-strings.php:115
 msgid "{count} signatures were entered for {organization}."
 msgstr "{count} Unterschriften wurden für {organization} eingetragen."
 
-#: languages/app-strings.php:113
+#: languages/app-strings.php:116
 msgid "{firstName} just achieved its goal of {count} signatures."
 msgstr "{firstName} hat gerade das Ziel von {count} Unterschriften erreicht."
 
-#: languages/app-strings.php:114
+#: languages/app-strings.php:117
 msgid "{firstName} is going to collect {count} signatures."
 msgstr "{firstName} wird {count} Unterschriften sammeln."
 
-#: languages/app-strings.php:115
+#: languages/app-strings.php:118
 msgid "Load more"
 msgstr "Mehr laden"
 
 #. Translators: Override with "My Goal for the Cause"
-#: languages/app-strings.php:120
+#: languages/app-strings.php:123
 msgid "My Goal"
 msgstr "Mein Ziel"
 
 #. Translators: Override with "Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute to the cause."
-#: languages/app-strings.php:122
+#: languages/app-strings.php:125
 msgid "Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute."
 msgstr "Jede Unterschrift stärkt uns. <strong>Wähle dein Sammelziel</strong> und trage zum Erfolg bei."
 
-#: languages/app-strings.php:123
-msgid "Already collected signatures count towards the goal. So if you increase your goal from {currentGoal} to {nextGoal} signatures, you start already with {percent}%."
-msgstr "Bereits gesammelte Unterschriften werden dem Ziel angerechnet. Wenn du also dein Ziel von {currentGoal} auf {nextGoal} Unterschriften erhöhst, beginnst du bereits mit {percent}%."
+#: languages/app-strings.php:126
+msgid "Already collected signatures count towards the new goal. So if you increase your goal from {currentGoal} to {nextGoal} signatures, you start already with {percent}%."
+msgstr "Bereits gesammelte Unterschriften werden dem neuen Ziel angerechnet. Wenn du also dein Ziel von {currentGoal} auf {nextGoal} Unterschriften erhöhst, beginnst du bereits mit {percent}%."
 
-#: languages/app-strings.php:124
+#: languages/app-strings.php:127
 msgid "Regardless of your promise here, every signature you collect always counts for your section/canton."
 msgstr "Egal, was du hier versprichst, jede Unterschrift, die du sammelst, zählt immer auch für deine Sektion / deinen Kanton."
 
-#: languages/app-strings.php:125
+#: languages/app-strings.php:128
 #: views/admin/settings.php:299
 msgid "Hot"
 msgstr "Super"
 
-#: languages/app-strings.php:126
+#: languages/app-strings.php:129
 msgid "Achieved"
 msgstr "Erreicht"
 
-#: languages/app-strings.php:127
+#: languages/app-strings.php:130
 msgid "Selected"
 msgstr "Ausgewählt"
 
-#: languages/app-strings.php:130
+#: languages/app-strings.php:133
 msgid "I promise {count} signatures."
 msgstr "Ich verspreche {count} Unterschriften."
 
-#: languages/app-strings.php:131
-#: languages/app-strings.php:142
+#: languages/app-strings.php:134
+#: languages/app-strings.php:145
 msgid "Saving..."
 msgstr "Speichern…"
 
-#: languages/app-strings.php:137
+#: languages/app-strings.php:140
 msgid "Enter the number of <strong>new signatures</strong> you've collected. They will be added to the already registered signatures."
 msgstr "Gib die Anzahl der <strong>neu gesammelten Unterschriften</strong> ein. Sie werden zu den bereits eingetragenen Unterschriften addiert."
 
-#: languages/app-strings.php:138
+#: languages/app-strings.php:141
 msgid "Number of new signatures"
 msgstr "Anzahl neu gesammelter Unterschriften"
 
-#: languages/app-strings.php:139
+#: languages/app-strings.php:142
 msgid "Number of recent collected signatures, that haven't been registered yet."
 msgstr "Anzahl der Unterschriften, die noch nicht eingetragen worden sind."
 
-#: languages/app-strings.php:140
+#: languages/app-strings.php:143
 msgid "Invalid number."
 msgstr "Ungültige Nummer."
 
-#: languages/app-strings.php:141
+#: languages/app-strings.php:144
 msgid "Register Signatures"
 msgstr "Unterschriften eintragen"
 
-#: languages/app-strings.php:143
+#: languages/app-strings.php:146
 msgid "{count} signatures added."
 msgstr "{count} Unterschriften hinzugefügt."
 
-#: languages/app-strings.php:144
+#: languages/app-strings.php:147
 msgid "Please hand in the signatures to your party as soon as possible. Or send them by mail to the address noted on the signature sheets. The sooner the better."
 msgstr "Bitte gib die Unterschriften so schnell wie möglich bei deiner Partei ab. Oder schicke sie per Post an die Adresse, die auf den Unterschriftenbogen angegeben ist. Je früher, desto besser."
 
-#: languages/app-strings.php:145
+#: languages/app-strings.php:148
 msgid "Back without registering signatures"
 msgstr "Zurück ohne Unterschriften einzutragen"
 
-#: languages/app-strings.php:146
+#: languages/app-strings.php:149
 msgid "Undo"
 msgstr "Rückgängig"
 
-#: languages/app-strings.php:150
+#: languages/app-strings.php:153
 msgid "You've got mail"
 msgstr "Du hast eine E-Mail bekommen"
 
-#: languages/app-strings.php:151
+#: languages/app-strings.php:154
 msgid "<strong>Do not close this window</strong>. We've emailed you a link that will activate your login here in this window."
 msgstr "<strong>Dieses Fenster nicht schliessen</strong>. Wir haben dir einen Link gemailt, der dein Login hier in diesem Fenster aktiviert."
 
-#: languages/app-strings.php:152
+#: languages/app-strings.php:155
 msgid "Emails are sometimes slow. It may take a minute or two until it reaches your inbox."
 msgstr "E-Mails sind manchmal langsam. Es kann ein oder zwei Minuten dauern, bis es deinen Posteingang erreicht."
 
-#: languages/app-strings.php:153
+#: languages/app-strings.php:156
 msgid "Send again"
 msgstr "Erneut senden"
 
-#: languages/app-strings.php:154
+#: languages/app-strings.php:157
 msgid "Retry sending login email to: {email}"
 msgstr "Login-E-Mail erneut senden an: {email}"
 
-#: languages/app-strings.php:155
+#: languages/app-strings.php:158
 msgid "invalid e-mail address"
 msgstr "E-Mail-Adresse ungültig"
 

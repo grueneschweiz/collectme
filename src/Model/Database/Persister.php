@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Collectme\Model\Database;
 
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Misc\Util;
 use Collectme\Model\DateTimeTypeHandler;
 
 use const Collectme\DB_PREFIX;
@@ -146,6 +147,9 @@ trait Persister
         return $wpdb->prefix . DB_PREFIX . $tableBaseName;
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
     private function getFormatStrings(array $data): array
     {
         $formatStrings = [];
@@ -208,6 +212,9 @@ trait Persister
         return static::getByQuery($query);
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
     protected static function getByQuery(string $query): static
     {
         global $wpdb;
@@ -316,7 +323,7 @@ trait Persister
      */
     public function delete(): void
     {
-        $this->deleted = date_create();
+        $this->deleted = date_create('-1 second', Util::getTimeZone());
 
         $this->update();
     }

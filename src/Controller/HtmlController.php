@@ -11,6 +11,7 @@ use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Misc\AssetLoader;
 use Collectme\Misc\Auth;
 use Collectme\Misc\Settings;
+use Collectme\Misc\Util;
 use Collectme\Model\Entities\AccountToken;
 use Collectme\Model\Entities\PersistentSession;
 
@@ -31,6 +32,7 @@ class HtmlController
 
     /**
      * @throws \JsonException
+     * @throws CollectmeDBException
      */
     public function createUserFromToken(string $causeUuid): string
     {
@@ -49,7 +51,7 @@ class HtmlController
 
         try {
             $accountToken = AccountToken::getByEmailAndToken($email, $token);
-        } catch (CollectmeDBException $e) {
+        } catch (CollectmeDBException) {
             // token not found / invalid
             return $this->redirectTo(get_permalink(), $causeUuid);
         }
@@ -133,11 +135,11 @@ class HtmlController
             }
 
             if (!$session->isActivated() && hash_equals($session->activationSecret, $activationSecret)) {
-                if ($session->created < date_create('-' . AUTH_SESSION_ACTIVATION_TIMEOUT)) {
+                if ($session->created < date_create('-' . AUTH_SESSION_ACTIVATION_TIMEOUT, Util::getTimeZone())) {
                     return $this->getView('activation-timeout');
                 }
 
-                $session->activated = date_create('-1 second');
+                $session->activated = date_create('-1 second', Util::getTimeZone());
                 $session = $session->save();
             }
 

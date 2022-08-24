@@ -159,7 +159,7 @@ SQL,
             $this->signatures = (int)$wpdb->get_var(
                 $wpdb->prepare(
                     "SELECT SUM(count) FROM " . SignatureEntry::getTableName() .
-                    " WHERE collected_by_groups_uuid = '%s'",
+                    " WHERE collected_by_groups_uuid = '%s' AND deleted_at IS NULL",
                     $this->uuid
                 )
             );
@@ -184,7 +184,7 @@ SQL,
         $this->objectiveUuids = $wpdb->get_col(
             $wpdb->prepare(
                 "SELECT uuid FROM " . Objective::getTableName() .
-                " WHERE groups_uuid = '%s'",
+                " WHERE groups_uuid = '%s' AND deleted_at IS NULL",
                 $this->uuid
             )
         );
@@ -208,7 +208,7 @@ SQL,
         $this->roleUuids = $wpdb->get_col(
             $wpdb->prepare(
                 "SELECT uuid FROM " . Role::getTableName() .
-                " WHERE groups_uuid = '%s'",
+                " WHERE groups_uuid = '%s' AND deleted_at IS NULL",
                 $this->uuid
             )
         );

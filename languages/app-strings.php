@@ -95,13 +95,16 @@ return [
             'title' => __('State of the collection', 'collectme'),
             /* Translators: Example: 15% of the pledged signatures were entered. */
             'enteredDesc' => __('of the pledged signatures were entered.', 'collectme'),
+            'enteredTooltip' => __('From all the signatures that were promised in the form of a personal goal, {percent}% are already collected and entered.', 'collectme'),
             /* Translators: Example: 31% of the required signatures were promised. */
             'pledgedDesc' => __('of the required signatures were promised.', 'collectme'),
+            'pledgedTooltip' => __('If all the pledged signatures are collected, we as GREENS will have reached {percent}% of our collection goal.', 'collectme'),
             'thanks' => __('Thank you for your contribution 💚', 'collectme'),
             'inviteFriends' => __('We can only reach the goal together. Invite your friends and we are already one step closer.', 'collectme'),
             /* Translators: Override with "I'm taking part in the collection challenge for the cause. Do you support it too?" */
             'shareMsg' => __("I'm taking part in the collection challenge. Do you support it too?", 'collectme'),
-            'shareEmailSubject' => __("Let's master the collection challenge for the cause together.", 'collectme')
+            /* Translators: Override with "Let's master the collection challenge for the cause together" */
+            'shareEmailSubject' => __("Let's master the collection challenge together", 'collectme')
         ],
 
         'ActivityFeed' => [
@@ -120,7 +123,7 @@ return [
             'title' => __('My Goal', 'collectme'),
             /* Translators: Override with "Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute to the cause." */
             'intro' => __('Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute.', 'collectme'),
-            'upgradeInfo' => __('Already collected signatures count towards the goal. So if you increase your goal from {currentGoal} to {nextGoal} signatures, you start already with {percent}%.','collectme'),
+            'upgradeInfo' => __('Already collected signatures count towards the new goal. So if you increase your goal from {currentGoal} to {nextGoal} signatures, you start already with {percent}%.','collectme'),
             'quotaInfo' => __('Regardless of your promise here, every signature you collect always counts for your section/canton.','collectme'),
             'ribbonHot' => __('Hot', 'collectme'),
             'ribbonDone' => __('Achieved', 'collectme'),

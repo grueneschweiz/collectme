@@ -20,9 +20,9 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Activity, Group } from "@/models/generated";
 import t from "@/utility/i18n";
 import moment from "moment";
-import "moment/locale/de";
-import "moment/locale/fr";
-import "moment/locale/it";
+import "moment/dist/locale/de.js";
+import "moment/dist/locale/fr.js";
+import "moment/dist/locale/it.js";
 import { useGroupStore } from "@/stores/GroupStore";
 import BaseContentCard from "@/components/base/BaseContentCard.vue";
 

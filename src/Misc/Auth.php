@@ -42,12 +42,18 @@ class Auth
         return self::$instance;
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
     public function isAuthenticated(): bool
     {
         $session = $this->getPersistentSession();
         return $session && $session->isActive();
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
     public function getPersistentSession(): ?PersistentSession
     {
         if (!isset($this->persistentSession)) {
@@ -72,6 +78,9 @@ class Auth
         $this->persistentSession = $persistentSession;
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
     private function loginWithAuthCookie(): void
     {
         $authCookie = $this->authCookie->get();
@@ -90,13 +99,15 @@ class Auth
                 return;
             }
         } catch (CollectmeDBException) {
-            // no active session for given session uuid and secret
+            // no active session for given session uuid
             return;
         }
 
         // note login
-        ++$validSession->loginCounter;
-        $validSession->lastLogin = date_create();
+        if ($validSession->lastLogin < date_create('-10 seconds', Util::getTimeZone())) {
+            ++$validSession->loginCounter;
+        }
+        $validSession->lastLogin = date_create('now', Util::getTimeZone());
         $validSession = $validSession->save();
 
         // set session
@@ -114,9 +125,9 @@ class Auth
      */
     public function createPersistentSession(User $user, bool $activated): void
     {
-        $activationSecret = wp_generate_password(64, false, false);
-        $sessionSecret = wp_generate_password(64, false, false);
-        $activatedAt = $activated ? date_create() : null;
+        $activationSecret = wp_generate_password(64, false);
+        $sessionSecret = wp_generate_password(64, false);
+        $activatedAt = $activated ? date_create('now', Util::getTimeZone()) : null;
 
         $session = new PersistentSession(
             null,
@@ -280,13 +291,16 @@ class Auth
             throw new CollectmeException('Can not logout from session if not logged in.');
         }
 
-        $session->closed = date_create('-1 second');
+        $session->closed = date_create('-1 second', Util::getTimeZone());
         $session->save();
 
         $this->authCookie->invalidate();
         $this->phpSession->reset();
     }
 
+    /**
+     * @throws CollectmeException
+     */
     public function getUserUuid(): string
     {
         $session = $this->getPersistentSession();
