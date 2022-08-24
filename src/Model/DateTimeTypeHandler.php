@@ -14,7 +14,7 @@ trait DateTimeTypeHandler
     {
         try {
             $instanceProperty = new \ReflectionProperty(static::class, $instancePropertyName);
-        } catch (\ReflectionException $e) {
+        } catch (\ReflectionException) {
             return false;
         }
 

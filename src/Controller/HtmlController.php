@@ -51,7 +51,7 @@ class HtmlController
 
         try {
             $accountToken = AccountToken::getByEmailAndToken($email, $token);
-        } catch (CollectmeDBException $e) {
+        } catch (CollectmeDBException) {
             // token not found / invalid
             return $this->redirectTo(get_permalink(), $causeUuid);
         }
