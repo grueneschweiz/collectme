@@ -99,7 +99,7 @@ class Auth
                 return;
             }
         } catch (CollectmeDBException) {
-            // no active session for given session uuid and secret
+            // no active session for given session uuid
             return;
         }
 
