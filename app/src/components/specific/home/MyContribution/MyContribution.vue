@@ -53,8 +53,7 @@ const userStore = useUserStore();
 const groupStore = useGroupStore();
 
 onMounted(() => {
-  userStore.fetch();
-  groupStore.fetch();
+  userStore.fetch().then(groupStore.fetch);
 });
 </script>
 
