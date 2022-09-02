@@ -7,6 +7,7 @@ import router from "@/router";
 import type { Snackbar } from "@/stores/SnackbarStore";
 import { useSnackbarStore } from "@/stores/SnackbarStore";
 import t from "@/utility/i18n";
+import isLoginPage from "@/router/isLoginPage";
 
 export interface JsonApiError {
   status: number;
@@ -33,7 +34,7 @@ async function errorHandler(error: any) {
     axios.isAxiosError(error) &&
     (error.response?.status === 401 || error.response?.status === 403)
   ) {
-    if (router.currentRoute.value.path === "/login") {
+    if (isLoginPage) {
       return Promise.reject(error);
     }
 
