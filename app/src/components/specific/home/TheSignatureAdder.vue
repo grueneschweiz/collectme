@@ -48,7 +48,7 @@ import t from "@/utility/i18n";
 import BaseInput from "@/components/base/BaseInput/BaseInput.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseLoader from "@/components/base/BaseLoader/BaseLoader.vue";
-import type { ValidationStatus } from "@/components/base/BaseInput/BaseInput";
+import type { ValidationStatus } from "@/components/base/BaseInput/BaseInput.js";
 import { ref, watch } from "vue";
 import { useSignatureStore } from "@/stores/SignatureStore";
 import type { Signature } from "@/models/generated";
