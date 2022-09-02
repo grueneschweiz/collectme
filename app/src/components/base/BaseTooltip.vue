@@ -9,7 +9,9 @@
       viewBox="0 0 29.536 29.536"
       class="collectme-base-tooltip__icon"
       :class="{ 'collectme-base-tooltip__icon--open': open }"
-      @click.stop="toggle"
+      @click.stop="toggleClicked"
+      @mouseover="showHover"
+      @mouseout="hideHover"
       v-if="outline"
     >
       <path
@@ -25,7 +27,9 @@
       viewBox="0 0 44.301 44.302"
       class="collectme-base-tooltip__icon"
       :class="{ 'collectme-base-tooltip__icon--open': open }"
-      @click.stop="toggle"
+      @click.stop="toggleClicked"
+      @mouseover="showHover"
+      @mouseout="hideHover"
       v-else
     >
       <path
@@ -58,9 +62,14 @@ const marginSide = 10;
 
 const msgBox = ref<HTMLDivElement>();
 const open = ref(false);
+const hover = ref(false);
 
-function toggle() {
-  open.value = !open.value;
+function toggleClicked() {
+  if (hover.value) {
+    hover.value = false;
+  } else {
+    open.value = !open.value;
+  }
 
   if (open.value) {
     addEventListener("click", close, { once: true });
@@ -69,6 +78,20 @@ function toggle() {
 
 function close() {
   open.value = false;
+}
+
+function showHover() {
+  if (!open.value) {
+    open.value = true;
+    hover.value = true;
+  }
+}
+
+function hideHover() {
+  if (hover.value) {
+    hover.value = false;
+    close();
+  }
 }
 
 function setSize() {
