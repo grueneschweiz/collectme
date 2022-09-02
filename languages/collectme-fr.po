@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2022-08-24T16:11:53+02:00\n"
-"PO-Revision-Date: 2022-08-24 14:28\n"
+"PO-Revision-Date: 2022-09-02 09:39\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -32,7 +32,7 @@ msgstr "https://github.com/grueneschweiz/collectme"
 
 #. Description of the plugin
 msgid "Handle signature collections with ease."
-msgstr ""
+msgstr "Gérez facilement les collectes de signatures."
 
 #. Author of the plugin
 msgid "Cyrill Bolliger"
@@ -44,433 +44,433 @@ msgstr "https://github.com/cyrillbolliger"
 
 #: languages/app-strings.php:8
 msgid "Nooo... 🙈"
-msgstr ""
+msgstr "Nooonn... 🙈"
 
 #: languages/app-strings.php:9
 msgid "Some goblins blocked the data flow. Please try again."
-msgstr ""
+msgstr "Des gobelins ont bloqué le flux de données. Réessayez."
 
 #: languages/app-strings.php:10
 msgid "Shame on me!"
-msgstr ""
+msgstr "Honte à moi!"
 
 #: languages/app-strings.php:11
 msgid "I must have made a terrible mistake. Please send me a screenshot of this error message: {email}"
-msgstr ""
+msgstr "J'ai dû faire une terrible erreur. S'il vous plaît, envoyez-moi une capture d'écran de ce message d'erreur: {email}..."
 
 #: languages/app-strings.php:12
 #: views/activation-error.php:4
 #: views/activation-timeout.php:4
 msgid "Try again"
-msgstr ""
+msgstr "Réessayez"
 
 #: languages/app-strings.php:13
 msgid "Not authenticated. Please login."
-msgstr ""
+msgstr "Non authentifié. Merci de vous connecter."
 
 #: languages/app-strings.php:14
 msgid "Invalid data."
-msgstr ""
+msgstr "Données non valides."
 
 #: languages/app-strings.php:15
 msgid "Please double check the following fields before resubmitting the form: {fields}"
-msgstr ""
+msgstr "Veuillez vérifier les champs suivants avant de soumettre à nouveau le formulaire : {fields}"
 
 #: languages/app-strings.php:19
 msgid "Share"
-msgstr ""
+msgstr "Partager"
 
 #: languages/app-strings.php:22
 msgid "Copied!"
-msgstr ""
+msgstr "Copié!"
 
 #. Translators: Override with "My contribution to the cause"
 #: languages/app-strings.php:30
 msgid "My contribution"
-msgstr ""
+msgstr "Ma contribution"
 
 #: languages/app-strings.php:31
 msgid "Please sign-in to enter your personal signatures."
-msgstr ""
+msgstr "Veuillez vous connecter pour enregistrer vos signatures personnelles."
 
 #: languages/app-strings.php:32
 #: languages/app-strings.php:89
 msgid "Sign in"
-msgstr ""
+msgstr "Se connecter"
 
 #: languages/app-strings.php:33
 msgid "No password required"
-msgstr ""
+msgstr "Aucun mot de passe requis"
 
 #: languages/app-strings.php:36
 msgid "Successfully connected"
-msgstr ""
+msgstr "Connexion réussie"
 
 #: languages/app-strings.php:37
 msgid "Hello {firstName}"
-msgstr ""
+msgstr "Bonjour {firstName}"
 
 #: languages/app-strings.php:41
 msgid "Goal set"
-msgstr ""
+msgstr "Objectif fixé"
 
 #: languages/app-strings.php:42
 msgid "Set a goal"
-msgstr ""
+msgstr "Fixer un objectif"
 
 #. Translators: Override with "You pledged {count} signatures for the cause on {date}."
 #: languages/app-strings.php:44
 msgid "You pledged {count} signatures on {date}."
-msgstr ""
+msgstr "Vous avez promis {count} signatures le {date}."
 
 #: languages/app-strings.php:45
 msgid "Set Goal"
-msgstr ""
+msgstr "Fixer l'objectif"
 
 #: languages/app-strings.php:49
 msgid "First signatures collected"
-msgstr ""
+msgstr "Premières signatures récoltées"
 
 #: languages/app-strings.php:50
 msgid "Collect your first signatures"
-msgstr ""
+msgstr "Récoltez vos premières signatures"
 
 #: languages/app-strings.php:51
 msgid "Mark done"
-msgstr ""
+msgstr "Marquer comme terminé"
 
 #: languages/app-strings.php:52
 msgid "Glorious. Keep going..."
-msgstr ""
+msgstr "Super! Continuez..."
 
 #: languages/app-strings.php:56
 #: languages/app-strings.php:70
 #: languages/app-strings.php:139
 msgid "Register signatures"
-msgstr ""
+msgstr "Entrer les signatures"
 
 #: languages/app-strings.php:57
 msgid "First signatures registered"
-msgstr ""
+msgstr "Premières signatures enregistrées"
 
 #: languages/app-strings.php:58
 msgid "Enter now"
-msgstr ""
+msgstr "Enregistrer maintenant"
 
 #: languages/app-strings.php:59
 msgid "Enter more signatures with the button on the bottom."
-msgstr ""
+msgstr "Enregistrez plus de signatures avec le bouton en bas."
 
 #: languages/app-strings.php:63
 msgid "Achieve goal"
-msgstr ""
+msgstr "Atteindre l'objectif"
 
 #: languages/app-strings.php:64
 msgid "Achieved {percent}% of goal"
-msgstr ""
+msgstr "{percent}% de l'objectif atteint"
 
 #: languages/app-strings.php:65
 msgid "You've already collected and registered <strong>{count} out of {goal}</strong> signatures."
-msgstr ""
+msgstr "Vous avez déjà récolté et enregistré <strong>{count} sur {goal}</strong> signatures."
 
 #: languages/app-strings.php:66
 msgid "Congratulations! You've achieved your goal and <strong>collected {count}</strong> signatures."
-msgstr ""
+msgstr "Félicitations ! Vous avez atteint votre objectif et <strong>récolté {count}</strong> signatures."
 
 #: languages/app-strings.php:67
 msgid "Complete the previous steps, and you will see your achievements here."
-msgstr ""
+msgstr "Complétez les étapes précédentes pour voir votre progression."
 
 #. Translators: Override with "The cause gives thanks!"
 #: languages/app-strings.php:69
 msgid "Thank you!"
-msgstr ""
+msgstr "Merci !"
 
 #: languages/app-strings.php:71
 msgid "Register more signatures"
-msgstr ""
+msgstr "Enregistrer plus de signatures"
 
 #: languages/app-strings.php:72
 msgid "Upgrade goal"
-msgstr ""
+msgstr "Revoir l'objectif à la hausse"
 
 #: languages/app-strings.php:77
 msgid "Full Access"
-msgstr ""
+msgstr "Accès illimité"
 
 #: languages/app-strings.php:78
 msgid "Sign-in with your email address (no password required) to enter signatures and see the current state of the collection."
-msgstr ""
+msgstr "Connectez-vous avec votre adresse e-mail (aucun mot de passe requis) pour entrer des signatures et voir l'état actuel de la récolte."
 
 #: languages/app-strings.php:82
 #: views/admin/settings.php:188
 msgid "E-Mail"
-msgstr ""
+msgstr "Courriel"
 
 #: languages/app-strings.php:83
 msgid "The same e-mail address where you receive our newsletter."
-msgstr ""
+msgstr "La même adresse e-mail où vous recevez notre infolettre."
 
 #: languages/app-strings.php:84
 msgid "E-Mail address is not valid."
-msgstr ""
+msgstr "L'adresse e-mail n'est pas valide."
 
 #: languages/app-strings.php:85
 msgid "First Name"
-msgstr ""
+msgstr "Prénom"
 
 #: languages/app-strings.php:86
 msgid "First name not valid."
-msgstr ""
+msgstr "Prénom non valide."
 
 #: languages/app-strings.php:87
 msgid "Last Name"
-msgstr ""
+msgstr "Nom de famille"
 
 #: languages/app-strings.php:88
 msgid "Last name not valid."
-msgstr ""
+msgstr "Nom de famille non valide."
 
 #: languages/app-strings.php:90
 msgid "You'll receive an e-mail with a link that signs you in. Keep this window open."
-msgstr ""
+msgstr "Vous recevrez un e-mail avec un lien qui vous permettra de vous connecter. Gardez cette fenêtre ouverte."
 
 #. Translators: Override with "State of the initiative"
 #: languages/app-strings.php:95
 msgid "State of the collection"
-msgstr ""
+msgstr "État de la récolte"
 
 #. Translators: Example: 15% of the pledged signatures were entered.
 #: languages/app-strings.php:97
 msgid "of the pledged signatures were entered."
-msgstr ""
+msgstr "des signatures promises ont été enregistrées."
 
 #: languages/app-strings.php:98
 msgid "From all the signatures that were promised in the form of a personal goal, {percent}% are already collected and entered."
-msgstr ""
+msgstr "De toutes les signatures promises par les personnes ayant défini un objeectif personnel, {percent}% ont déjà été collectées et enregistrées."
 
 #. Translators: Example: 31% of the required signatures were promised.
 #: languages/app-strings.php:100
 msgid "of the required signatures were promised."
-msgstr ""
+msgstr "des signatures requises ont été promises."
 
 #: languages/app-strings.php:101
 msgid "If all the pledged signatures are collected, we as GREENS will have reached {percent}% of our collection goal."
-msgstr ""
+msgstr "Si toutes les signatures promises sont récoltées, les VERT-E-S auront atteint {percent}% de leur objectif."
 
 #: languages/app-strings.php:102
 msgid "Thank you for your contribution 💚"
-msgstr ""
+msgstr "Merci de votre contribution 💚"
 
 #: languages/app-strings.php:103
 msgid "We can only reach the goal together. Invite your friends and we are already one step closer."
-msgstr ""
+msgstr "Nous n'atteindrons l'objectif qu'ensemble! Invitez vos ami-e-s pour nous en approcher un peu plus."
 
 #. Translators: Override with "I'm taking part in the collection challenge for the cause. Do you support it too?"
 #: languages/app-strings.php:105
 msgid "I'm taking part in the collection challenge. Do you support it too?"
-msgstr ""
+msgstr "Je participe au défi de récolte de signatures. Le soutiendrez-vous?"
 
 #. Translators: Override with "Let's master the collection challenge for the cause together"
 #: languages/app-strings.php:107
 msgid "Let's master the collection challenge together"
-msgstr ""
+msgstr "Maîtrisons ensemble le défi de récolte de signatures"
 
 #: languages/app-strings.php:111
 msgid "Activity Feed"
-msgstr ""
+msgstr "Flux d'activité"
 
 #: languages/app-strings.php:112
 msgid "No activity yet."
-msgstr ""
+msgstr "Aucune activité pour le moment."
 
 #: languages/app-strings.php:113
 msgid "{firstName} promised {count} signatures."
-msgstr ""
+msgstr "{firstName} a promis {count} signatures."
 
 #: languages/app-strings.php:114
 msgid "{firstName} collected {count} signatures."
-msgstr ""
+msgstr "{firstName} a récolté {count} signatures."
 
 #: languages/app-strings.php:115
 msgid "{count} signatures were entered for {organization}."
-msgstr ""
+msgstr "{count} signatures ont été enregistrées pour {organization}."
 
 #: languages/app-strings.php:116
 msgid "{firstName} just achieved its goal of {count} signatures."
-msgstr ""
+msgstr "{firstName} vient d'atteindre son objectif de {count} signatures."
 
 #: languages/app-strings.php:117
 msgid "{firstName} is going to collect {count} signatures."
-msgstr ""
+msgstr "{firstName} va récolter {count} signatures."
 
 #: languages/app-strings.php:118
 msgid "Load more"
-msgstr ""
+msgstr "Afficher plus"
 
 #. Translators: Override with "My Goal for the Cause"
 #: languages/app-strings.php:123
 msgid "My Goal"
-msgstr ""
+msgstr "Mon objectif"
 
 #. Translators: Override with "Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute to the cause."
 #: languages/app-strings.php:125
 msgid "Every signature strengthens our force. <strong>Choose your collection target</strong> and contribute."
-msgstr ""
+msgstr "Chaque signature compte. <strong>Définissez un ofjectif de récolte</strong> et contribuez."
 
 #: languages/app-strings.php:126
 msgid "Already collected signatures count towards the new goal. So if you increase your goal from {currentGoal} to {nextGoal} signatures, you start already with {percent}%."
-msgstr ""
+msgstr "Les signatures déjà collectées comptent pour le nouvel objectif. Donc, si vous augmentez votre objectif de {currentGoal} à {nextGoal} signatures, vous démarrez déjà avec {percent}%."
 
 #: languages/app-strings.php:127
 msgid "Regardless of your promise here, every signature you collect always counts for your section/canton."
-msgstr ""
+msgstr "Quelle que soit le nombre promis ici, chaque signature que vous collectez compte toujours pour votre section/canton."
 
 #: languages/app-strings.php:128
 #: views/admin/settings.php:299
 msgid "Hot"
-msgstr ""
+msgstr "Super"
 
 #: languages/app-strings.php:129
 msgid "Achieved"
-msgstr ""
+msgstr "Atteint"
 
 #: languages/app-strings.php:130
 msgid "Selected"
-msgstr ""
+msgstr "Sélectionné"
 
 #: languages/app-strings.php:133
 msgid "I promise {count} signatures."
-msgstr ""
+msgstr "Je promets {count} signatures."
 
 #: languages/app-strings.php:134
 #: languages/app-strings.php:145
 msgid "Saving..."
-msgstr ""
+msgstr "Enregistrer..."
 
 #: languages/app-strings.php:140
 msgid "Enter the number of <strong>new signatures</strong> you've collected. They will be added to the already registered signatures."
-msgstr ""
+msgstr "Entrez le nombre de <strong>nouvelles signatures</strong> que vous avez récoltées. Elles seront ajoutées aux signatures déjà enregistrées."
 
 #: languages/app-strings.php:141
 msgid "Number of new signatures"
-msgstr ""
+msgstr "Nombre de nouvelles signatures"
 
 #: languages/app-strings.php:142
 msgid "Number of recent collected signatures, that haven't been registered yet."
-msgstr ""
+msgstr "Nombre de signatures récemment collectées, qui n'ont pas encore été enregistrées."
 
 #: languages/app-strings.php:143
 msgid "Invalid number."
-msgstr ""
+msgstr "Nombre non valide."
 
 #: languages/app-strings.php:144
 msgid "Register Signatures"
-msgstr ""
+msgstr "Enregistrer les signatures"
 
 #: languages/app-strings.php:146
 msgid "{count} signatures added."
-msgstr ""
+msgstr "{count} signatures ajoutées."
 
 #: languages/app-strings.php:147
 msgid "Please hand in the signatures to your party as soon as possible. Or send them by mail to the address noted on the signature sheets. The sooner the better."
-msgstr ""
+msgstr "Veuillez transmettre les signatures à votre parti dès que possible. Ou envoyez-les par courrier à l'adresse indiquée sur les feuille de signature. Le plus tôt sera le mieux."
 
 #: languages/app-strings.php:148
 msgid "Back without registering signatures"
-msgstr ""
+msgstr "Retour sans enregistrer de signatures"
 
 #: languages/app-strings.php:149
 msgid "Undo"
-msgstr ""
+msgstr "Annuler"
 
 #: languages/app-strings.php:153
 msgid "You've got mail"
-msgstr ""
+msgstr "Vous avez reçu un mail"
 
 #: languages/app-strings.php:154
 msgid "<strong>Do not close this window</strong>. We've emailed you a link that will activate your login here in this window."
-msgstr ""
+msgstr "<strong>Ne fermez pas cette fenêtre</strong>. Nous vous avons envoyé un lien qui activera votre connexion dans cette fenêtre."
 
 #: languages/app-strings.php:155
 msgid "Emails are sometimes slow. It may take a minute or two until it reaches your inbox."
-msgstr ""
+msgstr "Les mails sont parfois lents. Cela peut prendre une ou deux minutes jusqu'à ce qu'ils atteignent votre boîte de réception."
 
 #: languages/app-strings.php:156
 msgid "Send again"
-msgstr ""
+msgstr "Envoyer à nouveau"
 
 #: languages/app-strings.php:157
 msgid "Retry sending login email to: {email}"
-msgstr ""
+msgstr "Réessayez d'envoyer l'e-mail de connexion à : {email}"
 
 #: languages/app-strings.php:158
 msgid "invalid e-mail address"
-msgstr ""
+msgstr "adresse mail invalide"
 
 #: src/AdminRouter.php:19
 #: views/admin/settings.php:24
 msgid "Collectme Settings"
-msgstr ""
+msgstr "Paramètres de Collectme"
 
 #: src/Controller/AdminController.php:35
 msgid "You do not have sufficient permissions to access this page."
-msgstr ""
+msgstr "Vous n'avez pas les autorisations pour accéder à cette page."
 
 #: src/Controller/AdminController.php:54
 msgid "Saved!"
-msgstr ""
+msgstr "Enregistré !"
 
 #: src/Controller/AdminController.php:115
 msgid "Invalid email config."
-msgstr ""
+msgstr "Configuration de l'e-mail non valable."
 
 #: src/Controller/AdminController.php:140
 msgid "Invalid objective key."
-msgstr ""
+msgstr "Clé d'objectif non valable."
 
 #: src/Controller/AdminController.php:149
 msgid "Invalid goal."
-msgstr ""
+msgstr "Objectif non valable."
 
 #: src/Controller/AdminController.php:159
 #: src/Controller/AdminController.php:184
 msgid "Invalid image url."
-msgstr ""
+msgstr "Url d'image non valable."
 
 #: src/Controller/AdminController.php:232
 msgid "Markup is not allowed in CSS."
-msgstr ""
+msgstr "Balisage non autorisé dans le CSS."
 
 #: src/Controller/AdminController.php:268
 msgid "Cause deleted."
-msgstr ""
+msgstr "Cause supprimée."
 
 #: src/Controller/AdminController.php:273
 msgid "Failed to delete cause."
-msgstr ""
+msgstr "Impossible de supprimer la cause."
 
 #: src/Controller/AdminController.php:285
 msgid "Failed to create cause: Invalid name."
-msgstr ""
+msgstr "Impossible de créer la cause : nom invalide."
 
 #: src/Controller/AdminController.php:295
 msgid "Cause created."
-msgstr ""
+msgstr "Cause créée."
 
 #: src/Controller/AdminController.php:300
 msgid "Failed to create cause."
-msgstr ""
+msgstr "Impossible de créer la cause."
 
 #. Translators: Override with "Login link for the cause"
 #: src/Misc/LoginEmail.php:37
 msgctxt "Email subject"
 msgid "Login link"
-msgstr ""
+msgstr "Lien de connexion"
 
 #: src/Misc/LoginEmail.php:52
 msgid "Confirm login"
-msgstr ""
+msgstr "Confirmer l'inscription"
 
 #. Translators: %1$s will be replaced with the users first name, %2$s the login link, %3$s the sender name. Keep the empty lines.
 #: src/Misc/LoginEmail.php:57
@@ -481,212 +481,218 @@ msgid "Hello %1$s\n\n"
 "Feel free to reply to this email, if you have any questions.\n"
 "Yours sincerely,\n"
 "%3$s"
-msgstr ""
+msgstr "Bonjour %1$s\n\n"
+"Cliquez sur le lien suivant pour vous connecter :\n\n"
+"%2$s\n\n"
+"Veuillez noter que vous serez connecté dans le navigateur de l'appareil que vous avez déclenché ce courriel. Cela peut être différent du navigateur qui s'ouvre lorsque vous cliquez sur ce lien.\n\n"
+"N'hésitez pas à répondre à cet e-mail si vous avez des questions.\n"
+"sincèrement,\n"
+"%3$s"
 
 #: src/Misc/Settings.php:71
 msgid "Small"
-msgstr ""
+msgstr "Petit"
 
 #: src/Misc/Settings.php:79
 msgid "Medium"
-msgstr ""
+msgstr "Moyen"
 
 #: src/Misc/Settings.php:87
 msgid "Large"
-msgstr ""
+msgstr "Grand"
 
 #: src/Misc/Settings.php:95
 msgid "Extra large"
-msgstr ""
+msgstr "Très grand"
 
 #: src/Misc/Settings.php:174
 #: views/admin/settings.php:330
 msgid "Default"
-msgstr ""
+msgstr "Par défaut"
 
 #: views/activation-error.php:2
 msgid "Oh là là"
-msgstr ""
+msgstr "Oh là là"
 
 #: views/activation-error.php:3
 msgid "We failed to activate your login. Please try again."
-msgstr ""
+msgstr "Nous n'avons pas réussi à activer votre login. Veuillez réessayer."
 
 #: views/activation-success.php:2
 msgid "Success"
-msgstr ""
+msgstr "Réussi"
 
 #: views/activation-success.php:3
 msgid "You successfully activated your login. Head back to the browser on which you requested the login. You are now automatically signed in."
-msgstr ""
+msgstr "Vous avez activé votre connexion avec succès. Retournez au navigateur sur lequel vous avez demandé la connexion. Vous êtes maintenant automatiquement connecté-e."
 
 #: views/activation-success.php:4
 msgid "Login here in this window"
-msgstr ""
+msgstr "Connectez-vous ici dans cette fenêtre"
 
 #: views/activation-timeout.php:2
 msgid "That took too long"
-msgstr ""
+msgstr "Cela a pris trop de temps"
 
 #: views/activation-timeout.php:3
 msgid "Sorry, your login link has already expired. Please try again."
-msgstr ""
+msgstr "Désolé, votre lien de connexion a déjà expiré. Veuillez réessayer."
 
 #: views/admin/settings.php:27
 msgid "Causes"
-msgstr ""
+msgstr "Causes"
 
 #: views/admin/settings.php:36
 msgid "Shortcode"
-msgstr ""
+msgstr "Shortcode"
 
 #: views/admin/settings.php:42
 msgid "Paste the shortcode into the post or page where you want the collectme app to run."
-msgstr ""
+msgstr "Collez le shortcode dans le message ou la page où vous voulez que l'application collectme s'exécute."
 
 #: views/admin/settings.php:48
 msgid "Do you really want to delete %s and all its associated data? Only do this if the cause is long past or was never launched."
-msgstr ""
+msgstr "Voulez-vous vraiment supprimer %s et toutes les données associées? Ne le faire que si la cause est trés ancienne ou n'a jamais été lancée."
 
 #: views/admin/settings.php:58
 msgid "Delete %s"
-msgstr ""
+msgstr "Supprimer %s"
 
 #: views/admin/settings.php:65
 msgid "Create new cause"
-msgstr ""
+msgstr "Créer une nouvelle cause"
 
 #: views/admin/settings.php:69
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: views/admin/settings.php:72
 msgid "The name is only for internal use and not visible to the public. Keep it short."
-msgstr ""
+msgstr "Le nom est uniquement pour un usage interne et n'est pas visible pour le public. Choisissez-en un court."
 
 #: views/admin/settings.php:77
 msgid "Create cause"
-msgstr ""
+msgstr "Créer la cause"
 
 #: views/admin/settings.php:91
 msgid "Signatures"
-msgstr ""
+msgstr "Signatures"
 
 #: views/admin/settings.php:95
 msgid "Number of signatures needed"
-msgstr ""
+msgstr "Nombre de signatures nécessaires"
 
 #: views/admin/settings.php:109
 msgid "The number of signatures to be registered. For an initiative this would typically be 105'000."
-msgstr ""
+msgstr "Le nombre de signatures à enregistrer. Pour une initiative, c'est généralement 105'000."
 
 #: views/admin/settings.php:116
 msgid "Additional signatures collected"
-msgstr ""
+msgstr "Signatures supplémentaires récoltées"
 
 #: views/admin/settings.php:130
 msgid "This number is added to the sum of the registered signatures. Typically you'd enter the number of signatures received by mailings (and thus not yet registered in this tool) here."
-msgstr ""
+msgstr "Ce nombre est ajouté à la somme des signatures enregistrées. Par exemple, vous entrez le nombre de signatures reçues par mailings (et donc pas encore enregistré dans cet outil) ici."
 
 #: views/admin/settings.php:139
 msgid "Pledges"
-msgstr ""
+msgstr "Promesses"
 
 #: views/admin/settings.php:143
 msgid "Number of signatures to be pledged"
-msgstr ""
+msgstr "Nombre de signatures promises"
 
 #: views/admin/settings.php:157
 msgid "The number of signatures you'd expect people to pledge for. It is possibly equal to the number of signatures needed."
-msgstr ""
+msgstr "Le nombre de signatures que vous vous attendiez à récolter. Il est peut-être identique au nombre de signatures nécessaires."
 
 #: views/admin/settings.php:164
 msgid "Additional pledges"
-msgstr ""
+msgstr "Promesses supplémentaires"
 
 #: views/admin/settings.php:178
 msgid "This number is added to the total of the pledges. Typically you'd enter the number of signatures expected to collect by mailings or other organizations."
-msgstr ""
+msgstr "Ce nombre est ajouté au total des promesses de signatures. En général, vous introduisez ici le nombre de signatures que vous attendez suite à un mailing ou d'autres organismes."
 
 #: views/admin/settings.php:193
 msgid "Sender name"
-msgstr ""
+msgstr "Nom de l'expéditeur"
 
 #: views/admin/settings.php:205
 msgid "The sender name for emails sent by this cause (e.g. login emails)."
-msgstr ""
+msgstr "Le nom de l'expéditeur pour les e-mails envoyés par cette cause (par exemple, les e-mails de connexion)."
 
 #: views/admin/settings.php:212
 msgid "Sender address"
-msgstr ""
+msgstr "Adresse de l'expéditeur"
 
 #: views/admin/settings.php:224
 msgid "The sender address for emails sent by this cause (e.g. login emails)."
-msgstr ""
+msgstr "L'adresse de l'expéditeur pour les e-mails envoyés par cette cause (par exemple, les e-mails de connexion)."
 
 #: views/admin/settings.php:231
 msgid "Reply-To address"
-msgstr ""
+msgstr "Adresse de réponse"
 
 #: views/admin/settings.php:243
 msgid "The destination address if people reply."
-msgstr ""
+msgstr "L'adresse de destination si les gens répondent."
 
 #: views/admin/settings.php:253
 msgid "Goals"
-msgstr ""
+msgstr "Objectifs"
 
 #: views/admin/settings.php:254
 msgid "Caution: Changing the goals after launching the cause will break the user experience."
-msgstr ""
+msgstr "Attention : Changer les objectifs après le lancement de la cause cassera l'expérience de l'utilisateur."
 
 #: views/admin/settings.php:264
 msgid "Goal"
-msgstr ""
+msgstr "Objectif"
 
 #: views/admin/settings.php:275
 msgid "Number of signatures to collect."
-msgstr ""
+msgstr "Nombre de signatures à collecter."
 
 #: views/admin/settings.php:282
 #: views/admin/settings.php:337
 msgid "Image URL"
-msgstr ""
+msgstr "URL de l'image"
 
 #: views/admin/settings.php:292
 #: views/admin/settings.php:347
 msgid "Fully qualified URL to the image. Clear to reset to default."
-msgstr ""
+msgstr "URL entièrement qualifiée pour l'image. Effacez pour réinitialiser à la valeur par défaut."
 
 #: views/admin/settings.php:308
 msgid "Add \"hot\" ribbon to goal."
-msgstr ""
+msgstr "Mettez l'objectif en évidence avec un ruban \"super\"."
 
 #: views/admin/settings.php:315
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #: views/admin/settings.php:324
 msgid "Goal is active (visible and selectable)"
-msgstr ""
+msgstr "L'objectif est actif (visible et sélectionnable)"
 
 #: views/admin/settings.php:331
 msgid "This is shown before any goal is selected."
-msgstr ""
+msgstr "Ceci est affiché avant la sélection d'un objectif."
 
 #: views/admin/settings.php:357
 msgid "Custom CSS"
-msgstr ""
+msgstr "CSS personnalisé"
 
 #: views/admin/settings.php:362
 msgid "CSS entered here will be applied to every page this cause is displayed."
-msgstr ""
+msgstr "Les CSS saisis ici seront appliqués à chaque page que cette cause est affichée."
 
 #: views/admin/settings.php:369
 msgid "Overrides"
-msgstr ""
+msgstr "Substitutions"
 
 #: views/admin/settings.php:451
 msgid "Save %s settings"
-msgstr ""
+msgstr "Enregistrer les paramètres %s"
 
