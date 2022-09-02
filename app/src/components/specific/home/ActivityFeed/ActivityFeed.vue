@@ -28,7 +28,7 @@
         {{ t("HomeView.ActivityFeed.loadMore") }}
       </BaseButton>
       <BaseAlert
-        v-if="activityStore.error && !activityStore.isLoading"
+        v-if="activityStore.error && !activityStore.isLoading && !isLoginPage"
         error
         @close="activityStore.error = null"
       >
@@ -69,6 +69,7 @@ import ActivityFeedCard from "@/components/specific/home/ActivityFeed/ActivityFe
 import { useActivityStore } from "@/stores/ActivityStore";
 import t from "@/utility/i18n";
 import { onBeforeUnmount, onMounted } from "vue";
+import isLoginPage from "@/router/isLoginPage";
 
 const activityStore = useActivityStore();
 activityStore.fetchFirst();
