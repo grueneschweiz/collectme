@@ -175,7 +175,10 @@ class Auth
             return $this->createUserFromAccountToken($accountToken, $causeUuid);
         }
 
-        $user->addCause($causeUuid);
+        if (!$user->hasCause($causeUuid)) {
+            $this->setupUserForCause($user, $causeUuid);
+        }
+
         $accountToken->userUuid = $user->uuid;
         $accountToken->save();
 
@@ -251,7 +254,7 @@ class Auth
      */
     private function createUserFromAccountToken(AccountToken $accountToken, string $causeUuid): User
     {
-        return DB::transactional(static function () use ($accountToken, $causeUuid) {
+        [$user, $group] = DB::transactional(static function () use ($accountToken, $causeUuid) {
             $user = new User(
                 null,
                 $accountToken->email,
@@ -283,8 +286,12 @@ class Auth
             $accountToken->userUuid = $user->uuid;
             $accountToken->save();
 
-            return $user;
+            return [$user, $group];
         });
+
+        do_action('collectme_after_user_setup', $user, $group->uuid, $causeUuid);
+
+        return $user;
     }
 
     /**
