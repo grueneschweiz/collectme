@@ -60,6 +60,14 @@ class Auth
             $persistentSession = $this->phpSession->get();
 
             if ($persistentSession) {
+                try {
+                    $persistentSession = PersistentSession::get($persistentSession->uuid);
+                } catch (CollectmeDBException) {
+                    $persistentSession = null;
+                }
+            }
+
+            if ($persistentSession) {
                 $this->persistentSession = $persistentSession;
             } else {
                 $this->loginWithAuthCookie();
