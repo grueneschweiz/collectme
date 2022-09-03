@@ -90,6 +90,13 @@ class HtmlController
      */
     public function index(string $causeUuid): string
     {
+        // this page must not be cached, else there is trouble with the nonce.
+        // so exclude it from supercache and compatible plugins
+        // @link https://odd.blog/wp-super-cache-developers/
+        if (!defined('DONOTCACHEPAGE')) {
+            define('DONOTCACHEPAGE', true);
+        }
+
         $translations = require PATH_APP_STRINGS;
 
         $data = [

@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import type { StepStatus } from "@/components/base/BaseStepElement/BaseStepElement";
+import type { StepStatus } from "@/components/base/BaseStepElement/BaseStepElement.js";
 import { useUserStore } from "@/stores/UserStore";
 import { useGroupStore } from "@/stores/GroupStore";
 import { computed, ref } from "vue";

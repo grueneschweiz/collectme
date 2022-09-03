@@ -48,13 +48,22 @@ import BaseButton from "@/components/base/BaseButton.vue";
 import MyContributionSteps from "@/components/specific/home/MyContribution/MyContributionSteps.vue";
 import { useGroupStore } from "@/stores/GroupStore";
 import { myCurrentObjectiveSettings } from "@/components/specific/home/MyContribution/MyContributionCurrentObjectiveSettings";
+import { useRouter } from "vue-router";
+import isLoginPage from "@/router/isLoginPage";
 
 const userStore = useUserStore();
 const groupStore = useGroupStore();
+const router = useRouter();
 
 onMounted(() => {
-  userStore.fetch();
-  groupStore.fetch();
+  userStore
+    .fetch()
+    .then(groupStore.fetch)
+    .catch(() => {
+      if (!isLoginPage.value) {
+        router.push("/login");
+      }
+    });
 });
 </script>
 
