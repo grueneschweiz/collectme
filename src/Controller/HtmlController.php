@@ -93,7 +93,9 @@ class HtmlController
         // this page must not be cached, else there is trouble with the nonce.
         // so exclude it from supercache and compatible plugins
         // @link https://odd.blog/wp-super-cache-developers/
-        define('DONOTCACHEPAGE', true);
+        if (!defined('DONOTCACHEPAGE')) {
+            define('DONOTCACHEPAGE', true);
+        }
 
         $translations = require PATH_APP_STRINGS;
 
