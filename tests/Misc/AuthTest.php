@@ -23,11 +23,12 @@ class AuthTest extends TestCase
 
     public function test_getPersistentSession__fromPhpSession(): void
     {
+        $userUuid = $this->insertTestUserIntoDB($this->uniqueEmail(), 'first', 'last', 'e', 'test');
         $sessionSecret = wp_generate_password(64, false, false);
         $sessionHash = password_hash($sessionSecret, PASSWORD_DEFAULT);
         $session = new PersistentSession(
-            wp_generate_uuid4(),
-            wp_generate_uuid4(),
+            null,
+            $userUuid,
             5,
             date_create('2022-06-26T20:30:00+00:00'),
             wp_generate_password(64, false, false),
@@ -35,6 +36,7 @@ class AuthTest extends TestCase
             date_create('2022-06-26T21:00:00+00:00'),
             null,
         );
+        $session = $session->save();
 
         $phpSession = $this->createMock(PhpSession::class);
         $authCookie = $this->createMock(AuthCookie::class);
@@ -45,7 +47,7 @@ class AuthTest extends TestCase
 
         $auth = new Auth($phpSession, $authCookie);
 
-        $this->assertSame($session, $auth->getPersistentSession());
+        $this->assertEquals($session, $auth->getPersistentSession());
     }
 
     public function test_getPersistentSession__none(): void

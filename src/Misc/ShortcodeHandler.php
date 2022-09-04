@@ -28,7 +28,7 @@ class ShortcodeHandler
 
         $args = shortcode_atts($defaults, $atts);
 
-        if (!CauseUuidValidator::check($args['causeuuid'])) {
+        if (!CauseUuidValidator::check($args['causeuuid']) && !is_admin()) {
             /** @noinspection ForgottenDebugOutputInspection */
             wp_die('Invalid cause in shortcode.');
         }
