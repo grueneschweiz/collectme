@@ -51,7 +51,9 @@ jobs:
           git diff -U0 
           | grep '^[+-]' 
           | grep -Ev '^(--- a/|\+\+\+ b/)' 
+          | grep -v 'Project-Id-Version'
           | grep -v 'POT-Creation-Date:'
+          | grep -v 'PO-Revision-Date:'
           | grep -v '^:#'
           && echo "CHANGES=1" >> $GITHUB_ENV
           ) 
@@ -86,6 +88,7 @@ jobs:
           git diff -U0 languages/*.po
           | grep '^[+-]' 
           | grep -Ev '^(--- a/|\+\+\+ b/)' 
+          | grep -v 'Project-Id-Version'
           | grep -v 'POT-Creation-Date:'
           | grep -v 'PO-Revision-Date:'
           | grep -v '^:#'
