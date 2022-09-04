@@ -46,7 +46,7 @@ import { useLoginStore } from "@/stores/LoginStore";
 import { onBeforeUnmount, onMounted } from "vue";
 import { useSessionStore } from "@/stores/SessionStore";
 import router from "@/router";
-import {useUserStore} from "@/stores/UserStore";
+import { useUserStore } from "@/stores/UserStore";
 
 const emit = defineEmits(["login"]);
 
@@ -64,6 +64,9 @@ function attemptLogin() {
 onMounted(() => {
   if (useUserStore().me?.id) {
     router.push("/");
+  }
+  if (!loginStore.login) {
+    router.push("/login");
   }
 
   timer = setInterval(attemptLogin, 4000);
