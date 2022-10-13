@@ -74,6 +74,7 @@ class UserTest extends \WP_UnitTestCase
             'firstName' => 'John',
             'lastName' => 'Doe',
             'lang' => EnumLang::DE,
+            'mailPermission' => true,
             'source' => 'test: some string'
         ];
 
@@ -100,6 +101,7 @@ class UserTest extends \WP_UnitTestCase
             'firstName' => 'John',
             'lastName' => 'Doe',
             'lang' => EnumLang::FR,
+            'mailPermission' => true,
             'source' => 'test: some string'
         ];
 
@@ -120,6 +122,7 @@ class UserTest extends \WP_UnitTestCase
             'John',
             'Doe',
             EnumLang::FR,
+            true,
             'add cause test'
         );
         $user->save();
@@ -150,6 +153,7 @@ class UserTest extends \WP_UnitTestCase
             'John',
             'Doe',
             EnumLang::FR,
+            true,
             'add cause test'
         );
         $user->save();
@@ -173,6 +177,7 @@ class UserTest extends \WP_UnitTestCase
             'John',
             'Doe',
             EnumLang::FR,
+            true,
             'add cause test'
         );
         $user->save();
@@ -201,6 +206,7 @@ class UserTest extends \WP_UnitTestCase
             'John',
             'Doe',
             EnumLang::FR,
+            true,
             'add cause test'
         );
         $user->save();
@@ -222,6 +228,7 @@ class UserTest extends \WP_UnitTestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user1->save();
@@ -232,6 +239,7 @@ class UserTest extends \WP_UnitTestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user2->save();
@@ -242,6 +250,7 @@ class UserTest extends \WP_UnitTestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user3->save();
@@ -311,6 +320,7 @@ class UserTest extends \WP_UnitTestCase
             'firstName' => 'John',
             'lastName' => 'Doe',
             'lang' => EnumLang::DE,
+            'mailPermission' => true,
             'source' => 'test: some string',
             'created' => date_create(),
             'updated' => date_create(),
@@ -360,7 +370,7 @@ class UserTest extends \WP_UnitTestCase
         $this->assertArrayNotHasKey('source', $userProps);
 
         /** @noinspection PhpParamsInspection */
-        $user = new User(...$userProps, source: 'must be added manually');
+        $user = new User(...$userProps, source: 'must be added manually', mailPermission: true);
 
         $this->assertSame($apiData['id'], $user->uuid);
         $this->assertSame($apiData['attributes']['email'], $user->email);

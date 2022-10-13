@@ -84,6 +84,7 @@ class GroupTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::DE,
+            true,
             'user cause test'
         );
         $user->save();
@@ -133,6 +134,7 @@ class GroupTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::DE,
+            true,
             'user cause test'
         );
         $user->save();
@@ -324,6 +326,7 @@ class GroupTest extends TestCase
             'John',
             'Doe',
             EnumLang::DE,
+            true,
             'test group'
         );
         $user1->save();
@@ -334,6 +337,7 @@ class GroupTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::DE,
+            true,
             'test group'
         );
         $user2->save();
@@ -424,6 +428,7 @@ class GroupTest extends TestCase
             'John',
             'Doe',
             EnumLang::DE,
+            true,
             'test group'
         );
         $user1->save();
@@ -434,6 +439,7 @@ class GroupTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::DE,
+            true,
             'test group'
         );
         $user2->save();

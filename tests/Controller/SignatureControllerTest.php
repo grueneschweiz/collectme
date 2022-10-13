@@ -138,6 +138,7 @@ class SignatureControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();
@@ -212,6 +213,7 @@ class SignatureControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();
@@ -290,6 +292,7 @@ class SignatureControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();
@@ -393,6 +396,7 @@ class SignatureControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();
@@ -496,6 +500,7 @@ class SignatureControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();
@@ -579,6 +584,7 @@ class SignatureControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();

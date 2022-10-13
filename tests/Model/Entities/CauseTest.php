@@ -47,6 +47,7 @@ class CauseTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user1->save();
@@ -57,6 +58,7 @@ class CauseTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user2->save();

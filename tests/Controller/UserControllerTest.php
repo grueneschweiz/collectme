@@ -21,6 +21,7 @@ class UserControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::EN,
+            true,
             'test: some string',
         );
         $user = $user->save();

@@ -41,6 +41,7 @@ class StatTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();
@@ -167,6 +168,7 @@ class StatTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();
@@ -217,6 +219,7 @@ class StatTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();

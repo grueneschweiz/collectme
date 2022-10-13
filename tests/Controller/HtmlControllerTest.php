@@ -32,6 +32,7 @@ class HtmlControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::EN,
+            true,
             'test: some string',
         );
         $user->save();
@@ -91,6 +92,7 @@ class HtmlControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::EN,
+            true,
             'test: some string',
         );
         $user->save();
@@ -145,6 +147,7 @@ class HtmlControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::EN,
+            true,
             'test: some string',
         );
         $user->save();
@@ -195,6 +198,7 @@ class HtmlControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::EN,
+            true,
             'test: some string',
         );
         $user->save();
@@ -255,6 +259,7 @@ class HtmlControllerTest extends TestCase
             $accountToken->firstName,
             $accountToken->lastName,
             $accountToken->lang,
+            true,
             'test: some string',
             date_create(),
             date_create(),
@@ -327,6 +332,7 @@ class HtmlControllerTest extends TestCase
             $accountToken->firstName,
             $accountToken->lastName,
             $accountToken->lang,
+            true,
             'test: some string',
             date_create(),
             date_create(),

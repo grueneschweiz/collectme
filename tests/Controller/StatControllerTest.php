@@ -44,6 +44,7 @@ class StatControllerTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();

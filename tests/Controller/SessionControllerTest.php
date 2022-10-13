@@ -98,6 +98,7 @@ class SessionControllerTest extends TestCase
             'John',
             'Doe',
             EnumLang::FR,
+            true,
             'test: some string',
             date_create(),
             date_create(),

@@ -39,6 +39,7 @@ class SignatureEntryTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();
@@ -125,6 +126,7 @@ class SignatureEntryTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();
@@ -216,6 +218,7 @@ class SignatureEntryTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'user cause test'
         );
         $user->save();

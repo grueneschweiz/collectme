@@ -31,6 +31,9 @@ class User extends Entity
     #[DBField]
     public EnumLang $lang;
 
+    #[DBField('mail_permission')]
+    public bool $mailPermission;
+
     #[DBField]
     public string $source;
 
@@ -40,6 +43,7 @@ class User extends Entity
         string $firstName,
         string $lastName,
         EnumLang $lang,
+        bool $mailPermission,
         string $source,
         ?\DateTime $created = null,
         ?\DateTime $updated = null,
@@ -51,6 +55,7 @@ class User extends Entity
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->lang = $lang;
+        $this->mailPermission = $mailPermission;
         $this->source = $source;
     }
 
@@ -147,5 +152,10 @@ class User extends Entity
     protected function _convertToLang(): string
     {
         return $this->lang->value;
+    }
+
+    protected static function _convertFromMailPermission(string $permission): bool
+    {
+        return (bool) $permission;
     }
 }

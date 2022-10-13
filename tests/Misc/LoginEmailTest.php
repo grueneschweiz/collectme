@@ -22,6 +22,7 @@ class LoginEmailTest extends TestCase
             'John',
             'Doe',
             EnumLang::EN,
+            true,
             'app',
             date_create(),
             date_create()

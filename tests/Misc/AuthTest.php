@@ -494,6 +494,7 @@ class AuthTest extends TestCase
             'John',
             'Doe',
             EnumLang::FR,
+            true,
             'test: some string',
         );
         $user->save();
@@ -630,6 +631,7 @@ class AuthTest extends TestCase
             'Jane',
             'Doe',
             EnumLang::FR,
+            true,
             'test: some string',
         );
         $existingUser->save();
