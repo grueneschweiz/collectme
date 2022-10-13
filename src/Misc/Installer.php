@@ -29,6 +29,7 @@ class Installer
 
         self::forEachSite([self::class, 'removeOptions']);
         self::forEachSite([DbInstaller::class, 'removeTables']);
+        self::forEachSite([MailScheduler::class, 'removeCron']);
     }
 
     private static function forEachSite(callable $callback): void
@@ -69,12 +70,26 @@ class Installer
     /**
      * @throws CollectmeException
      */
+    public function afterSiteAdd(\WP_Site $newSite): void
+    {
+        switch_to_blog($newSite->blog_id);
+        if (is_plugin_active(COLLECTME_PLUGIN_NAME)) {
+            $this->activate(false);
+        }
+        restore_current_blog();
+    }
+
+    /**
+     * @throws CollectmeException
+     */
     public function activate(bool $networkWide): void
     {
         if ($networkWide) {
             self::forEachSite([$this->dbInstaller, 'setupTables']);
+            self::forEachSite([MailScheduler::class, 'scheduleCron']);
         } else {
             $this->dbInstaller->setupTables();
+            MailScheduler::scheduleCron();
         }
 
         $this->storeCurrentPluginVersion();
@@ -85,8 +100,13 @@ class Installer
         update_option(OPTION_KEY_PLUGIN_VERSION, COLLECTME_VERSION);
     }
 
-    public function deactivate(): void
+    public function deactivate(bool $networkWide): void
     {
+        if ($networkWide) {
+            self::forEachSite([MailScheduler::class, 'removeCron']);
+        } else {
+            MailScheduler::removeCron();
+        }
     }
 
     /**
@@ -99,6 +119,8 @@ class Installer
         }
 
         $this->dbInstaller->setupTables();
+        MailScheduler::scheduleCron();
+
         $this->storeCurrentPluginVersion();
     }
 

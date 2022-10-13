@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Collectme;
 
 use Collectme\Misc\Installer;
+use Collectme\Misc\MailScheduler;
 use Collectme\Misc\ShortcodeHandler;
 use Collectme\Misc\Translator;
 
@@ -70,6 +71,7 @@ class Collectme
         private readonly RestRouterV1 $restRouter,
         private readonly Translator $translator,
         private readonly AdminRouter $adminRouter,
+        private readonly MailScheduler $mailScheduler,
     ) {
     }
 
@@ -98,6 +100,7 @@ class Collectme
          * Installation and uninstallation
          */
         register_activation_hook(COLLECTME_PLUGIN_NAME, [$this->installer, 'activate']);
+        add_action('wp_initialize_site', [$this->installer, 'afterSiteAdd']);
         register_deactivation_hook(COLLECTME_PLUGIN_NAME, [$this->installer, 'deactivate']);
         register_uninstall_hook(COLLECTME_PLUGIN_NAME, [Installer::class, 'uninstall']);
         add_action('admin_init', [$this->installer, 'afterPluginUpdated']);
@@ -120,6 +123,11 @@ class Collectme
         add_filter('gettext_with_context_collectme', [$this->translator, 'overrideGettextWithContext'], 10, 3);
         add_filter('ngettext_collectme', [$this->translator, 'overrideNGettext'], 10, 4);
         add_filter('ngettext_with_context_collectme', [$this->translator, 'overrideNGettextWithContext'], 10, 5);
+
+        /**
+         * Cron jobs
+         */
+        add_action('collectme_schedule_mails', [$this->mailScheduler, 'run']);
 
         /**
          * Don't add styles and scripts the WordPress way, this doesn't allow to add them only if the
