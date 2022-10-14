@@ -510,4 +510,73 @@ class GroupTest extends TestCase
 
         $this->assertEqualsCanonicalizing($uuidsEven, $uuids);
     }
+
+    public function test_findByTypeAndCause(): void
+    {
+        $cause1 = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause1->save();
+
+        $cause2 = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause2->save();
+
+        $group1 = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            true,
+        );
+        $group1->save();
+
+        $group2 = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            true,
+        );
+        $group2->save();
+
+        $groupOtherCause = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause2->uuid,
+            true,
+        );
+        $groupOtherCause->save();
+
+        $groupOtherType = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::ORGANIZATION,
+            $cause1->uuid,
+            true,
+        );
+        $groupOtherType->save();
+
+        $groupDeleted = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            true,
+        );
+        $groupDeleted->save();
+        $groupDeleted->delete();
+
+        $groups = Group::findByTypeAndCause($cause1->uuid, EnumGroupType::PERSON);
+
+        $this->assertCount(2, $groups);
+
+        $groupsUuids = array_map(static fn(Group $group) => $group->uuid, $groups);
+        $this->assertContains($group1->uuid, $groupsUuids);
+        $this->assertContains($group2->uuid, $groupsUuids);
+    }
 }

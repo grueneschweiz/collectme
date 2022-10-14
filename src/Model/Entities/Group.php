@@ -93,6 +93,29 @@ SQL,
         );
     }
 
+    /**
+     * @throws CollectmeDBException
+     */
+    public static function findByTypeAndCause(string $causeUuid, EnumGroupType $type): array
+    {
+        global $wpdb;
+
+        $groupsTbl = self::getTableName();
+
+        return self::findByQuery(
+            $wpdb->prepare(
+                <<<SQL
+SELECT $groupsTbl.* FROM $groupsTbl
+WHERE $groupsTbl.causes_uuid = '%s'
+    AND $groupsTbl.type = '%s'
+    AND $groupsTbl.deleted_at IS NULL
+SQL,
+                $causeUuid,
+                $type->value
+            )
+        );
+    }
+
     protected static function _convertFromType(string $type): EnumGroupType
     {
         return EnumGroupType::from($type);
