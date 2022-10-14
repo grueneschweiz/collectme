@@ -18,6 +18,7 @@ class Settings
     private const CUSTOM_CSS = 'custom_css';
     private const PLEDGE_SETTINGS = 'pledge_settings';
     private const SIGNATURE_SETTINGS = 'signature_settings';
+    private const TIMINGS = 'timing';
     private static Settings $instance;
     private array $settings = [];
 
@@ -216,5 +217,25 @@ class Settings
     {
         $this->set(self::SIGNATURE_SETTINGS, $settings, $causeUuid);
         Stat::clearCache($causeUuid);
+    }
+
+    /**
+     * @param string $causeUuid
+     * @return \DateTime[]|null[]
+     */
+    public function getTimings(string $causeUuid): array
+    {
+        $timings = $this->get(self::TIMINGS, $causeUuid) ?? [];
+        $defaults = [
+            'start' => null,
+            'stop' => null,
+        ];
+
+        return array_replace($defaults, $timings);
+    }
+
+    public function setTimings(array $settings, string $causeUuid): void
+    {
+        $this->set(self::TIMINGS, $settings, $causeUuid);
     }
 }

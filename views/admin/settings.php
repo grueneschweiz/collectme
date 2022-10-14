@@ -185,6 +185,47 @@ use Collectme\Model\Entities\Cause;
 
                 <tr>
                     <th scope="row">
+                        <?php echo esc_html($cause->name) . ' ' . __('Timings', 'collectme') ?>
+                    </th>
+                    <td>
+                        <div>
+                            <label for="timings[start]">
+                                <?php _e('Collection start date', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="timings[start]"
+                                    id="timings[start]"
+                                    type="date"
+                                    class="date"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getTimings($cause->uuid)['start']?->format('Y-m-d')) ?>"
+                            >
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label for="timings[stop]">
+                                <?php _e('Collection end date', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="timings[stop]"
+                                    id="timings[stop]"
+                                    type="date"
+                                    class="date"
+                                    maxlength="80"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getTimings($cause->uuid)['stop']?->format('Y-m-d')) ?>"
+                            >
+                            <p class="description"><?php _e(
+                                    'The last day you plan to collect signatures.',
+                                    'collectme'
+                                ) ?></p>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
                         <?php echo esc_html($cause->name) . ' ' . __('E-Mail', 'collectme') ?>
                     </th>
                     <td>

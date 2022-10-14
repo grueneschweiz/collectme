@@ -48,6 +48,7 @@ class AdminController
                 && $this->saveDefaultObjective($causeUuid)
                 && $this->saveSignatureSettings($causeUuid)
                 && $this->savePledgeSettings($causeUuid)
+                && $this->saveTimings($causeUuid)
                 && $this->saveCustomCss($causeUuid)
                 && $this->saveOverrides($causeUuid)
             ) {
@@ -220,6 +221,28 @@ class AdminController
             'objective' => $objective,
             'offset' => $offset,
         ], $causeUuid);
+
+        return true;
+    }
+
+    private function saveTimings(string $causeUuid): bool
+    {
+        $extractDate = static fn(string|null $dateString) => null === $dateString ? null : date_create($dateString);
+
+        $timings = $this->settings->getTimings($causeUuid);
+
+        $timings['start'] = $extractDate($_POST['timings']['start'] ?? null);
+        $timings['stop'] = $extractDate($_POST['timings']['stop'] ?? null);
+
+        if (false === $timings['start'] || false === $timings['stop']) {
+            return false;
+        }
+
+        if ($timings['stop']) {
+            $timings['stop']->setTime(23,59,59);
+        }
+
+        $this->settings->setTimings($timings, $causeUuid);
 
         return true;
     }
