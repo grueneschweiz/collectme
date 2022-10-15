@@ -360,6 +360,10 @@ use Collectme\Model\Entities\EnumMessageKey;
                                     'No email is sent if left blank.',
                                     'collectme'
                                 ) ?>
+                                <strong><?php _e(
+                                        'This option requires the previous two to be enabled as well.',
+                                        'collectme'
+                                    ) ?></strong>
                             </p>
                         </div>
                     </td>
