@@ -127,7 +127,7 @@ class Collectme
         /**
          * Cron jobs
          */
-        add_action('collectme_schedule_mails', [$this->mailScheduler, 'run']);
+        add_action('collectme_send_mails', [$this->mailScheduler, 'run']);
 
         /**
          * Don't add styles and scripts the WordPress way, this doesn't allow to add them only if the
