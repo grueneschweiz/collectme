@@ -16,6 +16,65 @@ trait Persister
     use DateTimeTypeHandler;
 
     /**
+     * @return static[]
+     * @throws CollectmeDBException
+     */
+    public static function getMany(array $uuids): array
+    {
+        global $wpdb;
+
+        $uuids = array_unique($uuids);
+        $count = count($uuids);
+
+        if ($count === 0) {
+            return [];
+        }
+
+        $groupsTbl = self::getTableName();
+        $placeholders = implode(',', array_fill(0, $count, '%s'));
+
+        $entities = self::findByQuery(
+            $wpdb->prepare(
+                "SELECT * FROM $groupsTbl WHERE uuid IN ($placeholders) AND deleted_at IS NULL",
+                ...$uuids
+            )
+        );
+
+        if ($count !== count($entities)) {
+            throw new CollectmeDBException(
+                'Failed to getMany ' . static::class . ": Cannot find entities for all given uuids."
+            );
+        }
+
+        return $entities;
+    }
+
+    /**
+     * @param string $query
+     * @return static[]
+     * @throws CollectmeDBException
+     */
+    protected static function findByQuery(string $query): array
+    {
+        global $wpdb;
+
+        $result = $wpdb->get_results($query, ARRAY_A);
+
+        if ($wpdb->error || $wpdb->last_error) {
+            throw new CollectmeDBException('Failed to find ' . static::class . ": $wpdb->last_error");
+        }
+
+        if (empty($result)) {
+            return [];
+        }
+
+        return array_map(
+            static fn($item) => new static(...self::convertFieldsFromDb($item)),
+            $result
+        );
+    }
+
+    /**
      * @throws CollectmeDBException
      */
     public function save(): static
@@ -36,6 +95,8 @@ trait Persister
     {
         global $wpdb;
 
+        $thisBeforeUpdated = self::get($this->uuid);
+
         $data = $this->convertDataForDb();
 
         $count = $wpdb->update(
@@ -49,6 +110,8 @@ trait Persister
         if (false === $count) {
             throw new CollectmeDBException('Failed to update ' . static::class . ": $wpdb->last_error");
         }
+
+        do_action('collectme_' . strtolower(static::class) . '_updated', $this, $thisBeforeUpdated);
     }
 
     private function convertDataForDb(): array
@@ -193,6 +256,8 @@ trait Persister
         }
 
         $this->uuid = $data['uuid'];
+
+        do_action('collectme_' . strtolower(static::class) . '_inserted', $this);
     }
 
     /**
@@ -226,62 +291,6 @@ trait Persister
         }
 
         return new static(...self::convertFieldsFromDb($result));
-    }
-
-    /**
-     * @return static[]
-     * @throws CollectmeDBException
-     */
-    public static function getMany(array $uuids): array {
-        global $wpdb;
-
-        $uuids = array_unique($uuids);
-        $count = count($uuids);
-
-        if ($count === 0) {
-            return [];
-        }
-
-        $groupsTbl = self::getTableName();
-        $placeholders = implode(',', array_fill(0, $count, '%s'));
-
-        $entities = self::findByQuery(
-            $wpdb->prepare(
-                "SELECT * FROM $groupsTbl WHERE uuid IN ($placeholders) AND deleted_at IS NULL",
-                ...$uuids
-            )
-        );
-
-        if ($count !== count($entities)) {
-            throw new CollectmeDBException('Failed to getMany ' . static::class . ": Cannot find entities for all given uuids.");
-        }
-
-        return $entities;
-    }
-
-    /**
-     * @param string $query
-     * @return static[]
-     * @throws CollectmeDBException
-     */
-    protected static function findByQuery(string $query): array
-    {
-        global $wpdb;
-
-        $result = $wpdb->get_results($query, ARRAY_A);
-
-        if ($wpdb->error || $wpdb->last_error) {
-            throw new CollectmeDBException('Failed to find ' . static::class . ": $wpdb->last_error");
-        }
-
-        if (empty($result)) {
-            return [];
-        }
-
-        return array_map(
-            static fn($item) => new static(...self::convertFieldsFromDb($item)),
-            $result
-        );
     }
 
     protected static function convertFieldsFromDb(array $data): array
@@ -323,8 +332,24 @@ trait Persister
      */
     public function delete(): void
     {
+        global $wpdb;
+
         $this->deleted = date_create('-1 second', Util::getTimeZone());
 
-        $this->update();
+        $data = $this->convertDataForDb();
+
+        $count = $wpdb->update(
+            self::getTableName(),
+            $data,
+            ['uuid' => $this->uuid],
+            $this->getFormatStrings($data),
+            '%s'
+        );
+
+        if (false === $count) {
+            throw new CollectmeDBException('Failed to delete ' . static::class . ": $wpdb->last_error");
+        }
+
+        do_action('collectme_' . strtolower(static::class) . '_deleted', $this);
     }
 }
