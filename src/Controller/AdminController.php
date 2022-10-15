@@ -273,9 +273,9 @@ class AdminController
                     EnumMessageKey::NO_COLLECT,
                     EnumMessageKey::REMINDER_1 => new \DateInterval("P{$delay}D"),
 
-                    EnumMessageKey::GOAL_ACHIEVED,
-                    EnumMessageKey::GOAL_ACHIEVED_FINAL,
-                    EnumMessageKey::GOAL_RAISED => new \DateInterval("PT{$delay}H"),
+                    EnumMessageKey::OBJECTIVE_ACHIEVED,
+                    EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL,
+                    EnumMessageKey::OBJECTIVE_ADDED => new \DateInterval("PT{$delay}H"),
                 };
             } catch(\Exception) {
                 return false;

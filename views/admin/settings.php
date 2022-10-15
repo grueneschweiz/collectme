@@ -285,20 +285,20 @@ use Collectme\Model\Entities\EnumMessageKey;
                             </p>
                         </div>
                         <div style="margin-top: 1rem;">
-                            <label for="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED->value ?>]">
+                            <label for="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED->value ?>]">
                                 <?php _e('Goal reached (but not upgraded)', 'collectme') ?>
                             </label>
                             <br>
                             <input
-                                    name="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED->value ?>]"
-                                    id="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED->value ?>]"
+                                    name="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED->value ?>]"
                                     type="number"
                                     class="num"
                                     step="1"
                                     min="0"
                                     max="999"
                                     autocomplete="off"
-                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::GOAL_ACHIEVED->value]?->format('%h')) ?>"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::OBJECTIVE_ACHIEVED->value]?->format('%h')) ?>"
                             > <?php _e('hours', 'collectme') ?>
                             <p class="description"><?php _e(
                                     "Number of hours after which the user receives a thank you email for reaching its goal.",
@@ -311,20 +311,20 @@ use Collectme\Model\Entities\EnumMessageKey;
                             </p>
                         </div>
                         <div style="margin-top: 1rem;">
-                            <label for="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED_FINAL->value ?>]">
+                            <label for="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value ?>]">
                                 <?php _e('Highest goal reached', 'collectme') ?>
                             </label>
                             <br>
                             <input
-                                    name="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED_FINAL->value ?>]"
-                                    id="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED_FINAL->value ?>]"
+                                    name="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value ?>]"
                                     type="number"
                                     class="num"
                                     step="1"
                                     min="0"
                                     max="999"
                                     autocomplete="off"
-                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::GOAL_ACHIEVED_FINAL->value]?->format('%h')) ?>"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value]?->format('%h')) ?>"
                             > <?php _e('hours', 'collectme') ?>
                             <p class="description"><?php _e(
                                     "Number of hours after which the user receives a thank you email for reaching the final goal.",
@@ -337,20 +337,20 @@ use Collectme\Model\Entities\EnumMessageKey;
                             </p>
                         </div>
                         <div style="margin-top: 1rem;">
-                            <label for="mail_delays[<?php echo EnumMessageKey::GOAL_RAISED->value ?>]">
+                            <label for="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ADDED->value ?>]">
                                 <?php _e('Goal raised', 'collectme') ?>
                             </label>
                             <br>
                             <input
-                                    name="mail_delays[<?php echo EnumMessageKey::GOAL_RAISED->value ?>]"
-                                    id="mail_delays[<?php echo EnumMessageKey::GOAL_RAISED->value ?>]"
+                                    name="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ADDED->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ADDED->value ?>]"
                                     type="number"
                                     class="num"
                                     step="1"
                                     min="0"
                                     max="999"
                                     autocomplete="off"
-                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::GOAL_RAISED->value]?->format('%h')) ?>"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::OBJECTIVE_ADDED->value]?->format('%h')) ?>"
                             > <?php _e('hours', 'collectme') ?>
                             <p class="description"><?php _e(
                                     "Number of hours after which the user receives a thank you email for raising it's goal.",

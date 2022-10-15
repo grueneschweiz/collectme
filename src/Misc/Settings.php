@@ -249,9 +249,9 @@ class Settings
         $defaults = [
             EnumMessageKey::NO_COLLECT->value => null,
             EnumMessageKey::REMINDER_1->value => null,
-            EnumMessageKey::GOAL_RAISED->value => null,
-            EnumMessageKey::GOAL_ACHIEVED->value => null,
-            EnumMessageKey::GOAL_ACHIEVED_FINAL->value => null,
+            EnumMessageKey::OBJECTIVE_ADDED->value => null,
+            EnumMessageKey::OBJECTIVE_ACHIEVED->value => null,
+            EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value => null,
         ];
 
         return array_replace($defaults, $mails);

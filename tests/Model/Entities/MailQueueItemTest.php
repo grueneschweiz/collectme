@@ -34,7 +34,7 @@ class MailQueueItemTest extends TestCase
         $mailQueueItem = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::GOAL_ACHIEVED,
+            EnumMessageKey::OBJECTIVE_ACHIEVED,
             wp_generate_password(64, false),
             null,
         );
@@ -43,7 +43,7 @@ class MailQueueItemTest extends TestCase
         $dbItem = MailQueueItem::get($mailQueueItem->uuid);
 
         $this->assertSame($group->uuid, $dbItem->groupUuid);
-        $this->assertSame(EnumMessageKey::GOAL_ACHIEVED, $dbItem->messageKey);
+        $this->assertSame(EnumMessageKey::OBJECTIVE_ACHIEVED, $dbItem->messageKey);
         $this->assertNotEmpty($dbItem->unsubscribeSecret);
         $this->assertNull($dbItem->sent);
         $this->assertNotEmpty($dbItem->created);
