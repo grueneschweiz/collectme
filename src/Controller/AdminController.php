@@ -12,6 +12,7 @@ use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Misc\Settings;
 use Collectme\Misc\Translator;
 use Collectme\Model\Entities\Cause;
+use Collectme\Model\Entities\EnumMessageKey;
 use Gettext\Loader\PoLoader;
 use Gettext\Translation;
 
@@ -49,6 +50,7 @@ class AdminController
                 && $this->saveSignatureSettings($causeUuid)
                 && $this->savePledgeSettings($causeUuid)
                 && $this->saveTimings($causeUuid)
+                && $this->saveMailDelays($causeUuid)
                 && $this->saveCustomCss($causeUuid)
                 && $this->saveOverrides($causeUuid)
             ) {
@@ -239,10 +241,48 @@ class AdminController
         }
 
         if ($timings['stop']) {
-            $timings['stop']->setTime(23,59,59);
+            $timings['stop']->setTime(23, 59, 59);
         }
 
         $this->settings->setTimings($timings, $causeUuid);
+
+        return true;
+    }
+
+    private function saveMailDelays(mixed $causeUuid): bool
+    {
+        $mailDelays = [];
+        foreach (EnumMessageKey::cases() as $case) {
+            $delay = $_POST['mail_delays'][$case->value] ?? null;
+            if (null === $delay) {
+                $mailDelays[$case->value] = null;
+                continue;
+            }
+
+            $delay = trim($delay);
+
+            if ('' === $delay) {
+                $mailDelays[$case->value] = null;
+                continue;
+            }
+
+            $delay = absint($delay);
+
+            try {
+                $mailDelays[$case->value] = match ($case) {
+                    EnumMessageKey::NO_COLLECT,
+                    EnumMessageKey::REMINDER_1 => new \DateInterval("P{$delay}D"),
+
+                    EnumMessageKey::GOAL_ACHIEVED,
+                    EnumMessageKey::GOAL_ACHIEVED_FINAL,
+                    EnumMessageKey::GOAL_RAISED => new \DateInterval("PT{$delay}H"),
+                };
+            } catch(\Exception) {
+                return false;
+            }
+        }
+
+        $this->settings->setMailDelays($mailDelays, $causeUuid);
 
         return true;
     }

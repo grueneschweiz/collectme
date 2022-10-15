@@ -14,6 +14,7 @@ declare(strict_types=1);
 use Collectme\Misc\Settings;
 use Collectme\Misc\Translator;
 use Collectme\Model\Entities\Cause;
+use Collectme\Model\Entities\EnumMessageKey;
 
 ?>
 
@@ -220,6 +221,146 @@ use Collectme\Model\Entities\Cause;
                                     'The last day you plan to collect signatures.',
                                     'collectme'
                                 ) ?></p>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <?php echo esc_html($cause->name) . ' ' . __('Scheduled E-Mails', 'collectme') ?>
+                    </th>
+                    <td>
+                        <div>
+                            <label for="mail_delays[<?php echo EnumMessageKey::NO_COLLECT->value ?>]">
+                                <?php _e('Start collecting reminder', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="mail_delays[<?php echo EnumMessageKey::NO_COLLECT->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::NO_COLLECT->value ?>]"
+                                    type="number"
+                                    class="num"
+                                    step="1"
+                                    min="1"
+                                    max="999"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::NO_COLLECT->value]?->format('%d')) ?>"
+                            > <?php _e('days', 'collectme') ?>
+                            <p class="description"><?php _e(
+                                    'Number of days after which the user is reminded to enter his first signatures.',
+                                    'collectme'
+                                ) ?>
+                                <?php _e('Resent every X days.', 'collectme') ?>
+                                <?php _e(
+                                    'No reminders are sent if left blank.',
+                                    'collectme'
+                                ) ?>
+                            </p>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label for="mail_delays[<?php echo EnumMessageKey::REMINDER_1->value ?>]">
+                                <?php _e('Continue collecting reminder', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="mail_delays[<?php echo EnumMessageKey::REMINDER_1->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::REMINDER_1->value ?>]"
+                                    type="number"
+                                    class="num"
+                                    step="1"
+                                    min="1"
+                                    max="999"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::REMINDER_1->value]?->format('%d')) ?>"
+                            > <?php _e('days', 'collectme') ?>
+                            <p class="description"><?php _e(
+                                    "Number of days after which the user is reminded if he hasn't entered any new signatures since.",
+                                    'collectme'
+                                ) ?>
+                                <?php _e('Resent every X days.', 'collectme') ?>
+                                <?php _e(
+                                    'No reminders are sent if left blank.',
+                                    'collectme'
+                                ) ?>
+                            </p>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label for="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED->value ?>]">
+                                <?php _e('Goal reached (but not upgraded)', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED->value ?>]"
+                                    type="number"
+                                    class="num"
+                                    step="1"
+                                    min="0"
+                                    max="999"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::GOAL_ACHIEVED->value]?->format('%h')) ?>"
+                            > <?php _e('hours', 'collectme') ?>
+                            <p class="description"><?php _e(
+                                    "Number of hours after which the user receives a thank you email for reaching its goal.",
+                                    'collectme'
+                                ) ?>
+                                <?php _e(
+                                    'No email is sent if left blank.',
+                                    'collectme'
+                                ) ?>
+                            </p>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label for="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED_FINAL->value ?>]">
+                                <?php _e('Highest goal reached', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED_FINAL->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::GOAL_ACHIEVED_FINAL->value ?>]"
+                                    type="number"
+                                    class="num"
+                                    step="1"
+                                    min="0"
+                                    max="999"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::GOAL_ACHIEVED_FINAL->value]?->format('%h')) ?>"
+                            > <?php _e('hours', 'collectme') ?>
+                            <p class="description"><?php _e(
+                                    "Number of hours after which the user receives a thank you email for reaching the final goal.",
+                                    'collectme'
+                                ) ?>
+                                <?php _e(
+                                    'No email is sent if left blank.',
+                                    'collectme'
+                                ) ?>
+                            </p>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label for="mail_delays[<?php echo EnumMessageKey::GOAL_RAISED->value ?>]">
+                                <?php _e('Goal raised', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="mail_delays[<?php echo EnumMessageKey::GOAL_RAISED->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::GOAL_RAISED->value ?>]"
+                                    type="number"
+                                    class="num"
+                                    step="1"
+                                    min="0"
+                                    max="999"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::GOAL_RAISED->value]?->format('%h')) ?>"
+                            > <?php _e('hours', 'collectme') ?>
+                            <p class="description"><?php _e(
+                                    "Number of hours after which the user receives a thank you email for raising it's goal.",
+                                    'collectme'
+                                ) ?>
+                                <?php _e(
+                                    'No email is sent if left blank.',
+                                    'collectme'
+                                ) ?>
+                            </p>
                         </div>
                     </td>
                 </tr>

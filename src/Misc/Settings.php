@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Collectme\Misc;
 
+use Collectme\Model\Entities\EnumMessageKey;
 use Collectme\Model\Entities\Stat;
+
+use Collectme\Model\ReminderEmailSettings;
 
 use const Collectme\ASSET_PATH_REL;
 use const Collectme\OPTIONS_PREFIX;
@@ -18,7 +21,8 @@ class Settings
     private const CUSTOM_CSS = 'custom_css';
     private const PLEDGE_SETTINGS = 'pledge_settings';
     private const SIGNATURE_SETTINGS = 'signature_settings';
-    private const TIMINGS = 'timing';
+    private const TIMINGS = 'timings';
+    private const MAIL_DELAYS = 'mail_delays';
     private static Settings $instance;
     private array $settings = [];
 
@@ -237,5 +241,24 @@ class Settings
     public function setTimings(array $settings, string $causeUuid): void
     {
         $this->set(self::TIMINGS, $settings, $causeUuid);
+    }
+
+    public function getMailDelays(string $causeUuid): array
+    {
+        $mails = $this->get(self::MAIL_DELAYS, $causeUuid) ?? [];
+        $defaults = [
+            EnumMessageKey::NO_COLLECT->value => null,
+            EnumMessageKey::REMINDER_1->value => null,
+            EnumMessageKey::GOAL_RAISED->value => null,
+            EnumMessageKey::GOAL_ACHIEVED->value => null,
+            EnumMessageKey::GOAL_ACHIEVED_FINAL->value => null,
+        ];
+
+        return array_replace($defaults, $mails);
+    }
+
+    public function setMailDelays(array $settings, string $causeUuid): void
+    {
+        $this->set(self::MAIL_DELAYS, $settings, $causeUuid);
     }
 }
