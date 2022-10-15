@@ -25,7 +25,7 @@ class MailQueueItem extends Entity
         public string $unsubscribeSecret,
 
         #[DateProperty]
-        #[DBField]
+        #[DBField('sent_at')]
         public ?\DateTime $sent,
 
         ?\DateTime $created = null,

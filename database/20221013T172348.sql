@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `collectme`.`mails`
     `groups_uuid`        VARCHAR(36) NOT NULL,
     `msg_key`            VARCHAR(45) NOT NULL,
     `unsubscribe_secret` VARCHAR(64) NOT NULL,
-    `sent`               TIMESTAMP   NULL,
+    `sent_at`            TIMESTAMP   NULL,
     `created_at`         TIMESTAMP   NOT NULL DEFAULT NOW(),
     `updated_at`         TIMESTAMP   NULL,
     `deleted_at`         TIMESTAMP   NULL,
