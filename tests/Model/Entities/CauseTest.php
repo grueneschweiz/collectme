@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Model\Entities;
 
+use Collectme\Misc\Settings;
 use Collectme\Model\Entities\Cause;
 use Collectme\Model\Entities\EnumLang;
 use Collectme\Model\Entities\User;
@@ -110,5 +111,56 @@ class CauseTest extends TestCase
             [$causes[0]->uuid, $causes[1]->uuid]
         );
         $this->assertCount(2, $causes);
+    }
+
+    public function test_findActive(): void
+    {
+        $createCause = static function(?\DateTime $start, ?\DateTime $stop) {
+            $cause = new Cause(
+                null,
+                'test_' . wp_generate_password()
+            );
+            $cause->save();
+            Settings::getInstance()->setTimings([
+                'start' => $start,
+                'stop' => $stop,
+            ], $cause->uuid);
+            return $cause;
+        };
+
+        $activeToday = $createCause(
+            date_create()->setTime(0,0),
+            date_create()->setTime(23,59, 59, 999999)
+        );
+        $activeUntilTomorrow = $createCause(
+            null,
+            date_create('+1 day')
+        );
+        $activeSinceYesterday = $createCause(
+            date_create('-1 day'),
+            null,
+        );
+        $activeForever = $createCause(
+            null,
+            null,
+        );
+        $passed = $createCause(
+            null,
+            date_create('-1 day'),
+        );
+        $upcoming = $createCause(
+            date_create('+1 day'),
+            null,
+        );
+
+        $causes = Cause::findActive();
+        $causesUuids = array_map(static fn(Cause $cause) => $cause->uuid, $causes);
+
+        $this->assertContains($activeToday->uuid, $causesUuids);
+        $this->assertContains($activeUntilTomorrow->uuid, $causesUuids);
+        $this->assertContains($activeSinceYesterday->uuid, $causesUuids);
+        $this->assertContains($activeForever->uuid, $causesUuids);
+        $this->assertNotContains($passed->uuid, $causesUuids);
+        $this->assertNotContains($upcoming->uuid, $causesUuids);
     }
 }
