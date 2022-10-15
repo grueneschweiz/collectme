@@ -6,7 +6,11 @@ namespace Model\Entities;
 
 use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Model\Entities\Cause;
+use Collectme\Model\Entities\EnumGroupType;
 use Collectme\Model\Entities\EnumLang;
+use Collectme\Model\Entities\EnumPermission;
+use Collectme\Model\Entities\Group;
+use Collectme\Model\Entities\Role;
 use Collectme\Model\Entities\User;
 use Collectme\Model\Entities\UserCause;
 
@@ -385,5 +389,116 @@ class UserTest extends \WP_UnitTestCase
 
     private function uniqueEmail(): string {
         return wp_generate_uuid4() . '@example.com';
+    }
+
+    public function test_findWithWritePermissionForGroup(): void
+    {
+        $user1 = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            true,
+            'test_findWithWritePermissionForGroup'
+        );
+        $user1->save();
+
+        $user2 = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            true,
+            'test_findWithWritePermissionForGroup'
+        );
+        $user2->save();
+
+        $userReadOnly = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            true,
+            'test_findWithWritePermissionForGroup'
+        );
+        $userReadOnly->save();
+
+        $userOtherGroup = new User(
+            null,
+            wp_generate_uuid4().'@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            true,
+            'test_findWithWritePermissionForGroup'
+        );
+        $userOtherGroup->save();
+
+        $cause = new Cause(
+            null,
+            'user_cause_'.wp_generate_password(),
+        );
+        $cause->save();
+
+        $group = new Group(
+            null,
+            'user_group_'.wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group->save();
+
+        $otherGroup = new Group(
+            null,
+            'user_group_'.wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $otherGroup->save();
+
+        $role1 = new Role(
+            null,
+            $user1->uuid,
+            $group->uuid,
+            EnumPermission::READ_WRITE,
+        );
+        $role1->save();
+
+        $role2 = new Role(
+            null,
+            $user2->uuid,
+            $group->uuid,
+            EnumPermission::READ_WRITE,
+        );
+        $role2->save();
+
+        $roleReadOnly = new Role(
+            null,
+            $userReadOnly->uuid,
+            $group->uuid,
+            EnumPermission::READ,
+        );
+        $roleReadOnly->save();
+
+        $roleOtherGroup = new Role(
+            null,
+            $userOtherGroup->uuid,
+            $otherGroup->uuid,
+            EnumPermission::READ_WRITE,
+        );
+        $roleOtherGroup->save();
+
+        $users = User::findWithWritePermissionForGroup($group->uuid);
+        $userUuids = array_map(static fn(User $user) => $user->uuid, $users);
+
+        $this->assertContains($user1->uuid, $userUuids);
+        $this->assertContains($user2->uuid, $userUuids);
+        $this->assertNotContains($userReadOnly->uuid, $userUuids);
+        $this->assertNotContains($userOtherGroup->uuid, $userUuids);
     }
 }
