@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Model\Entities;
 
+use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Model\Database\DBField;
 use Collectme\Model\Database\DBTable;
 use Collectme\Model\DateProperty;
@@ -33,6 +34,74 @@ class MailQueueItem extends Entity
         ?\DateTime $deleted = null
     ) {
         parent::__construct($uuid, $created, $updated, $deleted);
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    public static function deleteUnsentByGroup(string $groupUuid): void
+    {
+        foreach (self::findUnsentByGroup($groupUuid) as $item) {
+            $item->delete();
+        }
+    }
+
+    /**
+     * @return MailQueueItem[]
+     * @throws CollectmeDBException
+     */
+    public static function findUnsentByGroup(string $groupUuid): array
+    {
+        global $wpdb;
+
+        $tbl = self::getTableName();
+
+        return self::findByQuery(
+            $wpdb->prepare(
+                <<<SQL
+SELECT * FROM $tbl
+WHERE groups_uuid = '%s'
+AND sent_at IS NULL
+AND deleted_at IS NULL
+SQL,
+                $groupUuid
+            )
+        );
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    public static function deleteUnsentByGroupAndMsgKey(string $groupUuid, EnumMessageKey $msgKey): void
+    {
+        foreach (self::findUnsentByGroupAndMsgKey($groupUuid, $msgKey) as $queuedItem) {
+            $queuedItem->delete();
+        }
+    }
+
+    /**
+     * @return MailQueueItem[]
+     * @throws CollectmeDBException
+     */
+    public static function findUnsentByGroupAndMsgKey(string $groupUuid, EnumMessageKey $msgKey): array
+    {
+        global $wpdb;
+
+        $tbl = self::getTableName();
+
+        return self::findByQuery(
+            $wpdb->prepare(
+                <<<SQL
+SELECT * FROM $tbl
+WHERE groups_uuid = '%s'
+AND sent_at IS NULL
+AND msg_key = '%s'
+AND deleted_at IS NULL
+SQL,
+                $groupUuid,
+                $msgKey->value,
+            )
+        );
     }
 
     /**
