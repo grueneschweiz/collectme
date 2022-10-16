@@ -19,4 +19,9 @@ class Mailer
         wp_unschedule_event($timestamp, 'collectme_send_mails');
     }
 
+    public function processQueue(): void
+    {
+        // todo ...
+        // see also todos in MailScheduler
+    }
 }

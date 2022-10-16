@@ -49,6 +49,16 @@ trait Persister
         return $entities;
     }
 
+    protected static function getTableName(): string
+    {
+        global $wpdb;
+
+        $tableAttributes = (new \ReflectionClass(static::class))->getAttributes(DBTable::class);
+        $tableBaseName = $tableAttributes[0]->newInstance()->name;
+
+        return $wpdb->prefix . DB_PREFIX . $tableBaseName;
+    }
+
     /**
      * @param string $query
      * @return static[]
@@ -74,53 +84,16 @@ trait Persister
         );
     }
 
-    /**
-     * @throws CollectmeDBException
-     */
-    public function save(): static
-    {
-        if ($this->uuid) {
-            $this->update();
-        } else {
-            $this->insert();
-        }
-
-        return self::get($this->uuid);
-    }
-
-    /**
-     * @throws CollectmeDBException
-     */
-    private function update(): void
-    {
-        global $wpdb;
-
-        $thisBeforeUpdated = self::get($this->uuid);
-
-        $data = $this->convertDataForDb();
-
-        $count = $wpdb->update(
-            self::getTableName(),
-            $data,
-            ['uuid' => $this->uuid],
-            $this->getFormatStrings($data),
-            '%s'
-        );
-
-        if (false === $count) {
-            throw new CollectmeDBException('Failed to update ' . static::class . ": $wpdb->last_error");
-        }
-
-        do_action('collectme_' . strtolower(static::class) . '_updated', $this, $thisBeforeUpdated);
-    }
-
-    private function convertDataForDb(): array
+    protected static function convertFieldsFromDb(array $data): array
     {
         $propertiesMap = self::getInstanceDbPropertiesMap();
 
         $props = [];
         foreach ($propertiesMap as $propertyMap) {
-            $props[$propertyMap['dbFieldName']] = $this->getConvertedValueForDb($propertyMap['instancePropertyName']);
+            $props[$propertyMap['instancePropertyName']] = self::convertFieldFromDb(
+                $propertyMap['instancePropertyName'],
+                $data[$propertyMap['dbFieldName']]
+            );
         }
 
         return $props;
@@ -167,97 +140,63 @@ trait Persister
         return $map;
     }
 
-    /**
-     * The property value, or the result of its db getter, if one exists.
-     *
-     * The db getter takes precedence over the property itself. The getter must
-     * use the following naming pattern: _convertDb{InstancePropertyName}. So the db
-     * getter for a property called 'created' has to be called _convertDbCreated.
-     *
-     * If a general getter, _convert{InstancePropertyName} exists but no db getter
-     * the general getter is used. Where no getter exists, the unconverted value
-     * of the property is returned.
-     *
-     * @param string $instancePropertyName
-     * @return mixed
-     */
-    private function getConvertedValueForDb(string $instancePropertyName): mixed
+    private static function convertFieldFromDb(string $instancePropertyName, mixed $value): mixed
     {
-        $getterName = '_convertToDb' . ucfirst($instancePropertyName);
-        if (method_exists($this, $getterName)) {
-            return $this->$getterName();
+        $getterName = '_convertFromDb' . ucfirst($instancePropertyName);
+        if (method_exists(self::class, $getterName) || method_exists(static::class, $getterName)) {
+            return static::$getterName($value);
         }
 
-        $getterName = '_convertTo' . ucfirst($instancePropertyName);
-        if (method_exists($this, $getterName)) {
-            return $this->$getterName();
+        $getterName = '_convertFrom' . ucfirst($instancePropertyName);
+        if (method_exists(self::class, $getterName) || method_exists(static::class, $getterName)) {
+            return static::$getterName($value);
         }
 
         if (self::isDateTime($instancePropertyName)) {
-            return $this->convertDateTimeToString($this->$instancePropertyName);
+            return self::convertToDateTime($value);
         }
 
-        return $this->$instancePropertyName;
-    }
-
-    protected static function getTableName(): string
-    {
-        global $wpdb;
-
-        $tableAttributes = (new \ReflectionClass(static::class))->getAttributes(DBTable::class);
-        $tableBaseName = $tableAttributes[0]->newInstance()->name;
-
-        return $wpdb->prefix . DB_PREFIX . $tableBaseName;
+        return $value;
     }
 
     /**
      * @throws CollectmeDBException
      */
-    private function getFormatStrings(array $data): array
+    public function save(): static
     {
-        $formatStrings = [];
-
-        foreach ($data as $field => $value) {
-            if (!is_scalar($value) && !is_null($value)) {
-                throw new CollectmeDBException("Invalid type for $field: " . gettype($value));
-            }
-
-            $formatStrings[] = match (gettype($value)) {
-                'boolean', 'integer' => '%d',
-                'double' => '%f',
-                default => '%s'
-            };
+        if ($this->uuid) {
+            $this->update();
+        } else {
+            $this->insert();
         }
 
-        return $formatStrings;
+        return self::get($this->uuid);
     }
 
     /**
      * @throws CollectmeDBException
      */
-    private function insert(): void
+    private function update(): void
     {
         global $wpdb;
+
+        $thisBeforeUpdated = self::get($this->uuid);
 
         $data = $this->convertDataForDb();
 
-        // manually set uuid, as we can't get it back from the
-        // database if we let the trigger create it on insert
-        $data['uuid'] = wp_generate_uuid4();
-
-        $count = $wpdb->insert(
+        $count = $wpdb->update(
             self::getTableName(),
             $data,
-            $this->getFormatStrings($data)
+            ['uuid' => $this->uuid],
+            $this->getFormatStrings($data),
+            '%s'
         );
 
-        if (1 !== $count) {
-            throw new CollectmeDBException('Failed to insert ' . static::class . ": $wpdb->last_error");
+        if (false === $count) {
+            throw new CollectmeDBException('Failed to update ' . static::class . ": $wpdb->last_error");
         }
 
-        $this->uuid = $data['uuid'];
-
-        do_action('collectme_' . strtolower(static::class) . '_inserted', $this);
+        do_action("collectme_{$this->getEntityName()}_updated", $this, $thisBeforeUpdated);
     }
 
     /**
@@ -293,38 +232,112 @@ trait Persister
         return new static(...self::convertFieldsFromDb($result));
     }
 
-    protected static function convertFieldsFromDb(array $data): array
+    private function convertDataForDb(): array
     {
         $propertiesMap = self::getInstanceDbPropertiesMap();
 
         $props = [];
         foreach ($propertiesMap as $propertyMap) {
-            $props[$propertyMap['instancePropertyName']] = self::convertFieldFromDb(
-                $propertyMap['instancePropertyName'],
-                $data[$propertyMap['dbFieldName']]
-            );
+            $props[$propertyMap['dbFieldName']] = $this->getConvertedValueForDb($propertyMap['instancePropertyName']);
         }
 
         return $props;
     }
 
-    private static function convertFieldFromDb(string $instancePropertyName, mixed $value): mixed
+    /**
+     * The property value, or the result of its db getter, if one exists.
+     *
+     * The db getter takes precedence over the property itself. The getter must
+     * use the following naming pattern: _convertDb{InstancePropertyName}. So the db
+     * getter for a property called 'created' has to be called _convertDbCreated.
+     *
+     * If a general getter, _convert{InstancePropertyName} exists but no db getter
+     * the general getter is used. Where no getter exists, the unconverted value
+     * of the property is returned.
+     *
+     * @param string $instancePropertyName
+     * @return mixed
+     */
+    private function getConvertedValueForDb(string $instancePropertyName): mixed
     {
-        $getterName = '_convertFromDb' . ucfirst($instancePropertyName);
-        if (method_exists(self::class, $getterName) || method_exists(static::class, $getterName)) {
-            return static::$getterName($value);
+        $getterName = '_convertToDb' . ucfirst($instancePropertyName);
+        if (method_exists($this, $getterName)) {
+            return $this->$getterName();
         }
 
-        $getterName = '_convertFrom' . ucfirst($instancePropertyName);
-        if (method_exists(self::class, $getterName) || method_exists(static::class, $getterName)) {
-            return static::$getterName($value);
+        $getterName = '_convertTo' . ucfirst($instancePropertyName);
+        if (method_exists($this, $getterName)) {
+            return $this->$getterName();
         }
 
         if (self::isDateTime($instancePropertyName)) {
-            return self::convertToDateTime($value);
+            return $this->convertDateTimeToString($this->$instancePropertyName);
         }
 
-        return $value;
+        return $this->$instancePropertyName;
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    private function getFormatStrings(array $data): array
+    {
+        $formatStrings = [];
+
+        foreach ($data as $field => $value) {
+            if (!is_scalar($value) && !is_null($value)) {
+                throw new CollectmeDBException("Invalid type for $field: " . gettype($value));
+            }
+
+            $formatStrings[] = match (gettype($value)) {
+                'boolean', 'integer' => '%d',
+                'double' => '%f',
+                default => '%s'
+            };
+        }
+
+        return $formatStrings;
+    }
+
+    /**
+     * Get the unqualified class name in snake_case
+     *
+     * Example: Collectme\Model\Entities\SignatureEntry returns "signature_entry"
+     */
+    private function getEntityName(): string
+    {
+        $fqcn = static::class;
+        $class = substr($fqcn, strrpos($fqcn, '\\') + 1);
+        $snakeCased = strtolower(preg_replace('/([A-Z])/', '_$1', $class));
+        return trim($snakeCased, '_');
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    private function insert(): void
+    {
+        global $wpdb;
+
+        $data = $this->convertDataForDb();
+
+        // manually set uuid, as we can't get it back from the
+        // database if we let the trigger create it on insert
+        $data['uuid'] = wp_generate_uuid4();
+
+        $count = $wpdb->insert(
+            self::getTableName(),
+            $data,
+            $this->getFormatStrings($data)
+        );
+
+        if (1 !== $count) {
+            throw new CollectmeDBException('Failed to insert ' . static::class . ": $wpdb->last_error");
+        }
+
+        $this->uuid = $data['uuid'];
+
+        do_action("collectme_{$this->getEntityName()}_created", $this);
     }
 
     /**
@@ -350,6 +363,6 @@ trait Persister
             throw new CollectmeDBException('Failed to delete ' . static::class . ": $wpdb->last_error");
         }
 
-        do_action('collectme_' . strtolower(static::class) . '_deleted', $this);
+        do_action("collectme_{$this->getEntityName()}_deleted", $this);
     }
 }

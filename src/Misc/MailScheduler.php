@@ -6,67 +6,149 @@ namespace Collectme\Misc;
 
 
 use Collectme\Exceptions\CollectmeDBException;
-use Collectme\Model\Entities\Cause;
-use Collectme\Model\Entities\EnumGroupType;
+use Collectme\Model\Entities\EnumMessageKey;
 use Collectme\Model\Entities\Group;
-use DI\DependencyException;
-use DI\NotFoundException;
+use Collectme\Model\Entities\MailQueueItem;
+use Collectme\Model\Entities\Objective;
+use Collectme\Model\Entities\SignatureEntry;
 
 class MailScheduler
 {
-    public function __construct(
-        private readonly Settings $settings,
-    ) {
-    }
-
-    public static function scheduleCron(): void
+    /**
+     * @throws CollectmeDBException
+     */
+    public function groupDeleted(Group $group): void
     {
-        if (!wp_next_scheduled('collectme_schedule_mails')) {
-            wp_schedule_event(time(), 'daily', 'collectme_schedule_mails');
-        }
-    }
-
-    public static function removeCron(): void
-    {
-        $timestamp = wp_next_scheduled('collectme_schedule_mails');
-        wp_unschedule_event($timestamp, 'collectme_schedule_mails');
+        MailQueueItem::deleteUnsentByGroup($group->uuid);
     }
 
     /**
-     * @throws NotFoundException
      * @throws CollectmeDBException
-     * @throws DependencyException
      */
-    public function run(): void
+    public function groupUpdated(Group $group): void
     {
-        $container = collectme_get_container();
-
-        foreach ($this->getActiveCauses() as $cause) {
-            foreach (Group::findByTypeAndCause($cause->uuid, EnumGroupType::PERSON) as $group) {
-                foreach ($group->users() as $user) {
-                    if (!$user->mailPermission) {
-                        return;
-                    }
-
-                    $container->make(ReminderMailScheduler::class, [$group, $user])->run();
-                    $container->make(ActionMailScheduler::class, [$group, $user])->run();
-                }
-            }
+        if (!$group->isPersonal()) {
+            MailQueueItem::deleteUnsentByGroup($group->uuid);
         }
     }
 
     /**
      * @throws CollectmeDBException
      */
-    public function getActiveCauses(): array
+    public function groupCreated(Group $group): void
     {
-        $now = date_create();
+        if (!$group->isPersonal()) {
+            return;
+        }
 
-        return array_filter(Cause::findAll(), function (Cause $cause) use ($now) {
-            [$start, $stop] = $this->settings->getTimings($cause->uuid);
+        $queueItem = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::NO_COLLECT,
+            wp_generate_password(64, false),
+            null,
+        );
+        $queueItem->save();
+    }
 
-            return !($start && $start > $now)
-                && !($stop && $stop < $now);
-        });
+    /**
+     * @throws CollectmeDBException
+     */
+    public function objectiveDeleted(Objective $objective): void
+    {
+        MailQueueItem::deleteUnsentByGroupAndMsgKey(
+            $objective->groupUuid,
+            EnumMessageKey::OBJECTIVE_ADDED
+        );
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    public function objectiveUpdated(Objective $newObjective, Objective $oldObjective): void
+    {
+        if ($newObjective->groupUuid !== $oldObjective->groupUuid) {
+            MailQueueItem::deleteUnsentByGroupAndMsgKey(
+                $oldObjective->groupUuid,
+                EnumMessageKey::OBJECTIVE_ADDED
+            );
+            $this->objectiveCreated($newObjective);
+        }
+
+        if ($newObjective->objective !== $oldObjective->objective) {
+            $this->objectiveCreated($newObjective);
+        }
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    public function objectiveCreated(Objective $objective): void
+    {
+        if (!Group::get($objective->groupUuid)->isPersonal()) {
+            return;
+        }
+
+        MailQueueItem::deleteUnsentByGroupAndMsgKey(
+            $objective->groupUuid,
+            EnumMessageKey::OBJECTIVE_ADDED
+        );
+//        TODO: Consider the following lines in the Mailer logic.
+//        They can not be treated here as it would lead to buggy
+//        behavior if settings were changed during an ongoing
+//        campaign.
+//
+//        TODO: Delete those lines
+//        MailQueueItem::deleteUnsentByGroupAndMsgKey(
+//            $objective->groupUuid,
+//            EnumMessageKey::OBJECTIVE_ACHIEVED
+//        );
+//        MailQueueItem::deleteUnsentByGroupAndMsgKey(
+//            $objective->groupUuid,
+//            EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL
+//        );
+
+        $queueItem = new MailQueueItem(
+            null,
+            $objective->groupUuid,
+            EnumMessageKey::OBJECTIVE_ADDED,
+            wp_generate_password(64, false),
+            null,
+        );
+        $queueItem->save();
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    public function signatureEntryChange(SignatureEntry $entry): void
+    {
+        MailQueueItem::deleteUnsentByGroupAndMsgKey(
+            $entry->groupUuid,
+            EnumMessageKey::NO_COLLECT
+        );
+        MailQueueItem::deleteUnsentByGroupAndMsgKey(
+            $entry->groupUuid,
+            EnumMessageKey::REMINDER_1
+        );
+
+        $group = Group::get($entry->groupUuid);
+
+        if (!$group->isPersonal()) {
+            return;
+        }
+
+        $msg = $group->signatures() > 0
+            ? EnumMessageKey::REMINDER_1
+            : EnumMessageKey::NO_COLLECT;
+
+        $queueItem = new MailQueueItem(
+            null,
+            $entry->groupUuid,
+            $msg,
+            wp_generate_password(64, false),
+            null,
+        );
+        $queueItem->save();
     }
 }

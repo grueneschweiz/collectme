@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Collectme;
 
 use Collectme\Misc\Installer;
+use Collectme\Misc\Mailer;
 use Collectme\Misc\MailScheduler;
 use Collectme\Misc\ShortcodeHandler;
 use Collectme\Misc\Translator;
@@ -72,6 +73,7 @@ class Collectme
         private readonly Translator $translator,
         private readonly AdminRouter $adminRouter,
         private readonly MailScheduler $mailScheduler,
+        private readonly Mailer $mailer,
     ) {
     }
 
@@ -125,9 +127,22 @@ class Collectme
         add_filter('ngettext_with_context_collectme', [$this->translator, 'overrideNGettextWithContext'], 10, 5);
 
         /**
+         * Mail scheduler
+         */
+        add_action('collectme_signature_entry_created', [$this->mailScheduler, 'signatureEntryChange']);
+        add_action('collectme_signature_entry_updated', [$this->mailScheduler, 'signatureEntryChange']);
+        add_action('collectme_signature_entry_deleted', [$this->mailScheduler, 'signatureEntryChange']);
+        add_action('collectme_objective_created', [$this->mailScheduler, 'objectiveCreated']);
+        add_action('collectme_objective_updated', [$this->mailScheduler, 'objectiveUpdated'], 10, 2);
+        add_action('collectme_objective_deleted', [$this->mailScheduler, 'objectiveDeleted']);
+        add_action('collectme_group_created', [$this->mailScheduler, 'groupCreated']);
+        add_action('collectme_group_updated', [$this->mailScheduler, 'groupUpdated']);
+        add_action('collectme_group_deleted', [$this->mailScheduler, 'groupDeleted']);
+
+        /**
          * Cron jobs
          */
-        add_action('collectme_send_mails', [$this->mailScheduler, 'run']);
+        add_action('collectme_send_mails', [$this->mailer, 'processQueue']);
 
         /**
          * Don't add styles and scripts the WordPress way, this doesn't allow to add them only if the

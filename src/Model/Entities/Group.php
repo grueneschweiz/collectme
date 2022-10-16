@@ -215,4 +215,9 @@ SQL,
 
         return $this->roleUuids;
     }
+
+    public function isPersonal(): bool
+    {
+        return $this->type === EnumGroupType::PERSON;
+    }
 }
