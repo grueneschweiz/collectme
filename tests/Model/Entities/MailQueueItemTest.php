@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Model\Entities;
 
+use Collectme\Misc\Settings;
 use Collectme\Model\Entities\Cause;
 use Collectme\Model\Entities\EnumGroupType;
 use Collectme\Model\Entities\EnumMessageKey;
@@ -426,5 +427,147 @@ class MailQueueItemTest extends TestCase
         $this->assertNull(MailQueueItem::get($unsentOtherMsgKey->uuid, true)->deleted);
         $this->assertNull(MailQueueItem::get($sent->uuid, true)->deleted);
         $this->assertNull(MailQueueItem::get($unsentOtherGroup->uuid, true)->deleted);
+    }
+
+    public function test_isEnabled(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause->save();
+
+        Settings::getInstance()->setMailDelays([
+            EnumMessageKey::NO_COLLECT->value => new \DateInterval('P1D'),
+            EnumMessageKey::REMINDER_1->value => null,
+            EnumMessageKey::OBJECTIVE_ADDED->value => null,
+            EnumMessageKey::OBJECTIVE_ACHIEVED->value => null,
+            EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value => null,
+        ], $cause->uuid);
+
+        $group = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group->save();
+
+        $due = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::NO_COLLECT,
+            wp_generate_password(64, false),
+            null,
+            date_create('-2 days'),
+        );
+
+        $notYetDue = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::NO_COLLECT,
+            wp_generate_password(64, false),
+            null,
+            date_create('+1 hour'),
+        );
+
+        $disabled = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::OBJECTIVE_ADDED,
+            wp_generate_password(64, false),
+            null,
+            date_create('-2 days'),
+        );
+
+        $this->assertTrue($due->isEnabled());
+        $this->assertTrue($notYetDue->isEnabled());
+        $this->assertFalse($disabled->isEnabled());
+    }
+
+    public function test_isDueForSending(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause->save();
+
+        Settings::getInstance()->setMailDelays([
+            EnumMessageKey::NO_COLLECT->value => new \DateInterval('P1D'),
+            EnumMessageKey::REMINDER_1->value => null,
+            EnumMessageKey::OBJECTIVE_ADDED->value => null,
+            EnumMessageKey::OBJECTIVE_ACHIEVED->value => null,
+            EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value => null,
+        ], $cause->uuid);
+
+        $group = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group->save();
+
+        $due = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::NO_COLLECT,
+            wp_generate_password(64, false),
+            null,
+            date_create('-2 days'),
+        );
+
+        $notYetDue = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::NO_COLLECT,
+            wp_generate_password(64, false),
+            null,
+            date_create('+1 hour'),
+        );
+
+        $disabled = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::OBJECTIVE_ADDED,
+            wp_generate_password(64, false),
+            null,
+            date_create('-2 days'),
+        );
+
+        $this->assertTrue($due->isDueForSending());
+        $this->assertFalse($notYetDue->isDueForSending());
+        $this->assertFalse($disabled->isDueForSending());
+    }
+
+    public function test_group(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $group = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group->save();
+
+        $item = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::NO_COLLECT,
+            wp_generate_password(64, false),
+            null,
+        );
+
+        $this->assertSame($group->uuid, $item->group()->uuid);
     }
 }

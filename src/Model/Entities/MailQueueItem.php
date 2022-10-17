@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Collectme\Model\Entities;
 
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Misc\Settings;
+use Collectme\Misc\Util;
 use Collectme\Model\Database\DBField;
 use Collectme\Model\Database\DBTable;
 use Collectme\Model\DateProperty;
@@ -13,6 +15,9 @@ use Collectme\Model\Entity;
 #[DBTable('mails')]
 class MailQueueItem extends Entity
 {
+    private null|\DateInterval $delay;
+    private Group $group;
+
     public function __construct(
         ?string $uuid,
 
@@ -131,6 +136,59 @@ SQL
     protected static function _convertFromMessageKey(string $key): EnumMessageKey
     {
         return EnumMessageKey::from($key);
+    }
+
+    /**
+     * Is sending of this message type (messageKey) enabled in the settings?
+     */
+    public function isEnabled(): bool
+    {
+        return null !== $this->getDelay();
+    }
+
+    /**
+     * The delay after which the mail should be sent, configured in settings.
+     */
+    private function getDelay(): null|\DateInterval
+    {
+        if (!isset($this->delay)) {
+            try {
+                $causeUuid = $this->group()->causeUuid;
+                $this->delay = Settings::getInstance()
+                    ->getMailDelays($causeUuid)[$this->messageKey->value];
+            } catch (CollectmeDBException) {
+                $this->delay = null;
+            }
+        }
+
+        return $this->delay;
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    public function group(): Group
+    {
+        if (!isset($this->group)) {
+            $this->group = Group::get($this->groupUuid);
+        }
+
+        return $this->group;
+    }
+
+    /**
+     * Are we already past the delay after which the mail should be sent?
+     */
+    public function isDueForSending(): bool
+    {
+        $delay = $this->getDelay();
+
+        if (null === $delay) {
+            return false;
+        }
+
+        $now = date_create('now', Util::getTimeZone());
+        return $this->created->add($delay) <= $now;
     }
 
     /**
