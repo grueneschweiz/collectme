@@ -105,6 +105,23 @@ SQL,
     }
 
     /**
+     * @return MailQueueItem[]
+     * @throws CollectmeDBException
+     */
+    public static function findUnsent(): array
+    {
+        $tbl = self::getTableName();
+
+        return self::findByQuery(
+            <<<SQL
+SELECT * FROM $tbl
+WHERE sent_at IS NULL
+AND deleted_at IS NULL
+SQL
+        );
+    }
+
+    /**
      * Convert message key string to enum
      *
      * @param string $key

@@ -57,6 +57,71 @@ class MailQueueItemTest extends TestCase
         $this->assertNotEmpty($dbItem);
     }
 
+    public function test_findUnsent(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $group = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group->save();
+
+        $unsent1 = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            wp_generate_password(64, false),
+            null,
+        );
+        $unsent1->save();
+
+        $unsent2 = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            wp_generate_password(64, false),
+            null,
+        );
+        $unsent2->save();
+
+        $sent = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            wp_generate_password(64, false),
+            date_create(),
+        );
+        $sent->save();
+
+        $deleted = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            wp_generate_password(64, false),
+            null,
+        );
+        $deleted->save()->delete();
+
+        $found = MailQueueItem::findUnsent();
+        $foundUuids = array_map(
+            static fn(MailQueueItem $item) => $item->uuid,
+            $found
+        );
+
+        $this->assertContains($unsent1->uuid, $foundUuids);
+        $this->assertContains($unsent2->uuid, $foundUuids);
+        $this->assertNotContains($sent->uuid, $foundUuids);
+        $this->assertNotContains($deleted->uuid, $foundUuids);
+    }
+
     public function test_findUnsentByGroup(): void
     {
         $cause = new Cause(
