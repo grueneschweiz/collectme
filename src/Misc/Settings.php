@@ -238,11 +238,19 @@ class Settings
         return array_replace($defaults, $timings);
     }
 
+    /**
+     * @param \DateTime[]|null[] $settings
+     * @param string $causeUuid
+     */
     public function setTimings(array $settings, string $causeUuid): void
     {
         $this->set(self::TIMINGS, $settings, $causeUuid);
     }
 
+    /**
+     * @param string $causeUuid
+     * @return \DateInterval[]|null[]
+     */
     public function getMailDelays(string $causeUuid): array
     {
         $mails = $this->get(self::MAIL_DELAYS, $causeUuid) ?? [];
@@ -257,6 +265,10 @@ class Settings
         return array_replace($defaults, $mails);
     }
 
+    /**
+     * @param \DateInterval[]|null[] $settings
+     * @param string $causeUuid
+     */
     public function setMailDelays(array $settings, string $causeUuid): void
     {
         $this->set(self::MAIL_DELAYS, $settings, $causeUuid);
