@@ -14,6 +14,7 @@ use Collectme\Controller\Validators\UrlValidator;
 use Collectme\Email\LoginEmail;
 use Collectme\Exceptions\CollectmeException;
 use Collectme\Misc\Auth;
+use Collectme\Misc\Mailer;
 use Collectme\Model\Entities\EnumLang;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -28,6 +29,7 @@ class AuthController extends WP_REST_Controller
     public function __construct(
         private readonly Auth $auth,
         private readonly LoginEmail $loginEmail,
+        private readonly Mailer $mailer,
     ) {
     }
 
@@ -112,13 +114,13 @@ class AuthController extends WP_REST_Controller
             return $this->makeInternalServerErrorResponse(new CollectmeException('Missing session'));
         }
 
-        try {
-            $this->loginEmail->user = $user;
-            $this->loginEmail->session = $session;
-            $this->loginEmail->appUrl = $attributes['appUrl'];
-            $this->loginEmail->causeUuid = $causeUuid;
+        $this->loginEmail->user = $user;
+        $this->loginEmail->session = $session;
+        $this->loginEmail->appUrl = $attributes['appUrl'];
+        $this->loginEmail->causeUuid = $causeUuid;
 
-            $this->loginEmail->send();
+        try {
+            $this->mailer->send($this->loginEmail, $causeUuid);
         } catch (CollectmeException $e) {
             return $this->makeInternalServerErrorResponse($e);
         }

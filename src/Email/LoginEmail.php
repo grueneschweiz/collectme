@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Collectme\Email;
 
-use Collectme\Exceptions\CollectmeException;
 use Collectme\Misc\Settings;
 use Collectme\Model\Entities\PersistentSession;
 use Collectme\Model\Entities\User;
 
-class LoginEmail
+class LoginEmail implements Mailable
 {
     public User $user;
     public PersistentSession $session;
@@ -21,33 +20,20 @@ class LoginEmail
     ) {
     }
 
-    /**
-     * @throws CollectmeException
-     */
-    public function send(): void
+    public function getToAddr(): string
     {
-        $emailConfig = $this->settings->getEmailConfig($this->causeUuid);
-
-        $headers = [
-            'Content-Type: text/html; charset=UTF-8',
-            'From: ' . $emailConfig['fromName'] . ' <' . $emailConfig['fromAddress'] . '>',
-            'Reply-To: ' . $emailConfig['replyToAddress'],
-        ];
-
-        /* Translators: Override with "Login link for the cause" */
-        $subject = _x('Login link', 'Email subject', 'collectme');
-        $message = $this->composeMessage();
-
-        $success = wp_mail($this->user->email, $subject, $message, $headers);
-
-        if (!$success) {
-            throw new CollectmeException('Failed to send email.');
-        }
+        return $this->user->email;
     }
 
-    private function composeMessage(): string
+    public function getSubject(): string
     {
-        $fromName =  $this->settings->getEmailConfig($this->causeUuid)['fromName'];
+        /* Translators: Override with "Login link for the cause" */
+        return _x('Login link', 'Email subject', 'collectme');
+    }
+
+    public function getMessage(): string
+    {
+        $fromName = $this->settings->getEmailConfig($this->causeUuid)['fromName'];
 
         $loginButton = $this->getButton(
             __('Confirm login', 'collectme'),

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Email;
 
 use Collectme\Email\LoginEmail;
+use Collectme\Misc\Mailer;
 use Collectme\Misc\Settings;
 use Collectme\Model\Entities\EnumLang;
 use Collectme\Model\Entities\PersistentSession;
@@ -67,6 +68,7 @@ class LoginEmailTest extends TestCase
             );
         } );
 
-        $loginEmail->send();
+        $mailer = new Mailer($settingsMock);
+        $mailer->send($loginEmail, wp_generate_uuid4());
     }
 }
