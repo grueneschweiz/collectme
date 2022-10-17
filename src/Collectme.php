@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace Collectme;
 
 use Collectme\Misc\Installer;
-use Collectme\Misc\Mailer;
+use Collectme\Misc\MailQueueProcessor;
 use Collectme\Misc\MailScheduler;
 use Collectme\Misc\ShortcodeHandler;
 use Collectme\Misc\Translator;
@@ -73,7 +73,7 @@ class Collectme
         private readonly Translator $translator,
         private readonly AdminRouter $adminRouter,
         private readonly MailScheduler $mailScheduler,
-        private readonly Mailer $mailer,
+        private readonly MailQueueProcessor $mailQueueProcessor,
     ) {
     }
 
@@ -142,7 +142,7 @@ class Collectme
         /**
          * Cron jobs
          */
-        add_action('collectme_send_mails', [$this->mailer, 'processQueue']);
+        add_action('collectme_send_mails', [$this->mailQueueProcessor, 'processQueue']);
 
         /**
          * Don't add styles and scripts the WordPress way, this doesn't allow to add them only if the

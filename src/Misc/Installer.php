@@ -29,7 +29,7 @@ class Installer
 
         self::forEachSite([self::class, 'removeOptions']);
         self::forEachSite([DbInstaller::class, 'removeTables']);
-        self::forEachSite([Mailer::class, 'removeCron']);
+        self::forEachSite([MailQueueProcessor::class, 'removeCron']);
     }
 
     private static function forEachSite(callable $callback): void
@@ -86,10 +86,10 @@ class Installer
     {
         if ($networkWide) {
             self::forEachSite([$this->dbInstaller, 'setupTables']);
-            self::forEachSite([Mailer::class, 'scheduleCron']);
+            self::forEachSite([MailQueueProcessor::class, 'scheduleCron']);
         } else {
             $this->dbInstaller->setupTables();
-            Mailer::scheduleCron();
+            MailQueueProcessor::scheduleCron();
         }
 
         $this->storeCurrentPluginVersion();
@@ -103,9 +103,9 @@ class Installer
     public function deactivate(bool $networkWide): void
     {
         if ($networkWide) {
-            self::forEachSite([Mailer::class, 'removeCron']);
+            self::forEachSite([MailQueueProcessor::class, 'removeCron']);
         } else {
-            Mailer::removeCron();
+            MailQueueProcessor::removeCron();
         }
     }
 
@@ -119,7 +119,7 @@ class Installer
         }
 
         $this->dbInstaller->setupTables();
-        Mailer::scheduleCron();
+        MailQueueProcessor::scheduleCron();
 
         $this->storeCurrentPluginVersion();
     }
