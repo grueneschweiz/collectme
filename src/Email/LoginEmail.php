@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Collectme\Misc;
+namespace Collectme\Email;
 
 use Collectme\Exceptions\CollectmeException;
+use Collectme\Misc\Settings;
 use Collectme\Model\Entities\PersistentSession;
 use Collectme\Model\Entities\User;
 

@@ -6,11 +6,9 @@ declare(strict_types=1);
 namespace Controller;
 
 use Collectme\Controller\AuthController;
+use Collectme\Email\LoginEmail;
 use Collectme\Misc\Auth;
-use Collectme\Misc\LoginEmail;
-use Collectme\Model\Entities\AccountToken;
 use Collectme\Model\Entities\Cause;
-use Collectme\Model\Entities\EnumLang;
 use Collectme\Model\Entities\PersistentSession;
 use Collectme\Model\Entities\User;
 use PHPUnit\Framework\TestCase;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Misc;
+namespace Email;
 
-use Collectme\Misc\LoginEmail;
+use Collectme\Email\LoginEmail;
 use Collectme\Misc\Settings;
 use Collectme\Model\Entities\EnumLang;
 use Collectme\Model\Entities\PersistentSession;
