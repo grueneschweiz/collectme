@@ -123,6 +123,21 @@ class MailScheduler
      */
     public function signatureEntryChange(SignatureEntry $entry): void
     {
+        $group = Group::get($entry->groupUuid);
+
+        if (!$group->isPersonal()) {
+            return;
+        }
+
+        $this->scheduleReminder($entry, $group);
+        $this->scheduleObjectiveMsg($entry, $group);
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    private function scheduleReminder(SignatureEntry $entry, Group $group): void
+    {
         MailQueueItem::deleteUnsentByGroupAndMsgKey(
             $entry->groupUuid,
             EnumMessageKey::NO_COLLECT
@@ -132,15 +147,63 @@ class MailScheduler
             EnumMessageKey::REMINDER_1
         );
 
-        $group = Group::get($entry->groupUuid);
-
-        if (!$group->isPersonal()) {
-            return;
-        }
-
         $msg = $group->signatures() > 0
             ? EnumMessageKey::REMINDER_1
             : EnumMessageKey::NO_COLLECT;
+
+        $queueItem = new MailQueueItem(
+            null,
+            $entry->groupUuid,
+            $msg,
+            wp_generate_password(64, false),
+            null,
+        );
+        $queueItem->save();
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    private function scheduleObjectiveMsg(SignatureEntry $entry, Group $group): void
+    {
+        $objective = Objective::findHighestOfGroup($entry->groupUuid);
+        if (empty($objective)) {
+            return;
+        }
+
+        $objectiveCount = $objective[0]->objective;
+        $signatureCount = $group->signatures();
+
+        if ($signatureCount < $objectiveCount // below objective
+            || ($signatureCount - $entry->count) >= $objectiveCount // objective already achieved
+            || 0 >= $objectiveCount
+        ) {
+            return;
+        }
+
+        MailQueueItem::deleteUnsentByGroupAndMsgKey(
+            $entry->groupUuid,
+            EnumMessageKey::OBJECTIVE_ACHIEVED
+        );
+        MailQueueItem::deleteUnsentByGroupAndMsgKey(
+            $entry->groupUuid,
+            EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL
+        );
+
+        $objectiveSettings = Settings::getInstance()->getObjectives($group->causeUuid);
+        $enabledObjectives = array_filter(
+            $objectiveSettings,
+            static fn($setting) => $setting['enabled']
+        );
+        $highestObjective = array_reduce(
+            $enabledObjectives,
+            static fn($carry, $setting) => $carry['objective'] > $setting['objective'] ? $carry : $setting,
+            ['objective' => 0]
+        );
+
+        $msg = $objectiveCount < $highestObjective['objective']
+            ? EnumMessageKey::OBJECTIVE_ACHIEVED
+            : EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL;
 
         $queueItem = new MailQueueItem(
             null,
