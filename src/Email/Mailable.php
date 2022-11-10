@@ -19,5 +19,5 @@ interface Mailable
     /**
      * The email body
      */
-    public function getMessage();
+    public function getMessage(): string;
 }
