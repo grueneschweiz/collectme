@@ -8,6 +8,7 @@ namespace Controller;
 use Collectme\Controller\AuthController;
 use Collectme\Email\LoginEmail;
 use Collectme\Misc\Auth;
+use Collectme\Misc\Mailer;
 use Collectme\Model\Entities\Cause;
 use Collectme\Model\Entities\PersistentSession;
 use Collectme\Model\Entities\User;
@@ -66,10 +67,12 @@ class AuthControllerTest extends TestCase
             ->willReturn($session);
 
         $emailMock = $this->createMock(LoginEmail::class);
-        $emailMock->expects($this->once())
+
+        $mailerMock = $this->createMock(Mailer::class);
+        $mailerMock->expects($this->once())
             ->method('send');
 
-        $controller = new AuthController($authMock, $emailMock);
+        $controller = new AuthController($authMock, $emailMock, $mailerMock);
         $resp = $controller->loginWithFormData($request);
 
         $respData = json_decode(json_encode($resp->get_data()), true);
@@ -106,8 +109,9 @@ class AuthControllerTest extends TestCase
 
         $authMock = $this->createMock(Auth::class);
         $emailMock = $this->createMock(LoginEmail::class);
+        $mailerMock = $this->createMock(Mailer::class);
 
-        $controller = new AuthController($authMock, $emailMock);
+        $controller = new AuthController($authMock, $emailMock, $mailerMock);
         $resp = $controller->loginWithFormData($request);
 
         $respData = json_decode(json_encode($resp->get_data()), true);
@@ -139,8 +143,9 @@ class AuthControllerTest extends TestCase
 
         $authMock = $this->createMock(Auth::class);
         $emailMock = $this->createMock(LoginEmail::class);
+        $mailerMock = $this->createMock(Mailer::class);
 
-        $controller = new AuthController($authMock, $emailMock);
+        $controller = new AuthController($authMock, $emailMock, $mailerMock);
         $resp = $controller->loginWithFormData($request);
 
         $respData = json_decode(json_encode($resp->get_data()), true);
