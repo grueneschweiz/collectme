@@ -75,6 +75,17 @@ SQL,
     }
 
     /**
+     * @param EnumMessageKey[] $msgKeys
+     * @throws CollectmeDBException
+     */
+    public static function deleteUnsentByGroupAndMsgKeys(string $groupUuid, array $msgKeys): void
+    {
+        foreach ($msgKeys as $msgKey) {
+            self::deleteUnsentByGroupAndMsgKey($groupUuid, $msgKey);
+        }
+    }
+
+    /**
      * @throws CollectmeDBException
      */
     public static function deleteUnsentByGroupAndMsgKey(string $groupUuid, EnumMessageKey $msgKey): void

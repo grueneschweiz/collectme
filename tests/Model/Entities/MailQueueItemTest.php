@@ -429,6 +429,92 @@ class MailQueueItemTest extends TestCase
         $this->assertNull(MailQueueItem::get($unsentOtherGroup->uuid, true)->deleted);
     }
 
+    public function test_deleteUnsentByGroupAndMsgKeys(): void
+    {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause->save();
+
+        $group = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $group->save();
+
+        $otherGroup = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause->uuid,
+            false,
+        );
+        $otherGroup->save();
+
+        $unsent1 = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            wp_generate_password(64, false),
+            null,
+        );
+        $unsent1->save();
+
+        $unsent2 = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::OBJECTIVE_RAISED,
+            wp_generate_password(64, false),
+            null,
+        );
+        $unsent2->save();
+
+        $unsentOtherMsgKey = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::NO_COLLECT,
+            wp_generate_password(64, false),
+            null,
+        );
+        $unsentOtherMsgKey->save();
+
+        $sent = new MailQueueItem(
+            null,
+            $group->uuid,
+            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            wp_generate_password(64, false),
+            date_create(),
+        );
+        $sent->save();
+
+        $unsentOtherGroup = new MailQueueItem(
+            null,
+            $otherGroup->uuid,
+            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            wp_generate_password(64, false),
+            null,
+        );
+        $unsentOtherGroup->save();
+
+        MailQueueItem::deleteUnsentByGroupAndMsgKeys(
+            $group->uuid,
+            [
+                EnumMessageKey::OBJECTIVE_ACHIEVED,
+                EnumMessageKey::OBJECTIVE_RAISED
+            ]
+        );
+
+        $this->assertNotNull(MailQueueItem::get($unsent1->uuid, true)->deleted);
+        $this->assertNotNull(MailQueueItem::get($unsent2->uuid, true)->deleted);
+        $this->assertNull(MailQueueItem::get($unsentOtherMsgKey->uuid, true)->deleted);
+        $this->assertNull(MailQueueItem::get($sent->uuid, true)->deleted);
+        $this->assertNull(MailQueueItem::get($unsentOtherGroup->uuid, true)->deleted);
+    }
+
     public function test_isEnabled(): void
     {
         $cause = new Cause(
