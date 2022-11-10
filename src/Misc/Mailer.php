@@ -14,6 +14,9 @@ class Mailer
     ) {
     }
 
+    /**
+     * @throws CollectmeException
+     */
     public function send(Mailable $mailable, string $causeUuid): void
     {
         $success = wp_mail(
