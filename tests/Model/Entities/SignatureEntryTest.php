@@ -343,4 +343,98 @@ class SignatureEntryTest extends TestCase
         $this->assertSame($apiData['relationships']['group']['data']['id'], $entry->groupUuid);
         $this->assertSame($apiData['relationships']['activity']['data']['id'], $entry->activityLogUuid);
     }
+
+    public function test_totalBeforeDateByGroup(): void
+    {
+        $now = date_create_immutable();
+        $oneSec = \DateInterval::createFromDateString('1 second');
+
+        $cause1 = new Cause(
+            null,
+            'test_' . wp_generate_password(),
+        );
+        $cause1->save();
+
+        $group1 = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            false,
+        );
+        $group1->save();
+
+        $group2 = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $cause1->uuid,
+            false,
+        );
+        $group2->save();
+
+        $user = new User(
+            null,
+            wp_generate_uuid4() . '@mail.com',
+            'Jane',
+            'Doe',
+            EnumLang::FR,
+            true,
+            'user cause test'
+        );
+        $user->save();
+
+        $log = new ActivityLog(
+            null,
+            EnumActivityType::PERSONAL_SIGNATURE,
+            123,
+            $cause1->uuid,
+            $group1->uuid
+        );
+        $log->save();
+
+        $entry11 = new SignatureEntry(
+            null,
+            $group1->uuid,
+            $user->uuid,
+            1,
+            $log->uuid,
+            date_create($now->sub($oneSec)->format(DATE_RFC3339_EXTENDED))
+        );
+        $entry11->save();
+
+        $entry12 = new SignatureEntry(
+            null,
+            $group1->uuid,
+            $user->uuid,
+            10,
+            $log->uuid,
+            date_create($now->sub($oneSec)->format(DATE_RFC3339_EXTENDED))
+        );
+        $entry12->save();
+
+        $entry13 = new SignatureEntry(
+            null,
+            $group1->uuid,
+            $user->uuid,
+            100,
+            $log->uuid,
+            date_create($now->add($oneSec)->format(DATE_RFC3339_EXTENDED))
+        );
+        $entry13->save();
+
+        $entry21 = new SignatureEntry(
+            null,
+            $group2->uuid,
+            $user->uuid,
+            1000,
+            $log->uuid,
+            date_create($now->sub($oneSec)->format(DATE_RFC3339_EXTENDED))
+        );
+        $entry21->save();
+
+        $total = SignatureEntry::totalBeforeDateByGroup($now, $group1->uuid);
+        $this->assertSame(11, $total);
+    }
+
 }
