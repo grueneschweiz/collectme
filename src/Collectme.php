@@ -153,7 +153,7 @@ class Collectme
         /**
          * Cron jobs
          */
-        add_action('collectme_send_mails', [$this->mailQueueProcessor, 'processQueue']);
+        add_action('collectme_send_mails', [$this->mailQueueProcessor, 'process']);
 
         /**
          * Don't add styles and scripts the WordPress way, this doesn't allow to add them only if the

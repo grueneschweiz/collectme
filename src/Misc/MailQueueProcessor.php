@@ -4,25 +4,20 @@ declare(strict_types=1);
 
 namespace Collectme\Misc;
 
-use Collectme\Email\NoCollectEmail;
-use Collectme\Email\ObjectiveAchievedEmail;
-use Collectme\Email\ObjectiveAchievedFinalEmail;
-use Collectme\Email\ObjectiveAddedEmail;
-use Collectme\Email\Reminder1Email;
 use Collectme\Exceptions\CollectmeDBException;
-use Collectme\Model\Entities\EnumMessageKey;
+use Collectme\Exceptions\CollectmeException;
 use Collectme\Model\Entities\MailQueueItem;
-use Collectme\Model\Entities\User;
+use DI\DependencyException;
+use DI\NotFoundException;
+
 
 class MailQueueProcessor
 {
+
     public function __construct(
-        private readonly NoCollectEmail $noCollectEmail,
-        private readonly Reminder1Email $reminder1Email,
-        private readonly ObjectiveAddedEmail $objectiveAddedEmail,
-        private readonly ObjectiveAchievedEmail $objectiveAchievedEmail,
-        private readonly ObjectiveAchievedFinalEmail $objectiveAchievedFinalEmail,
-    ) {
+        private readonly MailQueueItemProcessor $itemProcessor,
+    )
+    {
     }
 
     public static function scheduleCron(): void
@@ -40,49 +35,14 @@ class MailQueueProcessor
 
     /**
      * @throws CollectmeDBException
+     * @throws CollectmeException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function processQueue(): void
+    public function process(): void
     {
         foreach (MailQueueItem::findUnsent() as $item) {
-            $this->processItem($item);
+            $this->itemProcessor->process($item);
         }
-    }
-
-    /**
-     * @throws CollectmeDBException
-     */
-    private function processItem(MailQueueItem $item): void
-    {
-        if ($item->isEnabled()) {
-            $item->delete();
-            return;
-        }
-
-        if (!$item->isDueForSending()) {
-            return;
-        }
-
-        $email = match ($item->messageKey) {
-            EnumMessageKey::NO_COLLECT => $this->noCollectEmail,
-            EnumMessageKey::REMINDER_1 => $this->reminder1Email,
-
-            EnumMessageKey::OBJECTIVE_ADDED => $this->objectiveAddedEmail,
-            EnumMessageKey::OBJECTIVE_ACHIEVED => $this->objectiveAchievedEmail,
-            EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL => $this->objectiveAchievedFinalEmail,
-        };
-
-        $email->prepare($item);
-
-        $users = User::findWithWritePermissionForGroup($item->groupUuid);
-        foreach ($users as $user) {
-            if (!$user->mailPermission) {
-                continue;
-            }
-
-            $email->send($item, $user);
-        }
-
-        $item->sent = date_create('now', Util::getTimeZone());
-        $item->save();
     }
 }
