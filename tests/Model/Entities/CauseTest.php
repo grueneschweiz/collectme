@@ -11,7 +11,7 @@ use Collectme\Model\Entities\User;
 use Collectme\Model\Entities\UserCause;
 use PHPUnit\Framework\TestCase;
 
-use const Collectme\MAIL_QUEUE_ITEM_EXPIRATION_DURATION;
+use const Collectme\CAUSE_MINIMAL_DATA_RETENTION_DURATION;
 
 class CauseTest extends TestCase
 {
@@ -46,7 +46,7 @@ class CauseTest extends TestCase
     {
         $user1 = new User(
             null,
-            wp_generate_uuid4().'@mail.com',
+            wp_generate_uuid4() . '@mail.com',
             'Jane',
             'Doe',
             EnumLang::FR,
@@ -57,7 +57,7 @@ class CauseTest extends TestCase
 
         $user2 = new User(
             null,
-            wp_generate_uuid4().'@mail.com',
+            wp_generate_uuid4() . '@mail.com',
             'Jane',
             'Doe',
             EnumLang::FR,
@@ -69,19 +69,19 @@ class CauseTest extends TestCase
 
         $cause1 = new Cause(
             null,
-            'user_cause_'.wp_generate_password(),
+            'user_cause_' . wp_generate_password(),
         );
         $cause1->save();
 
         $cause2 = new Cause(
             null,
-            'user_cause_'.wp_generate_password(),
+            'user_cause_' . wp_generate_password(),
         );
         $cause2->save();
 
         $cause3 = new Cause(
             null,
-            'user_cause_'.wp_generate_password(),
+            'user_cause_' . wp_generate_password(),
         );
         $cause3->save();
 
@@ -115,24 +115,11 @@ class CauseTest extends TestCase
         $this->assertCount(2, $causes);
     }
 
-    private function createCause(?\DateTime $start, ?\DateTime $stop) {
-        $cause = new Cause(
-            null,
-            'test_' . wp_generate_password()
-        );
-        $cause->save();
-        Settings::getInstance()->setTimings([
-            'start' => $start,
-            'stop' => $stop,
-        ], $cause->uuid);
-        return $cause;
-    }
-
     public function test_findActive(): void
     {
         $activeToday = $this->createCause(
-            date_create()->setTime(0,0),
-            date_create()->setTime(23,59, 59, 999999)
+            date_create()->setTime(0, 0),
+            date_create()->setTime(23, 59, 59, 999999)
         );
         $activeForever = $this->createCause(
             null,
@@ -156,6 +143,20 @@ class CauseTest extends TestCase
         $this->assertNotContains($upcoming->uuid, $causesUuids);
     }
 
+    private function createCause(?\DateTime $start, ?\DateTime $stop)
+    {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password()
+        );
+        $cause->save();
+        Settings::getInstance()->setTimings([
+            'start' => $start,
+            'stop' => $stop,
+        ], $cause->uuid);
+        return $cause;
+    }
+
     /**
      * @dataProvider getActiveCauses
      */
@@ -167,8 +168,8 @@ class CauseTest extends TestCase
     public function getActiveCauses(): array
     {
         $activeToday = $this->createCause(
-            date_create()->setTime(0,0),
-            date_create()->setTime(23,59, 59, 999999)
+            date_create()->setTime(0, 0),
+            date_create()->setTime(23, 59, 59, 999999)
         );
         $activeUntilTomorrow = $this->createCause(
             null,
@@ -202,22 +203,22 @@ class CauseTest extends TestCase
     }
 
     /**
-     * @dataProvider getLongPastCauses
+     * @dataProvider getIsDataRetentionExpired
      */
-    public function test_isLongPast(Cause $cause, bool $longPast): void
+    public function test_isDataRetentionExpired(Cause $cause, bool $longPast): void
     {
-        $this->assertEquals($longPast, $cause->isLongPast());
+        $this->assertEquals($longPast, $cause->isDataRetentionExpired());
     }
 
-    public function getLongPastCauses()
+    public function getIsDataRetentionExpired(): array
     {
         $upcoming = $this->createCause(
             date_create('+1 day'),
             null,
         );
         $activeToday = $this->createCause(
-            date_create()->setTime(0,0),
-            date_create()->setTime(23,59, 59, 999999)
+            date_create()->setTime(0, 0),
+            date_create()->setTime(23, 59, 59, 999999)
         );
         $activeForever = $this->createCause(
             null,
@@ -230,7 +231,7 @@ class CauseTest extends TestCase
         $passedLong = $this->createCause(
             null,
             date_create('-1 second')
-                ->sub(new \DateInterval(MAIL_QUEUE_ITEM_EXPIRATION_DURATION)),
+                ->sub(new \DateInterval(CAUSE_MINIMAL_DATA_RETENTION_DURATION)),
         );
 
         return [

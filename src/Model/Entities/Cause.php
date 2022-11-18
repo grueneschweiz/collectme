@@ -11,7 +11,7 @@ use Collectme\Model\Database\DBTable;
 use Collectme\Model\Entity;
 use Collectme\Model\JsonApi\ApiModelType;
 
-use const Collectme\MAIL_QUEUE_ITEM_EXPIRATION_DURATION;
+use const Collectme\CAUSE_MINIMAL_DATA_RETENTION_DURATION;
 
 #[ApiModelType('cause')]
 #[DBTable('causes')]
@@ -96,13 +96,13 @@ class Cause extends Entity
             && !($stop && $stop < $now);
     }
 
-    public function isLongPast(): bool
+    public function isDataRetentionExpired(): bool
     {
         $settings = Settings::getInstance();
 
         $end = $settings->getTimings($this->uuid)['stop'];
         $longPast = date_create()->sub(
-            new \DateInterval(MAIL_QUEUE_ITEM_EXPIRATION_DURATION)
+            new \DateInterval(CAUSE_MINIMAL_DATA_RETENTION_DURATION)
         );
 
         return $end && $longPast > $end;

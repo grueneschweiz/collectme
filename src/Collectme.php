@@ -63,15 +63,14 @@ const OPTION_KEY_DB_VERSION = OPTIONS_PREFIX . 'db_version';
 const OPTION_KEY_PLUGIN_VERSION = OPTIONS_PREFIX . 'plugin_version';
 
 /**
- * Duration to keep mail queue items after the causes collection has ended.
+ * Timespan to keep data of cause after it's end date.
  *
- * This only controls how log they are kept in the database. The mailer
- * won't send them after the causes end date. However, keeping them longer
- * in the database, helps to cope with configuration errors of the end date.
+ * This only controls how long items must not be deleted. There is no deletion
+ * guarantee.
  *
  * Must be a \DateInterval duration
  */
-const MAIL_QUEUE_ITEM_EXPIRATION_DURATION = 'P1Y1W';
+const CAUSE_MINIMAL_DATA_RETENTION_DURATION = 'P1Y1W';
 
 class Collectme
 {
