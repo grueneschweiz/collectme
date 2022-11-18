@@ -9,6 +9,11 @@ use Collectme\Model\Entities\User;
 
 interface QueuableEmail
 {
-    public function prepare(MailQueueItem $item): void;
-    public function send(MailQueueItem $item, User $user): void;
+    public function prepareFor(MailQueueItem $item): void;
+
+    public function shouldBeSent(): bool;
+
+    public function setUser(User $user): void;
+
+    public function afterSent(): void;
 }
