@@ -62,6 +62,17 @@ const OPTIONS_PREFIX = 'collectme_';
 const OPTION_KEY_DB_VERSION = OPTIONS_PREFIX . 'db_version';
 const OPTION_KEY_PLUGIN_VERSION = OPTIONS_PREFIX . 'plugin_version';
 
+/**
+ * Duration to keep mail queue items after the causes collection has ended.
+ *
+ * This only controls how log they are kept in the database. The mailer
+ * won't send them after the causes end date. However, keeping them longer
+ * in the database, helps to cope with configuration errors of the end date.
+ *
+ * Must be a \DateInterval duration
+ */
+const MAIL_QUEUE_ITEM_EXPIRATION_DURATION = 'P1Y1W';
+
 class Collectme
 {
     private static string $causeUuid = '';
