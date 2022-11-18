@@ -10,6 +10,7 @@ use Collectme\Model\Entities\Cause;
 use Collectme\Model\Entities\EnumActivityType;
 use Collectme\Model\Entities\EnumGroupType;
 use Collectme\Model\Entities\EnumLang;
+use Collectme\Model\Entities\EnumMailQueueItemTrigger;
 use Collectme\Model\Entities\EnumMessageKey;
 use Collectme\Model\Entities\Group;
 use Collectme\Model\Entities\MailQueueItem;
@@ -26,9 +27,11 @@ class MailSchedulerTest extends TestCase
         $queueItem = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $queueItem->save();
 
@@ -36,9 +39,11 @@ class MailSchedulerTest extends TestCase
         $otherQueueItem = new MailQueueItem(
             null,
             $otherGroup->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $otherGroup->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $otherQueueItem->save();
 
@@ -78,17 +83,21 @@ class MailSchedulerTest extends TestCase
         $queueItem1 = new MailQueueItem(
             null,
             $group1->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group1->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $queueItem1->save();
         $queueItem2 = new MailQueueItem(
             null,
             $group2->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group2->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $queueItem2->save();
 

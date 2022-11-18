@@ -7,6 +7,7 @@ namespace Model\Entities;
 use Collectme\Misc\Settings;
 use Collectme\Model\Entities\Cause;
 use Collectme\Model\Entities\EnumGroupType;
+use Collectme\Model\Entities\EnumMailQueueItemTrigger;
 use Collectme\Model\Entities\EnumMessageKey;
 use Collectme\Model\Entities\Group;
 use Collectme\Model\Entities\MailQueueItem;
@@ -35,18 +36,22 @@ class MailQueueItemTest extends TestCase
         $mailQueueItem = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $mailQueueItem->save();
 
         $dbItem = MailQueueItem::get($mailQueueItem->uuid);
 
         $this->assertSame($group->uuid, $dbItem->groupUuid);
-        $this->assertSame(EnumMessageKey::OBJECTIVE_ACHIEVED, $dbItem->messageKey);
+        $this->assertSame(EnumMessageKey::COLLECTION_REMINDER, $dbItem->messageKey);
         $this->assertNotEmpty($dbItem->unsubscribeSecret);
         $this->assertNull($dbItem->sent);
+        $this->assertSame($group->uuid, $dbItem->triggerObjUuid);
+        $this->assertSame(EnumMailQueueItemTrigger::GROUP, $dbItem->triggerObjType);
         $this->assertNotEmpty($dbItem->created);
         $this->assertNotEmpty($dbItem->updated);
         $this->assertNull($dbItem->deleted);
@@ -78,36 +83,44 @@ class MailQueueItemTest extends TestCase
         $unsent1 = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsent1->save();
 
         $unsent2 = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsent2->save();
 
         $sent = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             date_create(),
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $sent->save();
 
         $deleted = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $deleted->save()->delete();
 
@@ -152,45 +165,55 @@ class MailQueueItemTest extends TestCase
         $unsent1 = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsent1->save();
 
         $unsent2 = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsent2->save();
 
         $sent = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             date_create(),
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $sent->save();
 
         $unsentOtherGroup = new MailQueueItem(
             null,
             $otherGroup->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $otherGroup->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsentOtherGroup->save();
 
         $deleted = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $deleted->save();
         $deleted->delete();
@@ -237,27 +260,33 @@ class MailQueueItemTest extends TestCase
         $unsent = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsent->save();
 
         $sent = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             date_create(),
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $sent->save();
 
         $unsentOtherGroup = new MailQueueItem(
             null,
             $otherGroup->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $otherGroup->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsentOtherGroup->save();
 
@@ -297,52 +326,62 @@ class MailQueueItemTest extends TestCase
         $unsent = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsent->save();
 
         $unsentOtherMsgKey = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::OBJECTIVE_CHANGE,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsentOtherMsgKey->save();
 
         $sent = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             date_create(),
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $sent->save();
 
         $unsentOtherGroup = new MailQueueItem(
             null,
             $otherGroup->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $otherGroup->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsentOtherGroup->save();
 
         $deleted = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $deleted->save();
         $deleted->delete();
 
         $found = MailQueueItem::findUnsentByGroupAndMsgKey(
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED
+            EnumMessageKey::COLLECTION_REMINDER
         );
         $foundUuids = array_map(
             static fn(MailQueueItem $item) => $item->uuid,
@@ -385,42 +424,50 @@ class MailQueueItemTest extends TestCase
         $unsent = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsent->save();
 
         $unsentOtherMsgKey = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::OBJECTIVE_CHANGE,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsentOtherMsgKey->save();
 
         $sent = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             date_create(),
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $sent->save();
 
         $unsentOtherGroup = new MailQueueItem(
             null,
             $otherGroup->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $otherGroup->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsentOtherGroup->save();
 
         MailQueueItem::deleteUnsentByGroupAndMsgKey(
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED
+            EnumMessageKey::COLLECTION_REMINDER
         );
 
         $this->assertNotNull(MailQueueItem::get($unsent->uuid, true)->deleted);
@@ -458,53 +505,62 @@ class MailQueueItemTest extends TestCase
         $unsent1 = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsent1->save();
 
         $unsent2 = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_RAISED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsent2->save();
 
         $unsentOtherMsgKey = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::OBJECTIVE_CHANGE,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsentOtherMsgKey->save();
 
         $sent = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             date_create(),
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $sent->save();
 
         $unsentOtherGroup = new MailQueueItem(
             null,
             $otherGroup->uuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $otherGroup->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $unsentOtherGroup->save();
 
         MailQueueItem::deleteUnsentByGroupAndMsgKeys(
             $group->uuid,
             [
-                EnumMessageKey::OBJECTIVE_ACHIEVED,
-                EnumMessageKey::OBJECTIVE_RAISED
+                EnumMessageKey::COLLECTION_REMINDER,
             ]
         );
 
@@ -524,11 +580,8 @@ class MailQueueItemTest extends TestCase
         $cause->save();
 
         Settings::getInstance()->setMailDelays([
-            EnumMessageKey::NO_COLLECT->value => new \DateInterval('P1D'),
-            EnumMessageKey::REMINDER_1->value => null,
-            EnumMessageKey::OBJECTIVE_ADDED->value => null,
-            EnumMessageKey::OBJECTIVE_ACHIEVED->value => null,
-            EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value => null,
+            EnumMessageKey::OBJECTIVE_CHANGE->value => new \DateInterval('P1D'),
+            EnumMessageKey::COLLECTION_REMINDER->value => null,
         ], $cause->uuid);
 
         $group = new Group(
@@ -543,27 +596,33 @@ class MailQueueItemTest extends TestCase
         $due = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::OBJECTIVE_CHANGE,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
             date_create('-2 days'),
         );
 
         $notYetDue = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::OBJECTIVE_CHANGE,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
             date_create('+1 hour'),
         );
 
         $disabled = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ADDED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
             date_create('-2 days'),
         );
 
@@ -581,11 +640,8 @@ class MailQueueItemTest extends TestCase
         $cause->save();
 
         Settings::getInstance()->setMailDelays([
-            EnumMessageKey::NO_COLLECT->value => new \DateInterval('P1D'),
-            EnumMessageKey::REMINDER_1->value => null,
-            EnumMessageKey::OBJECTIVE_ADDED->value => null,
-            EnumMessageKey::OBJECTIVE_ACHIEVED->value => null,
-            EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value => null,
+            EnumMessageKey::OBJECTIVE_CHANGE->value => new \DateInterval('P1D'),
+            EnumMessageKey::COLLECTION_REMINDER->value => null,
         ], $cause->uuid);
 
         $group = new Group(
@@ -600,27 +656,33 @@ class MailQueueItemTest extends TestCase
         $due = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::OBJECTIVE_CHANGE,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
             date_create('-2 days'),
         );
 
         $notYetDue = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::OBJECTIVE_CHANGE,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
             date_create('+1 hour'),
         );
 
         $disabled = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::OBJECTIVE_ADDED,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
             date_create('-2 days'),
         );
 
@@ -649,9 +711,11 @@ class MailQueueItemTest extends TestCase
         $item = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
 
         $this->assertSame($group->uuid, $item->group()->uuid);

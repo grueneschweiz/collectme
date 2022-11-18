@@ -34,6 +34,12 @@ class MailQueueItem extends Entity
         #[DBField('sent_at')]
         public ?\DateTime $sent,
 
+        #[DBField('trigger_obj_uuid')]
+        public ?string $triggerObjUuid,
+
+        #[DBField('trigger_obj_type')]
+        public ?EnumMailQueueItemTrigger $triggerObjType,
+
         ?\DateTime $created = null,
         ?\DateTime $updated = null,
         ?\DateTime $deleted = null
@@ -150,6 +156,18 @@ SQL
     }
 
     /**
+     * Convert trigger object type string to enum
+     *
+     * @param string $type
+     * @return EnumMailQueueItemTrigger
+     * @noinspection PhpUnused
+     */
+    protected static function _convertFromTriggerObjType(string $type): EnumMailQueueItemTrigger
+    {
+        return EnumMailQueueItemTrigger::from($type);
+    }
+
+    /**
      * Is sending of this message type (messageKey) enabled in the settings?
      */
     public function isEnabled(): bool
@@ -187,6 +205,23 @@ SQL
         return $this->group;
     }
 
+    public function triggerObj(): SignatureEntry|Objective|Group|null
+    {
+        if (empty($this->triggerObjType) || empty($this->triggerObjUuid)) {
+            return null;
+        }
+
+        try {
+            return match ($this->triggerObjType) {
+                EnumMailQueueItemTrigger::SIGNATURE => SignatureEntry::get($this->triggerObjUuid),
+                EnumMailQueueItemTrigger::OBJECTIVE => Objective::get($this->triggerObjUuid),
+                EnumMailQueueItemTrigger::GROUP => Group::get($this->triggerObjUuid),
+            };
+        } catch (CollectmeDBException) {
+            return null;
+        }
+    }
+
     /**
      * Are we already past the delay after which the mail should be sent?
      */
@@ -211,5 +246,16 @@ SQL
     protected function _convertToMessageKey(): string
     {
         return $this->messageKey->value;
+    }
+
+    /**
+     * Return trigger object type enum as string
+     *
+     * @return string
+     * @noinspection PhpUnused
+     */
+    protected function _convertToTriggerObjType(): string
+    {
+        return $this->triggerObjType->value;
     }
 }
