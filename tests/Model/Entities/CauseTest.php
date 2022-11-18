@@ -113,42 +113,34 @@ class CauseTest extends TestCase
         $this->assertCount(2, $causes);
     }
 
+    private function createCause(?\DateTime $start, ?\DateTime $stop) {
+        $cause = new Cause(
+            null,
+            'test_' . wp_generate_password()
+        );
+        $cause->save();
+        Settings::getInstance()->setTimings([
+            'start' => $start,
+            'stop' => $stop,
+        ], $cause->uuid);
+        return $cause;
+    }
+
     public function test_findActive(): void
     {
-        $createCause = static function(?\DateTime $start, ?\DateTime $stop) {
-            $cause = new Cause(
-                null,
-                'test_' . wp_generate_password()
-            );
-            $cause->save();
-            Settings::getInstance()->setTimings([
-                'start' => $start,
-                'stop' => $stop,
-            ], $cause->uuid);
-            return $cause;
-        };
-
-        $activeToday = $createCause(
+        $activeToday = $this->createCause(
             date_create()->setTime(0,0),
             date_create()->setTime(23,59, 59, 999999)
         );
-        $activeUntilTomorrow = $createCause(
-            null,
-            date_create('+1 day')
-        );
-        $activeSinceYesterday = $createCause(
-            date_create('-1 day'),
-            null,
-        );
-        $activeForever = $createCause(
+        $activeForever = $this->createCause(
             null,
             null,
         );
-        $passed = $createCause(
+        $passed = $this->createCause(
             null,
             date_create('-1 day'),
         );
-        $upcoming = $createCause(
+        $upcoming = $this->createCause(
             date_create('+1 day'),
             null,
         );
@@ -157,10 +149,53 @@ class CauseTest extends TestCase
         $causesUuids = array_map(static fn(Cause $cause) => $cause->uuid, $causes);
 
         $this->assertContains($activeToday->uuid, $causesUuids);
-        $this->assertContains($activeUntilTomorrow->uuid, $causesUuids);
-        $this->assertContains($activeSinceYesterday->uuid, $causesUuids);
         $this->assertContains($activeForever->uuid, $causesUuids);
         $this->assertNotContains($passed->uuid, $causesUuids);
         $this->assertNotContains($upcoming->uuid, $causesUuids);
+    }
+
+    /**
+     * @dataProvider getActiveCauses
+     */
+    public function test_isActive(Cause $cause, bool $active): void
+    {
+        $this->assertEquals($active, $cause->isActive());
+    }
+
+    public function getActiveCauses(): array
+    {
+        $activeToday = $this->createCause(
+            date_create()->setTime(0,0),
+            date_create()->setTime(23,59, 59, 999999)
+        );
+        $activeUntilTomorrow = $this->createCause(
+            null,
+            date_create('+1 day')
+        );
+        $activeSinceYesterday = $this->createCause(
+            date_create('-1 day'),
+            null,
+        );
+        $activeForever = $this->createCause(
+            null,
+            null,
+        );
+        $passed = $this->createCause(
+            null,
+            date_create('-1 day'),
+        );
+        $upcoming = $this->createCause(
+            date_create('+1 day'),
+            null,
+        );
+
+        return [
+            'activeToday' => [$activeToday, true],
+            'activeUntilTomorrow' => [$activeUntilTomorrow, true],
+            'activeSinceYesterday' => [$activeSinceYesterday, true],
+            'activeForever' => [$activeForever, true],
+            'passed' => [$passed, false],
+            'upcoming' => [$upcoming, false],
+        ];
     }
 }

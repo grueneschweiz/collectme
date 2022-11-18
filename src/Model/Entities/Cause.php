@@ -66,18 +66,9 @@ class Cause extends Entity
      */
     public static function findActive(): array
     {
-        $now = date_create();
-        $settings = Settings::getInstance();
-
         return array_filter(
             self::findAll(),
-            static function (Cause $cause) use ($now, $settings) {
-                ['start' => $start, 'stop' => $stop] = $settings->getTimings($cause->uuid);
-
-                // missing start / stop dates are considered active
-                return !($start && $start > $now)
-                    && !($stop && $stop < $now);
-            }
+            static fn(Cause $cause) => $cause->isActive()
         );
     }
 
@@ -89,5 +80,17 @@ class Cause extends Entity
     {
         $causeTbl = self::getTableName();
         return self::findByQuery("SELECT * FROM {$causeTbl} WHERE deleted_at IS NULL");
+    }
+
+    public function isActive(): bool
+    {
+        $now = date_create();
+        $settings = Settings::getInstance();
+
+        ['start' => $start, 'stop' => $stop] = $settings->getTimings($this->uuid);
+
+        // missing start / stop dates are considered active
+        return !($start && $start > $now)
+            && !($stop && $stop < $now);
     }
 }
