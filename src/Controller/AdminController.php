@@ -270,12 +270,8 @@ class AdminController
 
             try {
                 $mailDelays[$case->value] = match ($case) {
-                    EnumMessageKey::NO_COLLECT,
-                    EnumMessageKey::REMINDER_1 => new \DateInterval("P{$delay}D"),
-
-                    EnumMessageKey::OBJECTIVE_ACHIEVED,
-                    EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL,
-                    EnumMessageKey::OBJECTIVE_ADDED => new \DateInterval("PT{$delay}H"),
+                    EnumMessageKey::COLLECTION_REMINDER => new \DateInterval("P{$delay}D"),
+                    EnumMessageKey::OBJECTIVE_CHANGE => new \DateInterval("PT{$delay}H"),
                 };
             } catch(\Exception) {
                 return false;

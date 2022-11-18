@@ -231,23 +231,23 @@ use Collectme\Model\Entities\EnumMessageKey;
                     </th>
                     <td>
                         <div>
-                            <label for="mail_delays[<?php echo EnumMessageKey::NO_COLLECT->value ?>]">
-                                <?php _e('Start collecting reminder', 'collectme') ?>
+                            <label for="mail_delays[<?php echo EnumMessageKey::COLLECTION_REMINDER->value ?>]">
+                                <?php _e('Collection reminder', 'collectme') ?>
                             </label>
                             <br>
                             <input
-                                    name="mail_delays[<?php echo EnumMessageKey::NO_COLLECT->value ?>]"
-                                    id="mail_delays[<?php echo EnumMessageKey::NO_COLLECT->value ?>]"
+                                    name="mail_delays[<?php echo EnumMessageKey::COLLECTION_REMINDER->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::COLLECTION_REMINDER->value ?>]"
                                     type="number"
                                     class="num"
                                     step="1"
                                     min="1"
                                     max="999"
                                     autocomplete="off"
-                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::NO_COLLECT->value]?->format('%d')) ?>"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::COLLECTION_REMINDER->value]?->format('%d')) ?>"
                             > <?php _e('days', 'collectme') ?>
                             <p class="description"><?php _e(
-                                    'Number of days after which the user is reminded to enter his first signatures.',
+                                    'Number of days after which the user receives an email that reminds him to collect and enter signatures.',
                                     'collectme'
                                 ) ?>
                                 <?php _e('Resent every X days.', 'collectme') ?>
@@ -258,112 +258,29 @@ use Collectme\Model\Entities\EnumMessageKey;
                             </p>
                         </div>
                         <div style="margin-top: 1rem;">
-                            <label for="mail_delays[<?php echo EnumMessageKey::REMINDER_1->value ?>]">
-                                <?php _e('Continue collecting reminder', 'collectme') ?>
+                            <label for="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_CHANGE->value ?>]">
+                                <?php _e('Goal added / updated / achieved', 'collectme') ?>
                             </label>
                             <br>
                             <input
-                                    name="mail_delays[<?php echo EnumMessageKey::REMINDER_1->value ?>]"
-                                    id="mail_delays[<?php echo EnumMessageKey::REMINDER_1->value ?>]"
-                                    type="number"
-                                    class="num"
-                                    step="1"
-                                    min="1"
-                                    max="999"
-                                    autocomplete="off"
-                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::REMINDER_1->value]?->format('%d')) ?>"
-                            > <?php _e('days', 'collectme') ?>
-                            <p class="description"><?php _e(
-                                    "Number of days after which the user is reminded if he hasn't entered any new signatures since.",
-                                    'collectme'
-                                ) ?>
-                                <?php _e('Resent every X days.', 'collectme') ?>
-                                <?php _e(
-                                    'No reminders are sent if left blank.',
-                                    'collectme'
-                                ) ?>
-                            </p>
-                        </div>
-                        <div style="margin-top: 1rem;">
-                            <label for="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED->value ?>]">
-                                <?php _e('Goal reached (but not upgraded)', 'collectme') ?>
-                            </label>
-                            <br>
-                            <input
-                                    name="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED->value ?>]"
-                                    id="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED->value ?>]"
+                                    name="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_CHANGE->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_CHANGE->value ?>]"
                                     type="number"
                                     class="num"
                                     step="1"
                                     min="0"
                                     max="999"
                                     autocomplete="off"
-                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::OBJECTIVE_ACHIEVED->value]?->format('%h')) ?>"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::OBJECTIVE_CHANGE->value]?->format('%h')) ?>"
                             > <?php _e('hours', 'collectme') ?>
                             <p class="description"><?php _e(
-                                    "Number of hours after which the user receives a thank you email for reaching its goal.",
+                                    "Number of hours after which the user receives a thank you email for reaching and/or updating its goal.",
                                     'collectme'
                                 ) ?>
                                 <?php _e(
                                     'No email is sent if left blank.',
                                     'collectme'
                                 ) ?>
-                            </p>
-                        </div>
-                        <div style="margin-top: 1rem;">
-                            <label for="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value ?>]">
-                                <?php _e('Highest goal reached', 'collectme') ?>
-                            </label>
-                            <br>
-                            <input
-                                    name="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value ?>]"
-                                    id="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value ?>]"
-                                    type="number"
-                                    class="num"
-                                    step="1"
-                                    min="0"
-                                    max="999"
-                                    autocomplete="off"
-                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value]?->format('%h')) ?>"
-                            > <?php _e('hours', 'collectme') ?>
-                            <p class="description"><?php _e(
-                                    "Number of hours after which the user receives a thank you email for reaching the final goal.",
-                                    'collectme'
-                                ) ?>
-                                <?php _e(
-                                    'No email is sent if left blank.',
-                                    'collectme'
-                                ) ?>
-                            </p>
-                        </div>
-                        <div style="margin-top: 1rem;">
-                            <label for="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ADDED->value ?>]">
-                                <?php _e('Goal raised', 'collectme') ?>
-                            </label>
-                            <br>
-                            <input
-                                    name="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ADDED->value ?>]"
-                                    id="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_ADDED->value ?>]"
-                                    type="number"
-                                    class="num"
-                                    step="1"
-                                    min="0"
-                                    max="999"
-                                    autocomplete="off"
-                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::OBJECTIVE_ADDED->value]?->format('%h')) ?>"
-                            > <?php _e('hours', 'collectme') ?>
-                            <p class="description"><?php _e(
-                                    "Number of hours after which the user receives a thank you email for raising it's goal.",
-                                    'collectme'
-                                ) ?>
-                                <?php _e(
-                                    'No email is sent if left blank.',
-                                    'collectme'
-                                ) ?>
-                                <strong><?php _e(
-                                        'This option requires the previous two to be enabled as well.',
-                                        'collectme'
-                                    ) ?></strong>
                             </p>
                         </div>
                     </td>

@@ -7,8 +7,6 @@ namespace Collectme\Misc;
 use Collectme\Model\Entities\EnumMessageKey;
 use Collectme\Model\Entities\Stat;
 
-use Collectme\Model\ReminderEmailSettings;
-
 use const Collectme\ASSET_PATH_REL;
 use const Collectme\OPTIONS_PREFIX;
 
@@ -255,11 +253,8 @@ class Settings
     {
         $mails = $this->get(self::MAIL_DELAYS, $causeUuid) ?? [];
         $defaults = [
-            EnumMessageKey::NO_COLLECT->value => null,
-            EnumMessageKey::REMINDER_1->value => null,
-            EnumMessageKey::OBJECTIVE_ADDED->value => null,
-            EnumMessageKey::OBJECTIVE_ACHIEVED->value => null,
-            EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL->value => null,
+            EnumMessageKey::COLLECTION_REMINDER->value => null,
+            EnumMessageKey::OBJECTIVE_CHANGE->value => null,
         ];
 
         return array_replace($defaults, $mails);
