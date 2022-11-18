@@ -11,6 +11,8 @@ use Collectme\Model\Database\DBTable;
 use Collectme\Model\Entity;
 use Collectme\Model\JsonApi\ApiModelType;
 
+use const Collectme\MAIL_QUEUE_ITEM_EXPIRATION_DURATION;
+
 #[ApiModelType('cause')]
 #[DBTable('causes')]
 class Cause extends Entity
@@ -92,5 +94,17 @@ class Cause extends Entity
         // missing start / stop dates are considered active
         return !($start && $start > $now)
             && !($stop && $stop < $now);
+    }
+
+    public function isLongPast(): bool
+    {
+        $settings = Settings::getInstance();
+
+        $end = $settings->getTimings($this->uuid)['stop'];
+        $longPast = date_create()->sub(
+            new \DateInterval(MAIL_QUEUE_ITEM_EXPIRATION_DURATION)
+        );
+
+        return $end && $longPast > $end;
     }
 }

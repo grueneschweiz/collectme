@@ -11,6 +11,8 @@ use Collectme\Model\Entities\User;
 use Collectme\Model\Entities\UserCause;
 use PHPUnit\Framework\TestCase;
 
+use const Collectme\MAIL_QUEUE_ITEM_EXPIRATION_DURATION;
+
 class CauseTest extends TestCase
 {
 
@@ -196,6 +198,47 @@ class CauseTest extends TestCase
             'activeForever' => [$activeForever, true],
             'passed' => [$passed, false],
             'upcoming' => [$upcoming, false],
+        ];
+    }
+
+    /**
+     * @dataProvider getLongPastCauses
+     */
+    public function test_isLongPast(Cause $cause, bool $longPast): void
+    {
+        $this->assertEquals($longPast, $cause->isLongPast());
+    }
+
+    public function getLongPastCauses()
+    {
+        $upcoming = $this->createCause(
+            date_create('+1 day'),
+            null,
+        );
+        $activeToday = $this->createCause(
+            date_create()->setTime(0,0),
+            date_create()->setTime(23,59, 59, 999999)
+        );
+        $activeForever = $this->createCause(
+            null,
+            null,
+        );
+        $passedOneDay = $this->createCause(
+            null,
+            date_create('-1 day'),
+        );
+        $passedLong = $this->createCause(
+            null,
+            date_create('-1 second')
+                ->sub(new \DateInterval(MAIL_QUEUE_ITEM_EXPIRATION_DURATION)),
+        );
+
+        return [
+            'upcoming' => [$upcoming, false],
+            'activeToday' => [$activeToday, false],
+            'activeForever' => [$activeForever, false],
+            'passedOneDay' => [$passedOneDay, false],
+            'passedLong' => [$passedLong, true],
         ];
     }
 }
