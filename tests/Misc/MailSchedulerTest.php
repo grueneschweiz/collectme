@@ -123,16 +123,16 @@ class MailSchedulerTest extends TestCase
 
         $this->assertCount(1, $queueItemsPerson);
         $this->assertCount(0, $queueItemsOrganization);
-        $this->assertSame(EnumMessageKey::NO_COLLECT, $queueItemsPerson[0]->messageKey);
+        $this->assertSame(EnumMessageKey::COLLECTION_REMINDER, $queueItemsPerson[0]->messageKey);
     }
 
     public function test_objectiveDeleted(): void
     {
-        $objective1 = $this->getObjective();
-        $objective2 = $this->getObjective();
-        $objective1->delete();
-        $this->assertCount(0, MailQueueItem::findUnsentByGroupAndMsgKey($objective1->groupUuid, EnumMessageKey::OBJECTIVE_ADDED));
-        $this->assertCount(1, MailQueueItem::findUnsentByGroupAndMsgKey($objective2->groupUuid, EnumMessageKey::OBJECTIVE_ADDED));
+        $objective = $this->getObjective();
+        MailQueueItem::deleteUnsentByGroupAndMsgKey($objective->groupUuid, EnumMessageKey::OBJECTIVE_CHANGE);
+
+        $objective->delete();
+        $this->assertCount(0, MailQueueItem::findUnsentByGroupAndMsgKey($objective->groupUuid, EnumMessageKey::OBJECTIVE_CHANGE));
     }
 
     private function getObjective(): Objective
@@ -150,7 +150,7 @@ class MailSchedulerTest extends TestCase
     {
         $this->getObjective();
         $objective = $this->getObjective();
-        $queueItems = MailQueueItem::findUnsentByGroupAndMsgKey($objective->groupUuid, EnumMessageKey::OBJECTIVE_ADDED);
+        $queueItems = MailQueueItem::findUnsentByGroupAndMsgKey($objective->groupUuid, EnumMessageKey::OBJECTIVE_CHANGE);
         $this->assertCount(1, $queueItems);
     }
 
@@ -164,68 +164,70 @@ class MailSchedulerTest extends TestCase
 
         $this->assertCount(
             0,
-            MailQueueItem::findUnsentByGroupAndMsgKey($oldGroupUuid, EnumMessageKey::OBJECTIVE_ADDED)
+            MailQueueItem::findUnsentByGroupAndMsgKey($oldGroupUuid, EnumMessageKey::OBJECTIVE_CHANGE)
         );
         $this->assertCount(
             1,
-            MailQueueItem::findUnsentByGroupAndMsgKey($newGroupUuid, EnumMessageKey::OBJECTIVE_ADDED)
+            MailQueueItem::findUnsentByGroupAndMsgKey($newGroupUuid, EnumMessageKey::OBJECTIVE_CHANGE)
         );
     }
 
     public function test_objectiveUpdated__objectiveChanged(): void
     {
         $objective = $this->getObjective();
+        MailQueueItem::deleteUnsentByGroupAndMsgKey($objective->groupUuid, EnumMessageKey::OBJECTIVE_CHANGE);
+
         $objective->objective++;
         $objective->save();
 
         $this->assertCount(
             1,
-            MailQueueItem::findUnsentByGroupAndMsgKey($objective->groupUuid, EnumMessageKey::OBJECTIVE_ADDED)
+            MailQueueItem::findUnsentByGroupAndMsgKey($objective->groupUuid, EnumMessageKey::OBJECTIVE_CHANGE)
         );
     }
 
     public function test_signatureEntryChange_created(): void
     {
         $group = $this->getGroup(EnumGroupType::PERSON);
+        MailQueueItem::deleteUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::COLLECTION_REMINDER);
+
         $this->getSignatureEntry($group);
         $this->getSignatureEntry($group);
 
-        $reminders = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::REMINDER_1);
-        $noCollects = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::NO_COLLECT);
+        $reminders = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::COLLECTION_REMINDER);
 
-        $this->assertCount(0, $noCollects);
         $this->assertCount(1, $reminders);
-        $this->assertSame(EnumMessageKey::REMINDER_1, $reminders[0]->messageKey);
+        $this->assertSame(EnumMessageKey::COLLECTION_REMINDER, $reminders[0]->messageKey);
     }
 
     public function test_signatureEntryChange_deleted(): void
     {
         $group = $this->getGroup(EnumGroupType::PERSON);
+        MailQueueItem::deleteUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::COLLECTION_REMINDER);
+
         $entry = $this->getSignatureEntry($group);
         $entry->delete();
 
-        $reminders = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::REMINDER_1);
-        $noCollects = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::NO_COLLECT);
+        $reminders = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::COLLECTION_REMINDER);
 
-        $this->assertCount(1, $noCollects);
-        $this->assertCount(0, $reminders);
-        $this->assertSame(EnumMessageKey::NO_COLLECT, $noCollects[0]->messageKey);
+        $this->assertCount(1, $reminders);
+        $this->assertSame(EnumMessageKey::COLLECTION_REMINDER, $reminders[0]->messageKey);
     }
 
     public function test_signatureEntryChange_updateCount(): void
     {
         $group = $this->getGroup(EnumGroupType::PERSON);
+        MailQueueItem::deleteUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::COLLECTION_REMINDER);
+
         $this->getSignatureEntry($group);
         $entry = $this->getSignatureEntry($group);
         $entry->count = -$entry->count;
         $entry->save();
 
-        $reminders = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::REMINDER_1);
-        $noCollects = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::NO_COLLECT);
+        $reminders = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::COLLECTION_REMINDER);
 
-        $this->assertCount(1, $noCollects);
-        $this->assertCount(0, $reminders);
-        $this->assertSame(EnumMessageKey::NO_COLLECT, $noCollects[0]->messageKey);
+        $this->assertCount(1, $reminders);
+        $this->assertSame(EnumMessageKey::COLLECTION_REMINDER, $reminders[0]->messageKey);
     }
 
     public function test_signatureEntryChange_objectiveAchieved(): void
@@ -239,6 +241,7 @@ class MailSchedulerTest extends TestCase
             'test mail scheduler'
         );
         $objective->save();
+        MailQueueItem::deleteUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::OBJECTIVE_CHANGE);
 
         $entry1 = $this->getSignatureEntry($group);
         $entry2 = new SignatureEntry(
@@ -250,10 +253,10 @@ class MailSchedulerTest extends TestCase
         );
         $entry2->save();
 
-        $mails = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::OBJECTIVE_ACHIEVED);
+        $mails = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::OBJECTIVE_CHANGE);
 
         $this->assertCount(1, $mails);
-        $this->assertSame(EnumMessageKey::OBJECTIVE_ACHIEVED, $mails[0]->messageKey);
+        $this->assertSame(EnumMessageKey::OBJECTIVE_CHANGE, $mails[0]->messageKey);
     }
 
     public function test_signatureEntryChange_objectiveAchievedFinal(): void
@@ -267,6 +270,7 @@ class MailSchedulerTest extends TestCase
             'test mail scheduler'
         );
         $objective->save();
+        MailQueueItem::deleteUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::OBJECTIVE_CHANGE);
 
         $entry1 = $this->getSignatureEntry($group);
         $entry2 = new SignatureEntry(
@@ -278,12 +282,10 @@ class MailSchedulerTest extends TestCase
         );
         $entry2->save();
 
-        $achieved = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::OBJECTIVE_ACHIEVED);
-        $final = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL);
+        $final = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::OBJECTIVE_CHANGE);
 
-        $this->assertCount(0, $achieved);
         $this->assertCount(1, $final);
-        $this->assertSame(EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL, $final[0]->messageKey);
+        $this->assertSame(EnumMessageKey::OBJECTIVE_CHANGE, $final[0]->messageKey);
     }
 
     public function test_signatureEntryChange_objectiveNotAchieved(): void
@@ -297,6 +299,7 @@ class MailSchedulerTest extends TestCase
             'test mail scheduler'
         );
         $objective->save();
+        MailQueueItem::deleteUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::OBJECTIVE_CHANGE);
 
         $entry1 = $this->getSignatureEntry($group);
         $entry2 = new SignatureEntry(
@@ -308,7 +311,7 @@ class MailSchedulerTest extends TestCase
         );
         $entry2->save();
 
-        $mails = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::OBJECTIVE_ACHIEVED);
+        $mails = MailQueueItem::findUnsentByGroupAndMsgKey($group->uuid, EnumMessageKey::OBJECTIVE_CHANGE);
 
         $this->assertCount(0, $mails);
     }

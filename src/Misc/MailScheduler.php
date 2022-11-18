@@ -6,6 +6,7 @@ namespace Collectme\Misc;
 
 
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Model\Entities\EnumMailQueueItemTrigger;
 use Collectme\Model\Entities\EnumMessageKey;
 use Collectme\Model\Entities\Group;
 use Collectme\Model\Entities\MailQueueItem;
@@ -44,22 +45,18 @@ class MailScheduler
         $queueItem = new MailQueueItem(
             null,
             $group->uuid,
-            EnumMessageKey::NO_COLLECT,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $group->uuid,
+            EnumMailQueueItemTrigger::GROUP,
         );
         $queueItem->save();
     }
 
-    /**
-     * @throws CollectmeDBException
-     */
     public function objectiveDeleted(Objective $objective): void
     {
-        MailQueueItem::deleteUnsentByGroupAndMsgKey(
-            $objective->groupUuid,
-            EnumMessageKey::OBJECTIVE_ADDED
-        );
+        // nothing to do
     }
 
     /**
@@ -67,15 +64,13 @@ class MailScheduler
      */
     public function objectiveUpdated(Objective $newObjective, Objective $oldObjective): void
     {
-        if ($newObjective->groupUuid !== $oldObjective->groupUuid) {
+        if ($newObjective->groupUuid !== $oldObjective->groupUuid
+            || $newObjective->objective !== $oldObjective->objective
+        ) {
             MailQueueItem::deleteUnsentByGroupAndMsgKey(
                 $oldObjective->groupUuid,
-                EnumMessageKey::OBJECTIVE_ADDED
+                EnumMessageKey::OBJECTIVE_CHANGE,
             );
-            $this->objectiveCreated($newObjective);
-        }
-
-        if ($newObjective->objective !== $oldObjective->objective) {
             $this->objectiveCreated($newObjective);
         }
     }
@@ -91,29 +86,17 @@ class MailScheduler
 
         MailQueueItem::deleteUnsentByGroupAndMsgKey(
             $objective->groupUuid,
-            EnumMessageKey::OBJECTIVE_ADDED
+            EnumMessageKey::OBJECTIVE_CHANGE,
         );
-//        TODO: Consider the following lines in the Mailer logic.
-//        They can not be treated here as it would lead to buggy
-//        behavior if settings were changed during an ongoing
-//        campaign.
-//
-//        TODO: Delete those lines
-//        MailQueueItem::deleteUnsentByGroupAndMsgKey(
-//            $objective->groupUuid,
-//            EnumMessageKey::OBJECTIVE_ACHIEVED
-//        );
-//        MailQueueItem::deleteUnsentByGroupAndMsgKey(
-//            $objective->groupUuid,
-//            EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL
-//        );
 
         $queueItem = new MailQueueItem(
             null,
             $objective->groupUuid,
-            EnumMessageKey::OBJECTIVE_ADDED,
+            EnumMessageKey::OBJECTIVE_CHANGE,
             wp_generate_password(64, false),
             null,
+            $objective->uuid,
+            EnumMailQueueItemTrigger::OBJECTIVE,
         );
         $queueItem->save();
     }
@@ -129,34 +112,28 @@ class MailScheduler
             return;
         }
 
-        $this->scheduleReminder($entry, $group);
+        $this->scheduleReminder($entry);
         $this->scheduleObjectiveMsg($entry, $group);
     }
 
     /**
      * @throws CollectmeDBException
      */
-    private function scheduleReminder(SignatureEntry $entry, Group $group): void
+    private function scheduleReminder(SignatureEntry $entry): void
     {
         MailQueueItem::deleteUnsentByGroupAndMsgKey(
             $entry->groupUuid,
-            EnumMessageKey::NO_COLLECT
+            EnumMessageKey::COLLECTION_REMINDER,
         );
-        MailQueueItem::deleteUnsentByGroupAndMsgKey(
-            $entry->groupUuid,
-            EnumMessageKey::REMINDER_1
-        );
-
-        $msg = $group->signatures() > 0
-            ? EnumMessageKey::REMINDER_1
-            : EnumMessageKey::NO_COLLECT;
 
         $queueItem = new MailQueueItem(
             null,
             $entry->groupUuid,
-            $msg,
+            EnumMessageKey::COLLECTION_REMINDER,
             wp_generate_password(64, false),
             null,
+            $entry->uuid,
+            EnumMailQueueItemTrigger::SIGNATURE,
         );
         $queueItem->save();
     }
@@ -183,34 +160,17 @@ class MailScheduler
 
         MailQueueItem::deleteUnsentByGroupAndMsgKey(
             $entry->groupUuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED
+            EnumMessageKey::OBJECTIVE_CHANGE
         );
-        MailQueueItem::deleteUnsentByGroupAndMsgKey(
-            $entry->groupUuid,
-            EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL
-        );
-
-        $objectiveSettings = Settings::getInstance()->getObjectives($group->causeUuid);
-        $enabledObjectives = array_filter(
-            $objectiveSettings,
-            static fn($setting) => $setting['enabled']
-        );
-        $highestObjective = array_reduce(
-            $enabledObjectives,
-            static fn($carry, $setting) => $carry['objective'] > $setting['objective'] ? $carry : $setting,
-            ['objective' => 0]
-        );
-
-        $msg = $objectiveCount < $highestObjective['objective']
-            ? EnumMessageKey::OBJECTIVE_ACHIEVED
-            : EnumMessageKey::OBJECTIVE_ACHIEVED_FINAL;
 
         $queueItem = new MailQueueItem(
             null,
             $entry->groupUuid,
-            $msg,
+            EnumMessageKey::OBJECTIVE_CHANGE,
             wp_generate_password(64, false),
             null,
+            $entry->uuid,
+            EnumMailQueueItemTrigger::SIGNATURE,
         );
         $queueItem->save();
     }
