@@ -56,7 +56,7 @@ class LoginEmailTest extends TestCase
         $loginEmail->appUrl = 'https://example.com';
         $loginEmail->causeUuid = wp_generate_uuid4();
 
-        add_filter('wp_mail', static function(array $mail) use ($user, $session) {
+        $test = static function(array $mail) use ($user, $session) {
             self::assertEquals($user->email, $mail['to']);
             self::assertContains('From: Sender <sender@example.com>', $mail['headers']);
             self::assertContains('Reply-To: replyto@example.com', $mail['headers']);
@@ -66,9 +66,14 @@ class LoginEmailTest extends TestCase
                 "https://example.com?action=activate&session=$session->uuid&token=$session->activationSecret",
                 $mail['message']
             );
-        } );
+        };
+
+        add_filter('wp_mail', $test );
 
         $mailer = new Mailer($settingsMock);
         $mailer->send($loginEmail, wp_generate_uuid4());
+
+        // prevent side effects on other tests
+        remove_filter('wp_mail', $test);
     }
 }

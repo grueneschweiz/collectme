@@ -42,16 +42,21 @@ class MailerTest extends TestCase
                 'replyToAddress' => 'replyto@example.com',
             ]);
 
-        add_filter('wp_mail', static function(array $mail) {
+        $test = static function(array $mail) {
             self::assertEquals('receiver@example.com', $mail['to']);
             self::assertContains('From: Sender <sender@example.com>', $mail['headers']);
             self::assertContains('Reply-To: replyto@example.com', $mail['headers']);
             self::assertEquals('the message', $mail['message']);
             self::assertEquals('the subject', $mail['subject']);
             self::assertEmpty($mail['attachments']);
-        } );
+        };
+
+        add_filter('wp_mail', $test);
 
         $mailer = new Mailer($settingsMock);
         $mailer->send($emailMock, wp_generate_uuid4());
+
+        // prevent side effects on other tests
+        remove_filter('wp_mail', $test);
     }
 }
