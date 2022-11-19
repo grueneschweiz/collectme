@@ -173,6 +173,10 @@ class EmailObjectiveChange implements QueuableEmail, Mailable
 
         $objectives = Objective::findByGroups([$this->queueItem->groupUuid]);
 
+        if (empty($objectives)) {
+            return false;
+        }
+
         $existingObjectives = array_filter(
             $objectives,
             static fn(Objective $objective) => $objective->created <= $signatureEntry->created
