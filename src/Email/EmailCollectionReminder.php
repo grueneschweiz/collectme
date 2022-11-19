@@ -91,7 +91,7 @@ class EmailCollectionReminder implements QueuableEmail, Mailable
             return true;
         }
 
-        // only send continue collection reminder if user has an objective
+        // only send continue collection reminder if group has an objective
         // and the objective hasn't been met.
         $objective = Objective::findHighestOfGroup($this->queueItem->groupUuid);
 
