@@ -19,6 +19,8 @@ class Mailer
      */
     public function send(Mailable $mailable, string $causeUuid): void
     {
+        $mailable = apply_filters('collectme_email', $mailable);
+
         $success = wp_mail(
             $mailable->getToAddr(),
             $mailable->getSubject(),
