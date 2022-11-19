@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Unit\Model\Entities;
 
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Misc\Util;
 use Collectme\Model\Entities\PersistentSession;
 use PHPUnit\Framework\TestCase;
 
@@ -16,8 +17,8 @@ class PersistentSessionTest extends TestCase
         $activationSecret = wp_generate_password(64, false, false);
         $sessionSecret = wp_generate_password(64, false, false);
         $sessionHash = password_hash($sessionSecret, PASSWORD_DEFAULT);
-        $lastLogin = date_create('-2 days')->format(DATE_ATOM);
-        $activated = date_create('-5 days')->format(DATE_ATOM);
+        $lastLogin = date_create('-2 days', Util::getTimeZone())->format(DATE_ATOM);
+        $activated = date_create('-5 days', Util::getTimeZone())->format(DATE_ATOM);
         $userUuid = wp_generate_uuid4();
 
         $uuid = $this->insertTestTokenIntoDB(

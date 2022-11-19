@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Unit\Model\Entities;
 
 use Collectme\Exceptions\CollectmeDBException;
+use Collectme\Misc\Util;
 use Collectme\Model\Entities\AccountToken;
 use Collectme\Model\Entities\EnumLang;
 use PHPUnit\Framework\TestCase;
@@ -14,7 +15,7 @@ class AccountTokenTest extends TestCase
     public function test_getByEmailAndToken(): void
     {
         $token = wp_generate_password(64, false, false);
-        $validUntil = date_create('+5 years')->format(DATE_ATOM);
+        $validUntil = date_create('+5 years', Util::getTimeZone())->format(DATE_ATOM);
         $uuid = $this->insertTestTokenIntoDB($token, 'mail@example.com', 'Jane', 'Doe', 'd', $validUntil);
 
         $accountToken = AccountToken::getByEmailAndToken('mail@example.com', $token);
@@ -63,7 +64,7 @@ class AccountTokenTest extends TestCase
     {
         $token1 = wp_generate_password(64, false, false);
         $token2 = wp_generate_password(64, false, false);
-        $validUntil = date_create('+5 years')->format(DATE_ATOM);
+        $validUntil = date_create('+5 years', Util::getTimeZone())->format(DATE_ATOM);
         $uuid1 = $this->insertTestTokenIntoDB($token1, 'mail@example.com', 'Jane', 'Doe', 'd', $validUntil);
         $uuid2 = $this->insertTestTokenIntoDB($token2, 'mail@example.com', 'Jane', 'Doe', 'd', $validUntil);
 
@@ -95,7 +96,7 @@ class AccountTokenTest extends TestCase
     public function test_getByEmail(): void
     {
         $token = wp_generate_password(64, false, false);
-        $validUntil = date_create('+5 years')->format(DATE_ATOM);
+        $validUntil = date_create('+5 years', Util::getTimeZone())->format(DATE_ATOM);
         $uuid = $this->insertTestTokenIntoDB($token, 'c@example.com', 'Jane', 'Doe', 'd', $validUntil);
 
         $accountToken = AccountToken::getByEmail('c@example.com');
@@ -108,9 +109,9 @@ class AccountTokenTest extends TestCase
         $token1 = wp_generate_password(64, false, false);
         $token2 = wp_generate_password(64, false, false);
         $token3 = wp_generate_password(64, false, false);
-        $uuid1 = $this->insertTestTokenIntoDB($token1, 'a@example.com', 'Jane', 'Doe', 'd', date_create('+5 years')->format(DATE_ATOM));
-        $uuid2 = $this->insertTestTokenIntoDB($token2, 'a@example.com', 'Jane', 'Doe', 'd', date_create('+10 years')->format(DATE_ATOM));
-        $uuid3 = $this->insertTestTokenIntoDB($token3, 'a@example.com', 'Jane', 'Doe', 'd', date_create('+2 years')->format(DATE_ATOM));
+        $uuid1 = $this->insertTestTokenIntoDB($token1, 'a@example.com', 'Jane', 'Doe', 'd', date_create('+5 years', Util::getTimeZone())->format(DATE_ATOM));
+        $uuid2 = $this->insertTestTokenIntoDB($token2, 'a@example.com', 'Jane', 'Doe', 'd', date_create('+10 years', Util::getTimeZone())->format(DATE_ATOM));
+        $uuid3 = $this->insertTestTokenIntoDB($token3, 'a@example.com', 'Jane', 'Doe', 'd', date_create('+2 years', Util::getTimeZone())->format(DATE_ATOM));
 
         $accountToken = AccountToken::getByEmail('a@example.com');
 
