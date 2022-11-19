@@ -168,7 +168,7 @@ class EmailObjectiveChange implements QueuableEmail, Mailable
 
         if (! $signatureEntry) {
             // the signature entry was deleted meanwhile
-            return false;
+            $signatureEntry = SignatureEntry::get($this->queueItem->triggerObjUuid, true);
         }
 
         $objectives = Objective::findByGroups([$this->queueItem->groupUuid]);
