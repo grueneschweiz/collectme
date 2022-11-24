@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Misc;
 
+use Collectme\Collectme;
 use Collectme\Email\QueueableEmailFactory;
 use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Exceptions\CollectmeException;
@@ -39,6 +40,7 @@ class MailQueueItemProcessor
         try {
             $causeUuid = $item->group()->causeUuid;
             $cause = $this->getCause($causeUuid);
+            Collectme::setCauseUuid($causeUuid);
         } catch (CollectmeDBException) {
             $item->delete();
             return;
