@@ -106,10 +106,10 @@ EOL;
         $email->setUser($this->user);
         $email->prepareFor($this->mailQueueItem);
 
-        $expected = <<<EOL
+        $expected = wpautop(<<<EOL
 Body {$this->user->firstName} {$this->group->name}
 More body text
-EOL;
+EOL);
 
         self::assertEquals($expected, $email->getMessage());
     }
