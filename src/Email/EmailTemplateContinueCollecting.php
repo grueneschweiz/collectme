@@ -13,7 +13,7 @@ class EmailTemplateContinueCollecting implements EmailTemplate
         return __(
             "Hello {{firstName}}
             
-Some time ago you promised {{groupSignatureCount}} signatures, thank you so much! You've already discovered the collection tool and entered {{groupSignatureCount}} signatures.
+Some time ago you promised {{groupSignatureObjective}} signatures, thank you so much! You've already discovered the collection tool and entered {{groupSignatureCount}} signatures.
 
 Keep collecting and enter your new signatures now. Every signature gets you one step closer to your goal of {{groupSignatureObjective}} signatures: LINK 
 
