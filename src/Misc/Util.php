@@ -38,6 +38,15 @@ class Util
                 static fn($locale) => str_starts_with($locale, $lang->value)
             );
 
+            if (function_exists('pll_the_languages')) {
+                $polylangLocales = array_map(
+                    static fn($pllLang) => str_replace('-', '_', $pllLang['locale']),
+                    pll_the_languages( ['raw' => true ] ),
+                );
+
+                $candidates = array_intersect($candidates, $polylangLocales);
+            }
+
             self::$localeMap[$lang->value] = empty($candidates)
                 ? determine_locale()
                 : array_values($candidates)[0];
