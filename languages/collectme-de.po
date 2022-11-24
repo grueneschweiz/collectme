@@ -9,8 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-24T11:38:24+01:00\n"
-"PO-Revision-Date: 2022-11-24 10:38\n"
+"POT-Creation-Date: 2022-11-24T11:57:41+01:00\n"
+"PO-Revision-Date: 2022-11-24 10:57\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -473,14 +473,24 @@ msgid "Hello {{firstName}}\n"
 "A big thank you for your commitment 💚\n"
 "Happy collecting,\n"
 "Your Team"
-msgstr ""
+msgstr "Hallo {{firstName}}\n"
+"            \n"
+"Vor einiger Zeit hast du {{groupSignatureCount}} Unterschriften versprochen, Vielen Dank! Du hast das Sammel-Tool bereits entdeckt und {{groupSignatureCount}} Unterschriften eingegeben.\n\n"
+"Sammle weiter und trage deine neue gesammelten Unterschriften jetzt ein. Jede Unterschrift bringt dich deinem Ziel von {{groupSignatureObjective}} Unterschriften einen Schritt näher: LINK \n\n"
+"Zur Erinnerung: Du kannst den Unterschriftenbogen und die wichtigsten Argumente hier herunterladen: LINK\n\n"
+"Hast du Fragen oder brauchst du weitere Tipps? Nimm mit mir Kontakt auf! \n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
 #: src/Email/EmailTemplateContinueCollecting.php:36
 msgid "Continue collecting and entering signatures!\n"
 "{{firstName}}, enter signatures now - it's worth it!\n"
 "{{firstName}}, only with you we can make a change!"
-msgstr ""
+msgstr "Sammle weiter Unterschriften und trage sie ein!\n"
+"{{firstName}}, trage jetzt Unterschriften ein - es lohnt sich!\n"
+"{{firstName}}, mit dir können wir etwas verändern!"
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
 #: src/Email/EmailTemplateObjectiveAchieved.php:14
@@ -491,13 +501,20 @@ msgid "Hello {{firstName}}\n\n"
 "A big thank you for your commitment 💚\n"
 "Happy collecting,\n"
 "Your Team"
-msgstr ""
+msgstr "Hallo {{firstName}}\n\n"
+"Gestern hast du dein Ziel für die Unterschriftensammlung erreicht. Fantastisch, herzlichen Glückwunsch. \n\n"
+"Erhöhe jetzt dein Sammelziel und werde ein*e echte*r Chefsammler*in: LINK \n\n"
+"Hast du noch Fragen oder wünschst du Tipps? Nimm Kontakt mit mir auf!\n\n"
+"Ein herzliches Dankeschön für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
 #: src/Email/EmailTemplateObjectiveAchieved.php:34
 msgid "Kudos, {{firstName}}: You made it!\n"
 "Congrats, {{firstName}}: Goal achieved."
-msgstr ""
+msgstr "Grossartig, {{firstName}}: Du hast es geschafft!\n"
+"Glückwunsch, {{firstName}}: Ziel erreicht."
 
 #. Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal.
 #: src/Email/EmailTemplateObjectiveAchievedAndRaised.php:15
@@ -509,13 +526,21 @@ msgid "Hello {{firstName}}\n\n"
 "A big thank you for your commitment 💚\n"
 "Happy collecting,\n"
 "Your Team"
-msgstr ""
+msgstr "Hallo {{firstName}}\n\n"
+"Gestern hast du dein Ziel für die Unterschriftensammlung erreicht. Fantastisch, herzlichen Glückwunsch. \n\n"
+"Dass du dich bereits entschieden hast, dein Ziel zu erhöhen, macht uns umso glücklicher. Herzlichen Glückwunsch, {{firstName}}! Jetzt ist es an der Zeit, weiterzusammeln. Gib weitere Unterschriften ein und komm deinem neuen Ziel einen Schritt näher: LINK \n\n"
+"Reminder: Du kannst den Unterschriftenbogen und die wichtigsten Argumente hier herunterladen: LINK\n\n"
+"Hast du Fragen oder brauchst du weitere Tipps? Nimm mit mir Kontakt auf! \n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
 #: src/Email/EmailTemplateObjectiveAchievedAndRaised.php:37
 msgid "Kudos, {{firstName}}: You're awesome!\n"
 "Congrats, {{firstName}}: You're a true chief collector."
-msgstr ""
+msgstr "Genial, {{firstName}}: Du bist grossartig!\n"
+"Glückwunsch, {{firstName}}: Du bist ein*e echte*r Chefsammler*in!"
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
 #: src/Email/EmailTemplateObjectiveAchievedFinal.php:14
@@ -525,12 +550,17 @@ msgid "Wow {{firstName}},\n\n"
 "An enormous thank you for your commitment 💚\n"
 "Happy collecting,\n"
 "Your Team"
-msgstr ""
+msgstr "Wow {{firstName}},\n\n"
+"Gestern hast du das höchste Ziel der Unterschriftensammlung erreicht. Das ist unglaublich, vielen Dank für dein grossartiges Engagement. Feiere diesen Erfolg.\n\n"
+"Menschen wie du bewirken eine echte Veränderung. Du kannst es noch weiter bringen, wenn du weiter sammelst.\n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
 #: src/Email/EmailTemplateObjectiveAchievedFinal.php:32
 msgid "Incredible, {{firstName}}!"
-msgstr ""
+msgstr "Unglaublich, {{firstName}}!"
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
 #: src/Email/EmailTemplateObjectiveAdded.php:14
@@ -541,12 +571,18 @@ msgid "Hello {{firstName}}\n\n"
 "A big thank you for your commitment 💚\n"
 "Happy collecting,\n"
 "Your Team"
-msgstr ""
+msgstr "Hallo {{firstName}}\n\n"
+"Gestern hast du ein Unterschriftensammelziel hinzugefügt. Fantastisch, herzlichen Glückwunsch. Das ist der erste Schritt, um etwas zu bewirken. Jetzt ist es an der Zeit, mit dem Sammeln zu beginnen. Trage Unterschriften ein und komm deinem Ziel einen Schritt näher: LINK \n\n"
+"Erinnerung: Du kannst den Unterschriftenbogen und die wichtigsten Argumente hier herunterladen: LINK\n\n"
+"Hast du Fragen oder brauchst du weitere Tipps? Nimm mit mir Kontakt auf! \n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
 #: src/Email/EmailTemplateObjectiveAdded.php:34
 msgid "You're making a change, {{firstName}}!"
-msgstr ""
+msgstr "Du machst einen Unterschied, {{firstName}}!"
 
 #. Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal.
 #: src/Email/EmailTemplateObjectiveRaised.php:15
@@ -558,20 +594,29 @@ msgid "Hello {{firstName}}\n\n"
 "A big thank you for your commitment 💚\n"
 "Happy collecting,\n"
 "Your Team"
-msgstr ""
+msgstr "Hallo {{firstName}}\n\n"
+"Gestern hast du dein Ziel für die Unterschriftensammlung erhöht. Fantastisch, herzlichen Glückwunsch! Du bist ein echter Profi!\n\n"
+"Sammle weiter. Jede Unterschrift bringt dich deinem neuen Ziel von {{groupSignatureObjective}} einen Schritt näher: LINK \n\n"
+"Zur Erinnerung: Du kannst den Unterschriftenbogen und die wichtigsten Argumente hier herunterladen: LINK\n\n"
+"Hast du Fragen oder brauchst du weitere Tipps? Nimm mit mir Kontakt auf! \n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
 
 #. Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal.
 #: src/Email/EmailTemplateObjectiveRaised.php:38
 msgid "Goal upgraded! Awesome, {{firstName}}!\n"
 "Good choice, {{firstName}}!\n"
 "{{groupSignatureObjective}} for the win"
-msgstr ""
+msgstr "Ziel erhöht! Super, {{firstName}}!\n"
+"Gute Wahl, {{firstName}}!\n"
+"{{groupSignatureObjective}} für den Sieg"
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
 #: src/Email/EmailTemplateStartCollecting.php:14
 msgid "Hello {{firstName}}\n"
 "            \n"
-"Some time ago you promised {{groupSignatureCount}} signatures, thank you so much!\n\n"
+"Some time ago you promised {{groupSignatureObjective}} signatures, thank you so much!\n\n"
 "Now it's time to start collecting! Do you have any questions or would you like some hints? Get in touch with me!\n\n"
 "Have you already discovered our great collection tool? Enter your collected signatures now and get one step closer to your goal: LINK\n\n"
 "A big thank you for your commitment 💚\n"
