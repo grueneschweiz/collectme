@@ -207,6 +207,7 @@ class Auth
                 $firstName,
                 $lastName,
                 $lang,
+                true,
                 $source,
             );
             $user = $user->save();
@@ -261,6 +262,7 @@ class Auth
                 $accountToken->firstName,
                 $accountToken->lastName,
                 $accountToken->lang,
+                true,
                 'Account Token'
             );
             $user->save();

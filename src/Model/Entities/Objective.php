@@ -99,6 +99,7 @@ EOL,
     }
 
     /**
+     * @return Objective[]
      * @throws CollectmeDBException
      */
     public static function findHighestOfGroup(string $groupUuid): array

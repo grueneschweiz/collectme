@@ -6,6 +6,8 @@ declare(strict_types=1);
 namespace Collectme;
 
 use Collectme\Misc\Installer;
+use Collectme\Misc\MailQueueProcessor;
+use Collectme\Misc\MailScheduler;
 use Collectme\Misc\ShortcodeHandler;
 use Collectme\Misc\Translator;
 
@@ -60,6 +62,16 @@ const OPTIONS_PREFIX = 'collectme_';
 const OPTION_KEY_DB_VERSION = OPTIONS_PREFIX . 'db_version';
 const OPTION_KEY_PLUGIN_VERSION = OPTIONS_PREFIX . 'plugin_version';
 
+/**
+ * Timespan to keep data of cause after it's end date.
+ *
+ * This only controls how long items must not be deleted. There is no deletion
+ * guarantee.
+ *
+ * Must be a \DateInterval duration
+ */
+const CAUSE_MINIMAL_DATA_RETENTION_DURATION = 'P1Y1W';
+
 class Collectme
 {
     private static string $causeUuid = '';
@@ -70,6 +82,8 @@ class Collectme
         private readonly RestRouterV1 $restRouter,
         private readonly Translator $translator,
         private readonly AdminRouter $adminRouter,
+        private readonly MailScheduler $mailScheduler,
+        private readonly MailQueueProcessor $mailQueueProcessor,
     ) {
     }
 
@@ -98,6 +112,7 @@ class Collectme
          * Installation and uninstallation
          */
         register_activation_hook(COLLECTME_PLUGIN_NAME, [$this->installer, 'activate']);
+        add_action('wp_initialize_site', [$this->installer, 'afterSiteAdd']);
         register_deactivation_hook(COLLECTME_PLUGIN_NAME, [$this->installer, 'deactivate']);
         register_uninstall_hook(COLLECTME_PLUGIN_NAME, [Installer::class, 'uninstall']);
         add_action('admin_init', [$this->installer, 'afterPluginUpdated']);
@@ -120,6 +135,24 @@ class Collectme
         add_filter('gettext_with_context_collectme', [$this->translator, 'overrideGettextWithContext'], 10, 3);
         add_filter('ngettext_collectme', [$this->translator, 'overrideNGettext'], 10, 4);
         add_filter('ngettext_with_context_collectme', [$this->translator, 'overrideNGettextWithContext'], 10, 5);
+
+        /**
+         * Mail scheduler
+         */
+        add_action('collectme_signature_entry_created', [$this->mailScheduler, 'signatureEntryChange']);
+        add_action('collectme_signature_entry_updated', [$this->mailScheduler, 'signatureEntryChange']);
+        add_action('collectme_signature_entry_deleted', [$this->mailScheduler, 'signatureEntryChange']);
+        add_action('collectme_objective_created', [$this->mailScheduler, 'objectiveCreated']);
+        add_action('collectme_objective_updated', [$this->mailScheduler, 'objectiveUpdated'], 10, 2);
+        add_action('collectme_objective_deleted', [$this->mailScheduler, 'objectiveDeleted']);
+        add_action('collectme_group_created', [$this->mailScheduler, 'groupCreated']);
+        add_action('collectme_group_updated', [$this->mailScheduler, 'groupUpdated']);
+        add_action('collectme_group_deleted', [$this->mailScheduler, 'groupDeleted']);
+
+        /**
+         * Cron jobs
+         */
+        add_action('collectme_send_mails', [$this->mailQueueProcessor, 'process']);
 
         /**
          * Don't add styles and scripts the WordPress way, this doesn't allow to add them only if the

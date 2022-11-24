@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-09-04T09:04:56+02:00\n"
-"PO-Revision-Date: 2022-09-04 07:05\n"
-"X-Generator: WP-CLI 2.6.0\n"
+"POT-Creation-Date: 2022-11-24T11:57:41+01:00\n"
+"PO-Revision-Date: 2022-11-24 11:08\n"
+"X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: collectme\n"
@@ -203,7 +203,7 @@ msgid "Sign-in with your email address (no password required) to enter signature
 msgstr "Melde dich mit deiner E-Mail-Adresse an (kein Passwort erforderlich), um Unterschriften einzutragen und den aktuellen Sammelstand zu sehen."
 
 #: languages/app-strings.php:82
-#: views/admin/settings.php:188
+#: views/admin/settings.php:291
 msgid "E-Mail"
 msgstr "E-Mail"
 
@@ -327,7 +327,7 @@ msgid "Regardless of your promise here, every signature you collect always count
 msgstr "Egal, was du hier versprichst, jede Unterschrift, die du sammelst, zählt immer auch für deine Sektion / deinen Kanton."
 
 #: languages/app-strings.php:128
-#: views/admin/settings.php:299
+#: views/admin/settings.php:402
 msgid "Hot"
 msgstr "Super"
 
@@ -409,71 +409,249 @@ msgid "invalid e-mail address"
 msgstr "E-Mail-Adresse ungültig"
 
 #: src/AdminRouter.php:19
-#: views/admin/settings.php:24
+#: views/admin/settings.php:25
 msgid "Collectme Settings"
 msgstr "Collectme Einstellungen"
 
-#: src/Controller/AdminController.php:35
+#: src/Controller/AdminController.php:36
 msgid "You do not have sufficient permissions to access this page."
 msgstr "Du hast keine Zugriffsberechtigung für diese Seite."
 
-#: src/Controller/AdminController.php:54
+#: src/Controller/AdminController.php:57
 msgid "Saved!"
 msgstr "Gespeichert!"
 
-#: src/Controller/AdminController.php:115
+#: src/Controller/AdminController.php:118
 msgid "Invalid email config."
 msgstr "Ungültige E-Mail-Konfiguration."
 
-#: src/Controller/AdminController.php:140
+#: src/Controller/AdminController.php:143
 msgid "Invalid objective key."
 msgstr "Ungültiges Ziel."
 
-#: src/Controller/AdminController.php:149
+#: src/Controller/AdminController.php:152
 msgid "Invalid goal."
 msgstr "Ungültiges Ziel."
 
-#: src/Controller/AdminController.php:159
-#: src/Controller/AdminController.php:184
+#: src/Controller/AdminController.php:162
+#: src/Controller/AdminController.php:187
 msgid "Invalid image url."
 msgstr "Ungültige Bild-Url."
 
-#: src/Controller/AdminController.php:232
+#: src/Controller/AdminController.php:291
 msgid "Markup is not allowed in CSS."
 msgstr "Markup ist in CSS nicht erlaubt."
 
-#: src/Controller/AdminController.php:268
+#: src/Controller/AdminController.php:327
 msgid "Cause deleted."
 msgstr "Anliegen gelöscht."
 
-#: src/Controller/AdminController.php:273
+#: src/Controller/AdminController.php:332
 msgid "Failed to delete cause."
 msgstr "Anliegen konnte nicht gelöscht werden."
 
-#: src/Controller/AdminController.php:285
+#: src/Controller/AdminController.php:344
 msgid "Failed to create cause: Invalid name."
 msgstr "Anliegen konnte nicht erstellt werden: Ungültiger Name."
 
-#: src/Controller/AdminController.php:295
+#: src/Controller/AdminController.php:354
 msgid "Cause created."
 msgstr "Anliegen erstellt."
 
-#: src/Controller/AdminController.php:300
+#: src/Controller/AdminController.php:359
 msgid "Failed to create cause."
 msgstr "Anliegen konnte nicht erstellt werden."
 
+#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateContinueCollecting.php:14
+msgid "Hello {{firstName}}\n"
+"            \n"
+"Some time ago you promised {{groupSignatureCount}} signatures, thank you so much! You've already discovered the collection tool and entered {{groupSignatureCount}} signatures.\n\n"
+"Keep collecting and enter your new signatures now. Every signature gets you one step closer to your goal of {{groupSignatureObjective}} signatures: LINK \n\n"
+"Reminder: You can download the signature sheet and the most important arguments here: LINK\n\n"
+"Do you have any questions or would you like some hints? Get in touch with me! \n\n"
+"A big thank you for your commitment 💚\n"
+"Happy collecting,\n"
+"Your Team"
+msgstr "Hallo {{firstName}}\n"
+"            \n"
+"Vor einiger Zeit hast du {{groupSignatureCount}} Unterschriften versprochen, Vielen Dank! Du hast das Sammel-Tool bereits entdeckt und {{groupSignatureCount}} Unterschriften eingegeben.\n\n"
+"Sammle weiter und trage deine neue gesammelten Unterschriften jetzt ein. Jede Unterschrift bringt dich deinem Ziel von {{groupSignatureObjective}} Unterschriften einen Schritt näher: LINK \n\n"
+"Zur Erinnerung: Du kannst den Unterschriftenbogen und die wichtigsten Argumente hier herunterladen: LINK\n\n"
+"Hast du Fragen oder brauchst du weitere Tipps? Nimm mit mir Kontakt auf! \n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
+
+#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateContinueCollecting.php:36
+msgid "Continue collecting and entering signatures!\n"
+"{{firstName}}, enter signatures now - it's worth it!\n"
+"{{firstName}}, only with you we can make a change!"
+msgstr "Sammle weiter Unterschriften und trage sie ein!\n"
+"{{firstName}}, trage jetzt Unterschriften ein - es lohnt sich!\n"
+"{{firstName}}, mit dir können wir etwas verändern!"
+
+#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAchieved.php:14
+msgid "Hello {{firstName}}\n\n"
+"Yesterday you've reached your signature collection goal. Fantastic, congratulations. \n\n"
+"Upgrade your collection goal now and become a true chief collector: LINK \n\n"
+"Do you have any questions or would you like some hints? Get in touch with me!\n\n"
+"A big thank you for your commitment 💚\n"
+"Happy collecting,\n"
+"Your Team"
+msgstr "Hallo {{firstName}}\n\n"
+"Gestern hast du dein Ziel für die Unterschriftensammlung erreicht. Fantastisch, herzlichen Glückwunsch. \n\n"
+"Erhöhe jetzt dein Sammelziel und werde ein*e echte*r Chefsammler*in: LINK \n\n"
+"Hast du noch Fragen oder wünschst du Tipps? Nimm Kontakt mit mir auf!\n\n"
+"Ein herzliches Dankeschön für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
+
+#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAchieved.php:34
+msgid "Kudos, {{firstName}}: You made it!\n"
+"Congrats, {{firstName}}: Goal achieved."
+msgstr "Grossartig, {{firstName}}: Du hast es geschafft!\n"
+"Glückwunsch, {{firstName}}: Ziel erreicht."
+
+#. Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal.
+#: src/Email/EmailTemplateObjectiveAchievedAndRaised.php:15
+msgid "Hello {{firstName}}\n\n"
+"Yesterday you've reached your signature collection goal. Fantastic, congratulations. \n\n"
+"That you've already chosen to upgrade your goal makes us even happier. Kudos to you, {{firstName}}! Now it's time to keep at it and continue collecting. Enter more signatures and get one step closer to your new goal: LINK \n\n"
+"Reminder: You can download the signature sheet and the most important arguments here: LINK\n\n"
+"Do you have any questions or would you like some hints? Get in touch with me!\n\n"
+"A big thank you for your commitment 💚\n"
+"Happy collecting,\n"
+"Your Team"
+msgstr "Hallo {{firstName}}\n\n"
+"Gestern hast du dein Ziel für die Unterschriftensammlung erreicht. Fantastisch, herzlichen Glückwunsch. \n\n"
+"Dass du dich bereits entschieden hast, dein Ziel zu erhöhen, macht uns umso glücklicher. Herzlichen Glückwunsch, {{firstName}}! Jetzt ist es an der Zeit, weiterzusammeln. Gib weitere Unterschriften ein und komm deinem neuen Ziel einen Schritt näher: LINK \n\n"
+"Reminder: Du kannst den Unterschriftenbogen und die wichtigsten Argumente hier herunterladen: LINK\n\n"
+"Hast du Fragen oder brauchst du weitere Tipps? Nimm mit mir Kontakt auf! \n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
+
+#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAchievedAndRaised.php:37
+msgid "Kudos, {{firstName}}: You're awesome!\n"
+"Congrats, {{firstName}}: You're a true chief collector."
+msgstr "Genial, {{firstName}}: Du bist grossartig!\n"
+"Glückwunsch, {{firstName}}: Du bist ein*e echte*r Chefsammler*in!"
+
+#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAchievedFinal.php:14
+msgid "Wow {{firstName}},\n\n"
+"Yesterday you've reached the highest signature collection goal. This is incredible, thank you so much for your awesome commitment. Celebrate your success.\n\n"
+"People like you are really making a change. You can push it even further, if you keep collecting.\n\n"
+"An enormous thank you for your commitment 💚\n"
+"Happy collecting,\n"
+"Your Team"
+msgstr "Wow {{firstName}},\n\n"
+"Gestern hast du das höchste Ziel der Unterschriftensammlung erreicht. Das ist unglaublich, vielen Dank für dein grossartiges Engagement. Feiere diesen Erfolg.\n\n"
+"Menschen wie du bewirken eine echte Veränderung. Du kannst es noch weiter bringen, wenn du weiter sammelst.\n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
+
+#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAchievedFinal.php:32
+msgid "Incredible, {{firstName}}!"
+msgstr "Unglaublich, {{firstName}}!"
+
+#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAdded.php:14
+msgid "Hello {{firstName}}\n\n"
+"Yesterday you've added a signature collection goal. Fantastic, congratulations. This is the first step to making a difference. Now it's time to start collecting. Enter signatures and get one step closer to your goal: LINK \n\n"
+"Reminder: You can download the signature sheet and the most important arguments here: LINK\n\n"
+"Do you have any questions or would you like some hints? Get in touch with me!\n\n"
+"A big thank you for your commitment 💚\n"
+"Happy collecting,\n"
+"Your Team"
+msgstr "Hallo {{firstName}}\n\n"
+"Gestern hast du ein Unterschriftensammelziel hinzugefügt. Fantastisch, herzlichen Glückwunsch. Das ist der erste Schritt, um etwas zu bewirken. Jetzt ist es an der Zeit, mit dem Sammeln zu beginnen. Trage Unterschriften ein und komm deinem Ziel einen Schritt näher: LINK \n\n"
+"Erinnerung: Du kannst den Unterschriftenbogen und die wichtigsten Argumente hier herunterladen: LINK\n\n"
+"Hast du Fragen oder brauchst du weitere Tipps? Nimm mit mir Kontakt auf! \n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
+
+#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAdded.php:34
+msgid "You're making a change, {{firstName}}!"
+msgstr "Du machst einen Unterschied, {{firstName}}!"
+
+#. Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal.
+#: src/Email/EmailTemplateObjectiveRaised.php:15
+msgid "Hello {{firstName}}\n\n"
+"Yesterday you've upgraded your signature collection goal. Fantastic, congratulations. You're a true pro!\n\n"
+"Keep collecting. Every signature gets you one step closer to your new goal of {{groupSignatureObjective}} signatures: LINK \n\n"
+"Reminder: You can download the signature sheet and the most important arguments here: LINK\n\n"
+"Do you have any questions or would you like some hints? Get in touch with me!\n\n"
+"A big thank you for your commitment 💚\n"
+"Happy collecting,\n"
+"Your Team"
+msgstr "Hallo {{firstName}}\n\n"
+"Gestern hast du dein Ziel für die Unterschriftensammlung erhöht. Fantastisch, herzlichen Glückwunsch! Du bist ein echter Profi!\n\n"
+"Sammle weiter. Jede Unterschrift bringt dich deinem neuen Ziel von {{groupSignatureObjective}} einen Schritt näher: LINK \n\n"
+"Zur Erinnerung: Du kannst den Unterschriftenbogen und die wichtigsten Argumente hier herunterladen: LINK\n\n"
+"Hast du Fragen oder brauchst du weitere Tipps? Nimm mit mir Kontakt auf! \n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
+
+#. Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal.
+#: src/Email/EmailTemplateObjectiveRaised.php:38
+msgid "Goal upgraded! Awesome, {{firstName}}!\n"
+"Good choice, {{firstName}}!\n"
+"{{groupSignatureObjective}} for the win"
+msgstr "Ziel erhöht! Super, {{firstName}}!\n"
+"Gute Wahl, {{firstName}}!\n"
+"{{groupSignatureObjective}} für den Sieg"
+
+#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateStartCollecting.php:14
+msgid "Hello {{firstName}}\n"
+"            \n"
+"Some time ago you promised {{groupSignatureObjective}} signatures, thank you so much!\n\n"
+"Now it's time to start collecting! Do you have any questions or would you like some hints? Get in touch with me!\n\n"
+"Have you already discovered our great collection tool? Enter your collected signatures now and get one step closer to your goal: LINK\n\n"
+"A big thank you for your commitment 💚\n"
+"Happy collecting,\n"
+"Your Team"
+msgstr "Hallo {{firstName}}\n"
+"            \n"
+"Vor einiger Zeit hast du {{groupSignatureObjective}} Unterschriften versprochen, vielen Dank dafür!\n\n"
+"Jetzt ist es an der Zeit, mit dem Sammeln zu beginnen! Hast du noch Fragen oder möchtest du ein paar Tipps? Nimm Kontakt mit mir auf!\n\n"
+"Hast du schon unser tolles Sammel-Tool entdeckt? Gib jetzt deine gesammelten Unterschriften ein und komm deinem Ziel einen Schritt näher: LINK\n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
+
+#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateStartCollecting.php:34
+msgid "Collect and enter signatures now!\n"
+"{{firstName}}, enter signatures now - it's worth it!\n"
+"{{firstName}}, only with you we can make a change!"
+msgstr "Sammle jetzt und gib Signaturen ein!\n"
+"{{firstName}}, gib jetzt Signaturen ein - es lohnt sich!\n"
+"{{firstName}}, nur mit Ihnen können wir eine Änderung vornehmen!"
+
 #. Translators: Override with "Login link for the cause"
-#: src/Misc/LoginEmail.php:37
+#: src/Email/LoginEmail.php:31
 msgctxt "Email subject"
 msgid "Login link"
 msgstr "Login-Link"
 
-#: src/Misc/LoginEmail.php:52
+#: src/Email/LoginEmail.php:39
 msgid "Confirm login"
 msgstr "Anmeldung bestätigen"
 
 #. Translators: %1$s will be replaced with the users first name, %2$s the login link, %3$s the sender name. Keep the empty lines.
-#: src/Misc/LoginEmail.php:57
+#: src/Email/LoginEmail.php:44
 msgid "Hello %1$s\n\n"
 "Click the following link to login:\n\n"
 "%2$s\n\n"
@@ -489,24 +667,24 @@ msgstr "Hallo %1$s\n\n"
 "Mit freundlichen Grüssen,\n"
 "%3$s"
 
-#: src/Misc/Settings.php:71
+#: src/Misc/Settings.php:74
 msgid "Small"
 msgstr "Klein"
 
-#: src/Misc/Settings.php:79
+#: src/Misc/Settings.php:82
 msgid "Medium"
 msgstr "Mittel"
 
-#: src/Misc/Settings.php:87
+#: src/Misc/Settings.php:90
 msgid "Large"
 msgstr "Gross"
 
-#: src/Misc/Settings.php:95
+#: src/Misc/Settings.php:98
 msgid "Extra large"
 msgstr "Extra gross"
 
-#: src/Misc/Settings.php:174
-#: views/admin/settings.php:330
+#: src/Misc/Settings.php:177
+#: views/admin/settings.php:433
 msgid "Default"
 msgstr "Standard"
 
@@ -538,161 +716,217 @@ msgstr "Das hat zu lange gedauert"
 msgid "Sorry, your login link has already expired. Please try again."
 msgstr "Sorry, dein Login-Link ist zwischenzeitlich abgelaufen. Bitte versuche es erneut."
 
-#: views/admin/settings.php:27
+#: views/admin/settings.php:28
 msgid "Causes"
 msgstr "Anliegen"
 
-#: views/admin/settings.php:36
+#: views/admin/settings.php:37
 msgid "Shortcode"
 msgstr "Shortcode"
 
-#: views/admin/settings.php:42
+#: views/admin/settings.php:43
 msgid "Paste the shortcode into the post or page where you want the collectme app to run."
 msgstr "Füge den Shortcode in den Beitrag oder die Seite ein, auf der du die collectme App einbetten möchtest."
 
-#: views/admin/settings.php:48
+#: views/admin/settings.php:49
 msgid "Do you really want to delete %s and all its associated data? Only do this if the cause is long past or was never launched."
 msgstr "Willst du %s und alle zugehörigen Daten wirklich löschen? Mach das nur, wenn das Anliegen schon lange vorbei ist oder nie gestartet wurde."
 
-#: views/admin/settings.php:58
+#: views/admin/settings.php:59
 msgid "Delete %s"
 msgstr "%s löschen"
 
-#: views/admin/settings.php:65
+#: views/admin/settings.php:66
 msgid "Create new cause"
 msgstr "Neues Anliegen erstellen"
 
-#: views/admin/settings.php:69
+#: views/admin/settings.php:70
 msgid "Name"
 msgstr "Name"
 
-#: views/admin/settings.php:72
+#: views/admin/settings.php:73
 msgid "The name is only for internal use and not visible to the public. Keep it short."
 msgstr "Der Name ist nur für den internen Gebrauch und für die Öffentlichkeit nicht sichtbar. Halte ihn kurz."
 
-#: views/admin/settings.php:77
+#: views/admin/settings.php:78
 msgid "Create cause"
 msgstr "Anliegen erstellen"
 
-#: views/admin/settings.php:91
+#: views/admin/settings.php:92
 msgid "Signatures"
 msgstr "Unterschriften"
 
-#: views/admin/settings.php:95
+#: views/admin/settings.php:96
 msgid "Number of signatures needed"
 msgstr "Sammelziel"
 
-#: views/admin/settings.php:109
+#: views/admin/settings.php:110
 msgid "The number of signatures to be registered. For an initiative this would typically be 105'000."
 msgstr "Die Anzahl der Unterschriften, die eingetragen werden müssen. Für eine Initiative sind das normalerweise 105'000."
 
-#: views/admin/settings.php:116
+#: views/admin/settings.php:117
 msgid "Additional signatures collected"
 msgstr "Zusätzlich gesammelte Unterschriften"
 
-#: views/admin/settings.php:130
+#: views/admin/settings.php:131
 msgid "This number is added to the sum of the registered signatures. Typically you'd enter the number of signatures received by mailings (and thus not yet registered in this tool) here."
 msgstr "Diese Zahl wird zur Summe der eingetragenen Unterschriften addiert. Normalerweise trägst du hier das Total der Unterschriften ein, die du durch Mailings erhalten hast (und die daher noch nicht in diesem Tool eingetragen wurden)."
 
-#: views/admin/settings.php:139
+#: views/admin/settings.php:140
 msgid "Pledges"
 msgstr "Pledges"
 
-#: views/admin/settings.php:143
+#: views/admin/settings.php:144
 msgid "Number of signatures to be pledged"
 msgstr "Pledge-Ziel"
 
-#: views/admin/settings.php:157
+#: views/admin/settings.php:158
 msgid "The number of signatures you'd expect people to pledge for. It is possibly equal to the number of signatures needed."
 msgstr "Die Anzahl der Unterschriften, die du aus den Pledges erwartest. Vermutlich ist sie identlich mit dem Sammelziel."
 
-#: views/admin/settings.php:164
+#: views/admin/settings.php:165
 msgid "Additional pledges"
 msgstr "Zusätzliche Pledges"
 
-#: views/admin/settings.php:178
+#: views/admin/settings.php:179
 msgid "This number is added to the total of the pledges. Typically you'd enter the number of signatures expected to collect by mailings or other organizations."
 msgstr "Diese Zahl wird zur Summe der Pledges addiert. Typischerweise gibst du hier die Anzahl Unterschriften ein, die du von Mailings oder anderen Organisationen erwartest."
 
-#: views/admin/settings.php:193
+#: views/admin/settings.php:189
+msgid "Timings"
+msgstr "Timings"
+
+#: views/admin/settings.php:194
+msgid "Collection start date"
+msgstr "Sammelstart"
+
+#: views/admin/settings.php:208
+msgid "Collection end date"
+msgstr "Sammelende"
+
+#: views/admin/settings.php:220
+msgid "The last day you plan to collect signatures."
+msgstr "Der letzte Tag der Unterschriftensammlung."
+
+#: views/admin/settings.php:230
+msgid "Scheduled E-Mails"
+msgstr "Geplante E-Mails"
+
+#: views/admin/settings.php:235
+msgid "Collection reminder"
+msgstr "Sammelerinnerung"
+
+#: views/admin/settings.php:248
+msgid "days"
+msgstr "Tage"
+
+#: views/admin/settings.php:249
+msgid "Number of days after which the user receives an email that reminds him to collect and enter signatures."
+msgstr "Anzahl der Tage, nach denen der*die Benutzer*in eine E-Mail erhält, die sie*ihn daran erinnert, Unterschriften zu sammeln und einzutragen."
+
+#: views/admin/settings.php:253
+msgid "Resent every X days."
+msgstr "Wird alle X Tage erneut gesendet."
+
+#: views/admin/settings.php:254
+msgid "No reminders are sent if left blank."
+msgstr "Wenn dieses Feld leer bleibt, werden keine Erinnerungen verschickt."
+
+#: views/admin/settings.php:262
+msgid "Goal added / updated / achieved"
+msgstr "Ziel hinzugefügt / aktualisiert / erreicht"
+
+#: views/admin/settings.php:275
+msgid "hours"
+msgstr "Stunden"
+
+#: views/admin/settings.php:276
+msgid "Number of hours after which the user receives a thank you email for reaching and/or updating its goal."
+msgstr "Anzahl Stunden, nach denen der*die Benutzer*in eine Dankes-E-Mail für das Erreichen und/oder Aktualisieren seines*ihres Ziels erhält."
+
+#: views/admin/settings.php:280
+msgid "No email is sent if left blank."
+msgstr "Wenn dieses Feld leer bleibt, werden keine Emails verschickt."
+
+#: views/admin/settings.php:296
 msgid "Sender name"
 msgstr "Name des Absenders"
 
-#: views/admin/settings.php:205
+#: views/admin/settings.php:308
 msgid "The sender name for emails sent by this cause (e.g. login emails)."
 msgstr "Der Absendername für E-Mails, die von diesem Anliegen gesendet werden (z. B. Login-E-Mails)."
 
-#: views/admin/settings.php:212
+#: views/admin/settings.php:315
 msgid "Sender address"
 msgstr "Absenderadresse"
 
-#: views/admin/settings.php:224
+#: views/admin/settings.php:327
 msgid "The sender address for emails sent by this cause (e.g. login emails)."
 msgstr "Die Absenderadresse für E-Mails, die von diesem Anliegen gesendet werden (z. B. Login-E-Mails)."
 
-#: views/admin/settings.php:231
+#: views/admin/settings.php:334
 msgid "Reply-To address"
 msgstr "Antwortadresse"
 
-#: views/admin/settings.php:243
+#: views/admin/settings.php:346
 msgid "The destination address if people reply."
 msgstr "Die Zieladresse, wenn Leute antworten."
 
-#: views/admin/settings.php:253
+#: views/admin/settings.php:356
 msgid "Goals"
 msgstr "Ziele"
 
-#: views/admin/settings.php:254
+#: views/admin/settings.php:357
 msgid "Caution: Changing the goals after launching the cause will break the user experience."
 msgstr "Achtung: Wenn du die Ziele änderst, nachdem das Anliegen lanciert wurde, wird die user experience beeinträchtigt."
 
-#: views/admin/settings.php:264
+#: views/admin/settings.php:367
 msgid "Goal"
 msgstr "Ziel"
 
-#: views/admin/settings.php:275
+#: views/admin/settings.php:378
 msgid "Number of signatures to collect."
 msgstr "Anzahl zu sammelnder Unterschriften."
 
-#: views/admin/settings.php:282
-#: views/admin/settings.php:337
+#: views/admin/settings.php:385
+#: views/admin/settings.php:440
 msgid "Image URL"
 msgstr "Bild-URL"
 
-#: views/admin/settings.php:292
-#: views/admin/settings.php:347
+#: views/admin/settings.php:395
+#: views/admin/settings.php:450
 msgid "Fully qualified URL to the image. Clear to reset to default."
 msgstr "Vollständig qualifizierte URL zum Bild. Leer lassen, um auf das Standardbild zurückzusetzen."
 
-#: views/admin/settings.php:308
+#: views/admin/settings.php:411
 msgid "Add \"hot\" ribbon to goal."
 msgstr "Hebe das Ziel mit dem Band \"Super\" hervor."
 
-#: views/admin/settings.php:315
+#: views/admin/settings.php:418
 msgid "Active"
 msgstr "Aktiv"
 
-#: views/admin/settings.php:324
+#: views/admin/settings.php:427
 msgid "Goal is active (visible and selectable)"
 msgstr "Das Ziel ist aktiv (sichtbar und auswählbar)"
 
-#: views/admin/settings.php:331
+#: views/admin/settings.php:434
 msgid "This is shown before any goal is selected."
 msgstr "Dies wird angezeigt, bevor ein Ziel ausgewählt wurde."
 
-#: views/admin/settings.php:357
+#: views/admin/settings.php:460
 msgid "Custom CSS"
 msgstr "Benutzerdefiniertes CSS"
 
-#: views/admin/settings.php:362
+#: views/admin/settings.php:465
 msgid "CSS entered here will be applied to every page this cause is displayed."
 msgstr "Das hier eingegebene CSS wird auf jeder Seite angewendet, auf der dieses Anliegen angezeigt wird."
 
-#: views/admin/settings.php:369
+#: views/admin/settings.php:472
 msgid "Overrides"
 msgstr "Überschreibungen"
 
-#: views/admin/settings.php:451
+#: views/admin/settings.php:554
 msgid "Save %s settings"
 msgstr "%s Einstellungen speichern"
 

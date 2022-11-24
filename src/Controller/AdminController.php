@@ -12,6 +12,7 @@ use Collectme\Exceptions\CollectmeDBException;
 use Collectme\Misc\Settings;
 use Collectme\Misc\Translator;
 use Collectme\Model\Entities\Cause;
+use Collectme\Model\Entities\EnumMessageKey;
 use Gettext\Loader\PoLoader;
 use Gettext\Translation;
 
@@ -48,6 +49,8 @@ class AdminController
                 && $this->saveDefaultObjective($causeUuid)
                 && $this->saveSignatureSettings($causeUuid)
                 && $this->savePledgeSettings($causeUuid)
+                && $this->saveTimings($causeUuid)
+                && $this->saveMailDelays($causeUuid)
                 && $this->saveCustomCss($causeUuid)
                 && $this->saveOverrides($causeUuid)
             ) {
@@ -220,6 +223,62 @@ class AdminController
             'objective' => $objective,
             'offset' => $offset,
         ], $causeUuid);
+
+        return true;
+    }
+
+    private function saveTimings(string $causeUuid): bool
+    {
+        $extractDate = static fn(string|null $dateString) => null === $dateString ? null : date_create($dateString);
+
+        $timings = $this->settings->getTimings($causeUuid);
+
+        $timings['start'] = $extractDate($_POST['timings']['start'] ?? null);
+        $timings['stop'] = $extractDate($_POST['timings']['stop'] ?? null);
+
+        if (false === $timings['start'] || false === $timings['stop']) {
+            return false;
+        }
+
+        if ($timings['stop']) {
+            $timings['stop']->setTime(23, 59, 59);
+        }
+
+        $this->settings->setTimings($timings, $causeUuid);
+
+        return true;
+    }
+
+    private function saveMailDelays(mixed $causeUuid): bool
+    {
+        $mailDelays = [];
+        foreach (EnumMessageKey::cases() as $case) {
+            $delay = $_POST['mail_delays'][$case->value] ?? null;
+            if (null === $delay) {
+                $mailDelays[$case->value] = null;
+                continue;
+            }
+
+            $delay = trim($delay);
+
+            if ('' === $delay) {
+                $mailDelays[$case->value] = null;
+                continue;
+            }
+
+            $delay = absint($delay);
+
+            try {
+                $mailDelays[$case->value] = match ($case) {
+                    EnumMessageKey::COLLECTION_REMINDER => new \DateInterval("P{$delay}D"),
+                    EnumMessageKey::OBJECTIVE_CHANGE => new \DateInterval("PT{$delay}H"),
+                };
+            } catch(\Exception) {
+                return false;
+            }
+        }
+
+        $this->settings->setMailDelays($mailDelays, $causeUuid);
 
         return true;
     }
