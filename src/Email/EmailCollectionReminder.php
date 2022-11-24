@@ -34,7 +34,7 @@ class EmailCollectionReminder implements QueuableEmail, Mailable
      */
     public function getSubject(): string
     {
-        return $this->applyReplacements($this->selectSubject());
+        return $this->applyReplacements(trim($this->selectSubject()));
     }
 
     /**
@@ -55,7 +55,7 @@ class EmailCollectionReminder implements QueuableEmail, Mailable
 
     private function selectSubject(): string
     {
-        $subjects = explode("\n", $this->template->getSubjectTemplate());
+        $subjects = explode("\n", trim($this->template->getSubjectTemplate()));
 
         $num = count($subjects);
         if (0 === $num) {
