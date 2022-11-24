@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Plugin Name:       Collectme
  * Plugin URI:        https://github.com/grueneschweiz/collectme
  * Description:       Handle signature collections with ease.
- * Version:           2.1.0
+ * Version:           2.1.1
  * Requires at least: 6.0
  * Requires PHP:      8.1
  * Author:            Cyrill Bolliger
@@ -23,7 +23,7 @@ if (!defined('WPINC')) {
     die;
 }
 
-const COLLECTME_VERSION = '2.1.0';
+const COLLECTME_VERSION = '2.1.1';
 const COLLECTME_PLUGIN_NAME = __FILE__;
 const COLLECTME_BASE_PATH = __DIR__;
 

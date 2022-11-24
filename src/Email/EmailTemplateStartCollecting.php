@@ -9,8 +9,7 @@ class EmailTemplateStartCollecting implements EmailTemplate
 
     public function getBodyTemplate(): string
     {
-        /* Translators: Override LINK with the link to the tool */
-        /* Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}} */
+        /* Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}} */
         return __(
             "Hello {{firstName}}
             

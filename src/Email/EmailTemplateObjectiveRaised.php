@@ -9,9 +9,7 @@ class EmailTemplateObjectiveRaised implements EmailTemplate
 
     public function getBodyTemplate(): string
     {
-        /* Translators: Override LINK with the link to the tool */
-        /* Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}} */
-        /* Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal. */
+        /* Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}. {{groupSignatureObjective}} resolves to the new, upgraded goal. */
         return __(
             "Hello {{firstName}}
 

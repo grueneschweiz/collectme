@@ -497,7 +497,7 @@ use Collectme\Model\Entities\EnumMessageKey;
                                 }
 
                                 $stringKey = base64_encode($string);
-                                $rows = strlen($string) > 50 ? 3 : 1;
+                                $rows = strlen($string) > 50 ? substr_count($string, "\n") + 3 : 1;
                                 $references = array_reduce(
                                     array_keys($stringTemplate->getReferences()->toArray()),
                                     static fn($carry, $filePath) => $filePath . ':' . implode(
@@ -524,8 +524,10 @@ use Collectme\Model\Entities\EnumMessageKey;
                                 $default = esc_attr__($string, 'collectme');
 
                                 echo '<div style="margin-bottom: 1em;">';
-                                echo "<p><label for='override[$contextKey][$stringKey]'>" . esc_html(
-                                        $string
+                                echo "<p><label for='override[$contextKey][$stringKey]'>" . wpautop(
+                                        esc_html(
+                                            $string
+                                        )
                                     ) . "</label> <span style='margin-top: 0; font-size: 0.875em; color: #888888; line-height: 1em;'>" . esc_html(
                                         $contextDesc
                                     ) . "</span></p>";

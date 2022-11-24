@@ -9,8 +9,7 @@ class EmailTemplateObjectiveAchieved implements EmailTemplate
 
     public function getBodyTemplate(): string
     {
-        /* Translators: Override LINK with the link to the tool */
-        /* Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}} */
+        /* Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}} */
         return __(
             "Hello {{firstName}}
 
@@ -29,8 +28,7 @@ Your Team",
 
     public function getSubjectTemplate(): string
     {
-        /* Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. */
-        /* Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}} */
+        /* Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}} */
         return __(
             "Kudos, {{firstName}}: You made it!
 Congrats, {{firstName}}: Goal achieved.",
