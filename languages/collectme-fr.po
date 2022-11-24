@@ -9,8 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-24T11:57:41+01:00\n"
-"PO-Revision-Date: 2022-11-24 10:57\n"
+"POT-Creation-Date: 2022-11-24T18:23:29+01:00\n"
+"PO-Revision-Date: 2022-11-24 17:23\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -462,11 +462,11 @@ msgstr "Cause créée."
 msgid "Failed to create cause."
 msgstr "Impossible de créer la cause."
 
-#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateContinueCollecting.php:14
+#. Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateContinueCollecting.php:13
 msgid "Hello {{firstName}}\n"
 "            \n"
-"Some time ago you promised {{groupSignatureCount}} signatures, thank you so much! You've already discovered the collection tool and entered {{groupSignatureCount}} signatures.\n\n"
+"Some time ago you promised {{groupSignatureObjective}} signatures, thank you so much! You've already discovered the collection tool and entered {{groupSignatureCount}} signatures.\n\n"
 "Keep collecting and enter your new signatures now. Every signature gets you one step closer to your goal of {{groupSignatureObjective}} signatures: LINK \n\n"
 "Reminder: You can download the signature sheet and the most important arguments here: LINK\n\n"
 "Do you have any questions or would you like some hints? Get in touch with me! \n\n"
@@ -475,15 +475,15 @@ msgid "Hello {{firstName}}\n"
 "Your Team"
 msgstr ""
 
-#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateContinueCollecting.php:36
+#. Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateContinueCollecting.php:34
 msgid "Continue collecting and entering signatures!\n"
 "{{firstName}}, enter signatures now - it's worth it!\n"
 "{{firstName}}, only with you we can make a change!"
 msgstr ""
 
-#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateObjectiveAchieved.php:14
+#. Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAchieved.php:13
 msgid "Hello {{firstName}}\n\n"
 "Yesterday you've reached your signature collection goal. Fantastic, congratulations. \n\n"
 "Upgrade your collection goal now and become a true chief collector: LINK \n\n"
@@ -493,14 +493,14 @@ msgid "Hello {{firstName}}\n\n"
 "Your Team"
 msgstr ""
 
-#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateObjectiveAchieved.php:34
+#. Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAchieved.php:32
 msgid "Kudos, {{firstName}}: You made it!\n"
 "Congrats, {{firstName}}: Goal achieved."
 msgstr ""
 
-#. Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal.
-#: src/Email/EmailTemplateObjectiveAchievedAndRaised.php:15
+#. Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}. {{groupSignatureObjective}} resolves to the new, upgraded goal.
+#: src/Email/EmailTemplateObjectiveAchievedAndRaised.php:13
 msgid "Hello {{firstName}}\n\n"
 "Yesterday you've reached your signature collection goal. Fantastic, congratulations. \n\n"
 "That you've already chosen to upgrade your goal makes us even happier. Kudos to you, {{firstName}}! Now it's time to keep at it and continue collecting. Enter more signatures and get one step closer to your new goal: LINK \n\n"
@@ -512,13 +512,13 @@ msgid "Hello {{firstName}}\n\n"
 msgstr ""
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateObjectiveAchievedAndRaised.php:37
+#: src/Email/EmailTemplateObjectiveAchievedAndRaised.php:35
 msgid "Kudos, {{firstName}}: You're awesome!\n"
 "Congrats, {{firstName}}: You're a true chief collector."
 msgstr ""
 
-#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateObjectiveAchievedFinal.php:14
+#. Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAchievedFinal.php:13
 msgid "Wow {{firstName}},\n\n"
 "Yesterday you've reached the highest signature collection goal. This is incredible, thank you so much for your awesome commitment. Celebrate your success.\n\n"
 "People like you are really making a change. You can push it even further, if you keep collecting.\n\n"
@@ -528,12 +528,12 @@ msgid "Wow {{firstName}},\n\n"
 msgstr ""
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateObjectiveAchievedFinal.php:32
+#: src/Email/EmailTemplateObjectiveAchievedFinal.php:31
 msgid "Incredible, {{firstName}}!"
 msgstr ""
 
-#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateObjectiveAdded.php:14
+#. Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAdded.php:13
 msgid "Hello {{firstName}}\n\n"
 "Yesterday you've added a signature collection goal. Fantastic, congratulations. This is the first step to making a difference. Now it's time to start collecting. Enter signatures and get one step closer to your goal: LINK \n\n"
 "Reminder: You can download the signature sheet and the most important arguments here: LINK\n\n"
@@ -544,12 +544,12 @@ msgid "Hello {{firstName}}\n\n"
 msgstr ""
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateObjectiveAdded.php:34
+#: src/Email/EmailTemplateObjectiveAdded.php:33
 msgid "You're making a change, {{firstName}}!"
 msgstr ""
 
-#. Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal.
-#: src/Email/EmailTemplateObjectiveRaised.php:15
+#. Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}. {{groupSignatureObjective}} resolves to the new, upgraded goal.
+#: src/Email/EmailTemplateObjectiveRaised.php:13
 msgid "Hello {{firstName}}\n\n"
 "Yesterday you've upgraded your signature collection goal. Fantastic, congratulations. You're a true pro!\n\n"
 "Keep collecting. Every signature gets you one step closer to your new goal of {{groupSignatureObjective}} signatures: LINK \n\n"
@@ -561,14 +561,14 @@ msgid "Hello {{firstName}}\n\n"
 msgstr ""
 
 #. Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal.
-#: src/Email/EmailTemplateObjectiveRaised.php:38
+#: src/Email/EmailTemplateObjectiveRaised.php:36
 msgid "Goal upgraded! Awesome, {{firstName}}!\n"
 "Good choice, {{firstName}}!\n"
 "{{groupSignatureObjective}} for the win"
 msgstr ""
 
-#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateStartCollecting.php:14
+#. Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateStartCollecting.php:13
 msgid "Hello {{firstName}}\n"
 "            \n"
 "Some time ago you promised {{groupSignatureObjective}} signatures, thank you so much!\n\n"
@@ -580,7 +580,7 @@ msgid "Hello {{firstName}}\n"
 msgstr ""
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateStartCollecting.php:34
+#: src/Email/EmailTemplateStartCollecting.php:33
 msgid "Collect and enter signatures now!\n"
 "{{firstName}}, enter signatures now - it's worth it!\n"
 "{{firstName}}, only with you we can make a change!"
@@ -872,7 +872,7 @@ msgstr "Les CSS saisis ici seront appliqués à chaque page que cette cause est 
 msgid "Overrides"
 msgstr "Substitutions"
 
-#: views/admin/settings.php:554
+#: views/admin/settings.php:556
 msgid "Save %s settings"
 msgstr "Enregistrer les paramètres %s"
 
