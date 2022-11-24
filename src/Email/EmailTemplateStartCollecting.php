@@ -14,7 +14,7 @@ class EmailTemplateStartCollecting implements EmailTemplate
         return __(
             "Hello {{firstName}}
             
-Some time ago you promised {{groupSignatureCount}} signatures, thank you so much!
+Some time ago you promised {{groupSignatureObjective}} signatures, thank you so much!
 
 Now it's time to start collecting! Do you have any questions or would you like some hints? Get in touch with me!
 
