@@ -14,6 +14,7 @@ declare(strict_types=1);
 use Collectme\Misc\Settings;
 use Collectme\Misc\Translator;
 use Collectme\Model\Entities\Cause;
+use Collectme\Model\Entities\EnumMessageKey;
 
 ?>
 
@@ -179,6 +180,108 @@ use Collectme\Model\Entities\Cause;
                                     "This number is added to the total of the pledges. Typically you'd enter the number of signatures expected to collect by mailings or other organizations.",
                                     'collectme'
                                 ) ?></p>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <?php echo esc_html($cause->name) . ' ' . __('Timings', 'collectme') ?>
+                    </th>
+                    <td>
+                        <div>
+                            <label for="timings[start]">
+                                <?php _e('Collection start date', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="timings[start]"
+                                    id="timings[start]"
+                                    type="date"
+                                    class="date"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getTimings($cause->uuid)['start']?->format('Y-m-d')) ?>"
+                            >
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label for="timings[stop]">
+                                <?php _e('Collection end date', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="timings[stop]"
+                                    id="timings[stop]"
+                                    type="date"
+                                    class="date"
+                                    maxlength="80"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getTimings($cause->uuid)['stop']?->format('Y-m-d')) ?>"
+                            >
+                            <p class="description"><?php _e(
+                                    'The last day you plan to collect signatures.',
+                                    'collectme'
+                                ) ?></p>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <?php echo esc_html($cause->name) . ' ' . __('Scheduled E-Mails', 'collectme') ?>
+                    </th>
+                    <td>
+                        <div>
+                            <label for="mail_delays[<?php echo EnumMessageKey::COLLECTION_REMINDER->value ?>]">
+                                <?php _e('Collection reminder', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="mail_delays[<?php echo EnumMessageKey::COLLECTION_REMINDER->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::COLLECTION_REMINDER->value ?>]"
+                                    type="number"
+                                    class="num"
+                                    step="1"
+                                    min="1"
+                                    max="999"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::COLLECTION_REMINDER->value]?->format('%d')) ?>"
+                            > <?php _e('days', 'collectme') ?>
+                            <p class="description"><?php _e(
+                                    'Number of days after which the user receives an email that reminds him to collect and enter signatures.',
+                                    'collectme'
+                                ) ?>
+                                <?php _e('Resent every X days.', 'collectme') ?>
+                                <?php _e(
+                                    'No reminders are sent if left blank.',
+                                    'collectme'
+                                ) ?>
+                            </p>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label for="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_CHANGE->value ?>]">
+                                <?php _e('Goal added / updated / achieved', 'collectme') ?>
+                            </label>
+                            <br>
+                            <input
+                                    name="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_CHANGE->value ?>]"
+                                    id="mail_delays[<?php echo EnumMessageKey::OBJECTIVE_CHANGE->value ?>]"
+                                    type="number"
+                                    class="num"
+                                    step="1"
+                                    min="0"
+                                    max="999"
+                                    autocomplete="off"
+                                    value="<?php echo esc_attr($settings->getMailDelays($cause->uuid)[EnumMessageKey::OBJECTIVE_CHANGE->value]?->format('%h')) ?>"
+                            > <?php _e('hours', 'collectme') ?>
+                            <p class="description"><?php _e(
+                                    "Number of hours after which the user receives a thank you email for reaching and/or updating its goal.",
+                                    'collectme'
+                                ) ?>
+                                <?php _e(
+                                    'No email is sent if left blank.',
+                                    'collectme'
+                                ) ?>
+                            </p>
                         </div>
                     </td>
                 </tr>

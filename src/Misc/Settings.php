@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Collectme\Misc;
 
+use Collectme\Model\Entities\EnumMessageKey;
 use Collectme\Model\Entities\Stat;
 
 use const Collectme\ASSET_PATH_REL;
@@ -18,6 +19,8 @@ class Settings
     private const CUSTOM_CSS = 'custom_css';
     private const PLEDGE_SETTINGS = 'pledge_settings';
     private const SIGNATURE_SETTINGS = 'signature_settings';
+    private const TIMINGS = 'timings';
+    private const MAIL_DELAYS = 'mail_delays';
     private static Settings $instance;
     private array $settings = [];
 
@@ -216,5 +219,53 @@ class Settings
     {
         $this->set(self::SIGNATURE_SETTINGS, $settings, $causeUuid);
         Stat::clearCache($causeUuid);
+    }
+
+    /**
+     * @param string $causeUuid
+     * @return \DateTime[]|null[]
+     */
+    public function getTimings(string $causeUuid): array
+    {
+        $timings = $this->get(self::TIMINGS, $causeUuid) ?? [];
+        $defaults = [
+            'start' => null,
+            'stop' => null,
+        ];
+
+        return array_replace($defaults, $timings);
+    }
+
+    /**
+     * @param \DateTime[]|null[] $settings
+     * @param string $causeUuid
+     */
+    public function setTimings(array $settings, string $causeUuid): void
+    {
+        $this->set(self::TIMINGS, $settings, $causeUuid);
+    }
+
+    /**
+     * @param string $causeUuid
+     * @return \DateInterval[]|null[]
+     */
+    public function getMailDelays(string $causeUuid): array
+    {
+        $mails = $this->get(self::MAIL_DELAYS, $causeUuid) ?? [];
+        $defaults = [
+            EnumMessageKey::COLLECTION_REMINDER->value => null,
+            EnumMessageKey::OBJECTIVE_CHANGE->value => null,
+        ];
+
+        return array_replace($defaults, $mails);
+    }
+
+    /**
+     * @param \DateInterval[]|null[] $settings
+     * @param string $causeUuid
+     */
+    public function setMailDelays(array $settings, string $causeUuid): void
+    {
+        $this->set(self::MAIL_DELAYS, $settings, $causeUuid);
     }
 }

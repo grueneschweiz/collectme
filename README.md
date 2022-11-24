@@ -67,6 +67,40 @@ add_action( 'collectme_after_user_setup', function(
 }, 10, 3 );
 ```
 
+### Email Notifications
+
+The plugin can send the following email notifications:
+
+**Collection reminders**:
+
+- **Start collecting reminder** to users that have created an account but haven't entered any signatures yet.
+- **Continue collecting reminder** to users that haven't entered any signatures for some time (see the [Timing](#timing)
+  section below) and haven't reached their goal. If no goal was set, no reminder is sent.
+
+**Goal related**:
+
+- **Thank you for adding a personal goal** to users that have added their first goal.
+- **Thank you for upgrading your personal goal** for users that raised their goal.
+- **Thank you for achieving your personal goal** for users that entered at least as many signatures as their personal
+  goal.
+- **Thank you for achieving the final goal** for users that reached the highest goal.
+- **Thank you for achieving your personal goal and upgrading it afterwards** to users that reached their goal and have
+  set a higher one after.
+
+#### Timing
+
+There is a section **Scheduled E-Mails** on the settings page of the plugin that controls the **timing** of the emails.
+A good starting point is 21 days for the reminder emails and 24 hours for the goal related emails. If the fields are
+left blank, no emails will be sent.
+
+The mail scheduler also respects the **collection start date** and the **collection end date**. No emails are sent
+before the start and after the end date. **If the dates are left blank, the mailer won't stop sending emails.**
+
+#### Customizing the emails
+
+You can customize the email subject and body using the string override feature on the plugin's settings page.
+
+
 ## Dev Guide
 
 For the cool kids that want to contribute :sunglasses:
@@ -268,10 +302,12 @@ Localization is done with gettext and [Crowdin](https://crowdin.com/project/coll
 1. Use translation functions as usual (
    see [How to Internationalize Your Plugin](https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/))
 2. Create a pull request
-3. The translation template (.pot file) is generated and uploaded to Crowdin by the GitHub action [l10n.yml](/.github/workflows/l10n.yml).
+3. The translation template (.pot file) is generated and uploaded to Crowdin by the GitHub
+   action [l10n.yml](/.github/workflows/l10n.yml).
 4. Translate in [Crowdin](https://crowdin.com/project/collectme)
 5. Merge pull request into main
-6. The translations are downloaded from Crowdin, mo-files are compiled and committed to by the GitHub action [l10n.yml](/.github/workflows/l10n.yml).
+6. The translations are downloaded from Crowdin, mo-files are compiled and committed to by the GitHub
+   action [l10n.yml](/.github/workflows/l10n.yml).
 
 See also [crowdin.yml](/crowdin.yml).
 

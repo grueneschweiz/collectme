@@ -75,6 +75,33 @@ EOL,
         return (int) $result;
     }
 
+    public static function totalBeforeDateByGroup(\DateTimeInterface $date, string $groupUuid): int
+    {
+        global $wpdb;
+
+        $signaturesTbl = self::getTableName();
+
+        $query = $wpdb->prepare(<<<EOL
+SELECT SUM({$signaturesTbl}.count) as total 
+FROM {$signaturesTbl}
+WHERE 
+    {$signaturesTbl}.collected_by_groups_uuid = '%s'
+    AND {$signaturesTbl}.deleted_at IS NULL
+    AND {$signaturesTbl}.created_at < '%s'
+EOL,
+            $groupUuid,
+            $date->format(DATE_RFC3339_EXTENDED)
+        );
+
+        $result = $wpdb->get_var($query);
+
+        if ($result === null && $wpdb->error) {
+            throw new CollectmeDBException('Could not get total signatures before date by group:' . $wpdb->last_error);
+        }
+
+        return (int) $result;
+    }
+
     protected static function _convertFromCount(string|int $count): int
     {
         return (int) $count;
