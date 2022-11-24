@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2022-11-24T11:57:41+01:00\n"
-"PO-Revision-Date: 2022-11-24 10:57\n"
+"PO-Revision-Date: 2022-11-24 11:08\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -622,14 +622,23 @@ msgid "Hello {{firstName}}\n"
 "A big thank you for your commitment 💚\n"
 "Happy collecting,\n"
 "Your Team"
-msgstr ""
+msgstr "Hallo {{firstName}}\n"
+"            \n"
+"Vor einiger Zeit hast du {{groupSignatureObjective}} Unterschriften versprochen, vielen Dank dafür!\n\n"
+"Jetzt ist es an der Zeit, mit dem Sammeln zu beginnen! Hast du noch Fragen oder möchtest du ein paar Tipps? Nimm Kontakt mit mir auf!\n\n"
+"Hast du schon unser tolles Sammel-Tool entdeckt? Gib jetzt deine gesammelten Unterschriften ein und komm deinem Ziel einen Schritt näher: LINK\n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
 
 #. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
 #: src/Email/EmailTemplateStartCollecting.php:34
 msgid "Collect and enter signatures now!\n"
 "{{firstName}}, enter signatures now - it's worth it!\n"
 "{{firstName}}, only with you we can make a change!"
-msgstr ""
+msgstr "Sammle jetzt und gib Signaturen ein!\n"
+"{{firstName}}, gib jetzt Signaturen ein - es lohnt sich!\n"
+"{{firstName}}, nur mit Ihnen können wir eine Änderung vornehmen!"
 
 #. Translators: Override with "Login link for the cause"
 #: src/Email/LoginEmail.php:31
@@ -785,59 +794,59 @@ msgstr "Diese Zahl wird zur Summe der Pledges addiert. Typischerweise gibst du h
 
 #: views/admin/settings.php:189
 msgid "Timings"
-msgstr ""
+msgstr "Timings"
 
 #: views/admin/settings.php:194
 msgid "Collection start date"
-msgstr ""
+msgstr "Sammelstart"
 
 #: views/admin/settings.php:208
 msgid "Collection end date"
-msgstr ""
+msgstr "Sammelende"
 
 #: views/admin/settings.php:220
 msgid "The last day you plan to collect signatures."
-msgstr ""
+msgstr "Der letzte Tag der Unterschriftensammlung."
 
 #: views/admin/settings.php:230
 msgid "Scheduled E-Mails"
-msgstr ""
+msgstr "Geplante E-Mails"
 
 #: views/admin/settings.php:235
 msgid "Collection reminder"
-msgstr ""
+msgstr "Sammelerinnerung"
 
 #: views/admin/settings.php:248
 msgid "days"
-msgstr ""
+msgstr "Tage"
 
 #: views/admin/settings.php:249
 msgid "Number of days after which the user receives an email that reminds him to collect and enter signatures."
-msgstr ""
+msgstr "Anzahl der Tage, nach denen der*die Benutzer*in eine E-Mail erhält, die sie*ihn daran erinnert, Unterschriften zu sammeln und einzutragen."
 
 #: views/admin/settings.php:253
 msgid "Resent every X days."
-msgstr ""
+msgstr "Wird alle X Tage erneut gesendet."
 
 #: views/admin/settings.php:254
 msgid "No reminders are sent if left blank."
-msgstr ""
+msgstr "Wenn dieses Feld leer bleibt, werden keine Erinnerungen verschickt."
 
 #: views/admin/settings.php:262
 msgid "Goal added / updated / achieved"
-msgstr ""
+msgstr "Ziel hinzugefügt / aktualisiert / erreicht"
 
 #: views/admin/settings.php:275
 msgid "hours"
-msgstr ""
+msgstr "Stunden"
 
 #: views/admin/settings.php:276
 msgid "Number of hours after which the user receives a thank you email for reaching and/or updating its goal."
-msgstr ""
+msgstr "Anzahl Stunden, nach denen der*die Benutzer*in eine Dankes-E-Mail für das Erreichen und/oder Aktualisieren seines*ihres Ziels erhält."
 
 #: views/admin/settings.php:280
 msgid "No email is sent if left blank."
-msgstr ""
+msgstr "Wenn dieses Feld leer bleibt, werden keine Emails verschickt."
 
 #: views/admin/settings.php:296
 msgid "Sender name"
