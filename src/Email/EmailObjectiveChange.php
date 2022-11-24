@@ -86,7 +86,11 @@ class EmailObjectiveChange implements QueuableEmail, Mailable
      */
     public function getMessage(): string
     {
-        return $this->applyReplacements($this->template->getBodyTemplate());
+        return wpautop(
+            $this->applyReplacements(
+                $this->template->getBodyTemplate()
+            )
+        );
     }
 
     /**
