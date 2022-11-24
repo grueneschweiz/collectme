@@ -310,7 +310,7 @@ class AdminController
                     continue;
                 }
 
-                $translation = strip_tags($translation, '<strong><a>');
+                $translation = strip_tags(stripslashes($translation), '<strong><a>');
                 $this->translator->addOverride($causeUuid, $text, $translation, $context);
             }
         }
