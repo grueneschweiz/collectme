@@ -131,6 +131,7 @@ class Collectme
          * Translations and overrides
          */
         add_action('init', [$this->translator, 'loadTextdomain']);
+        add_action('switch_locale', [$this->translator, 'clearCache']);
         add_filter('gettext_collectme', [$this->translator, 'overrideGettext'], 10, 2);
         add_filter('gettext_with_context_collectme', [$this->translator, 'overrideGettextWithContext'], 10, 3);
         add_filter('ngettext_collectme', [$this->translator, 'overrideNGettext'], 10, 4);
