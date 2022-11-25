@@ -47,6 +47,11 @@ class Translator
         }
     }
 
+    public function clearCache(): void
+    {
+        unset($this->overrides, $this->lang);
+    }
+
     public function overrideNGettext(
         string $translation,
         string $single,
