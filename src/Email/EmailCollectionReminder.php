@@ -21,6 +21,7 @@ class EmailCollectionReminder implements QueuableEmail, Mailable
     public function __construct(
         private readonly EmailTemplateStartCollecting $templateStartCollecting,
         private readonly EmailTemplateContinueCollecting $templateContinueCollecting,
+        private readonly EmailTemplateSetObjective $templateSetObjective,
     ) {
     }
 
@@ -95,6 +96,10 @@ class EmailCollectionReminder implements QueuableEmail, Mailable
             return true;
         }
 
+        if ($this->template instanceof EmailTemplateSetObjective) {
+            return true;
+        }
+
         // only send continue collection reminder if group has an objective
         // and the objective hasn't been met.
         $objective = Objective::findHighestOfGroup($this->queueItem->groupUuid);
@@ -136,9 +141,11 @@ class EmailCollectionReminder implements QueuableEmail, Mailable
     {
         $this->queueItem = $item;
 
-        $this->template = $this->hasSignatures()
-            ? $this->templateContinueCollecting
-            : $this->templateStartCollecting;
+        $this->template = match (true) {
+            $this->hasSignatures() && $this->hasObjective() => $this->templateContinueCollecting,
+            $this->hasObjective() => $this->templateStartCollecting,
+            default => $this->templateSetObjective,
+        };
     }
 
     /**
@@ -147,5 +154,15 @@ class EmailCollectionReminder implements QueuableEmail, Mailable
     private function hasSignatures(): bool
     {
         return $this->queueItem->group()->signatures() > 0;
+    }
+
+    /**
+     * @throws CollectmeDBException
+     */
+    private function hasObjective(): bool
+    {
+        $objectives = Objective::findHighestOfGroup($this->queueItem->groupUuid);
+
+        return isset($objectives[0]) && $objectives[0]->objective > 0;
     }
 }

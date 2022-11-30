@@ -12,6 +12,7 @@ use Collectme\Email\EmailTemplateObjectiveAchievedAndRaised;
 use Collectme\Email\EmailTemplateObjectiveAchievedFinal;
 use Collectme\Email\EmailTemplateObjectiveAdded;
 use Collectme\Email\EmailTemplateObjectiveRaised;
+use Collectme\Email\EmailTemplateSetObjective;
 use Collectme\Email\EmailTemplateStartCollecting;
 use Collectme\Email\Mailable;
 use Collectme\Misc\Settings;
@@ -97,7 +98,7 @@ class EmailActionTest extends TestCase
         remove_all_filters('collectme_email');
     }
 
-    public function test_groupAdded(): void
+    public function test_groupAdded_noObjective(): void
     {
         $group = new Group(
             null,
@@ -118,6 +119,120 @@ class EmailActionTest extends TestCase
 
         $sent = false;
         add_filter('collectme_email', function(Mailable $email) use (&$sent) {
+            $template = new \ReflectionProperty(EmailCollectionReminder::class, 'template');
+            self::assertInstanceOf(EmailTemplateSetObjective::class, $template->getValue($email));
+            $sent = true;
+            return $email;
+        });
+
+        $itemsBeforeSend = MailQueueItem::findUnsentByGroupAndMsgKey(
+            $this->group->uuid,
+            EnumMessageKey::COLLECTION_REMINDER,
+        );
+
+        do_action('collectme_send_mails');
+
+        $itemsAfterSend = MailQueueItem::findUnsentByGroupAndMsgKey(
+            $this->group->uuid,
+            EnumMessageKey::COLLECTION_REMINDER,
+        );
+
+        self::assertCount(1, $itemsBeforeSend);
+        self::assertCount(1, $itemsAfterSend);
+        self::assertNotEquals($itemsBeforeSend[0]->uuid, $itemsAfterSend[0]->uuid);
+        self::assertTrue($sent);
+    }
+
+    public function test_groupAdded_objectiveZero(): void
+    {
+        $group = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $this->cause->uuid,
+            false,
+        );
+        $this->group = $group->save();
+
+        $role = new Role(
+            null,
+            $this->user->uuid,
+            $this->group->uuid,
+            EnumPermission::READ_WRITE
+        );
+        $role->save();
+
+        $objective = new Objective(
+            null,
+            0,
+            $group->uuid,
+            'EmailActionTest'
+        );
+        $objective->save();
+
+        $sent = false;
+        add_filter('collectme_email', function(Mailable $email) use (&$sent) {
+            if (!($email instanceof EmailCollectionReminder)) {
+                return $email;
+            }
+
+            $template = new \ReflectionProperty(EmailCollectionReminder::class, 'template');
+            self::assertInstanceOf(EmailTemplateSetObjective::class, $template->getValue($email));
+            $sent = true;
+            return $email;
+        });
+
+        $itemsBeforeSend = MailQueueItem::findUnsentByGroupAndMsgKey(
+            $this->group->uuid,
+            EnumMessageKey::COLLECTION_REMINDER,
+        );
+
+        do_action('collectme_send_mails');
+
+        $itemsAfterSend = MailQueueItem::findUnsentByGroupAndMsgKey(
+            $this->group->uuid,
+            EnumMessageKey::COLLECTION_REMINDER,
+        );
+
+        self::assertCount(1, $itemsBeforeSend);
+        self::assertCount(1, $itemsAfterSend);
+        self::assertNotEquals($itemsBeforeSend[0]->uuid, $itemsAfterSend[0]->uuid);
+        self::assertTrue($sent);
+    }
+
+    public function test_groupAdded_objectiveSet(): void
+    {
+        $group = new Group(
+            null,
+            'test_' . wp_generate_password(),
+            EnumGroupType::PERSON,
+            $this->cause->uuid,
+            false,
+        );
+        $this->group = $group->save();
+
+        $role = new Role(
+            null,
+            $this->user->uuid,
+            $this->group->uuid,
+            EnumPermission::READ_WRITE
+        );
+        $role->save();
+
+        $objective = new Objective(
+            null,
+            100,
+            $group->uuid,
+            'EmailActionTest'
+        );
+        $objective->save();
+
+        $sent = false;
+        add_filter('collectme_email', function(Mailable $email) use (&$sent) {
+            if (!($email instanceof EmailCollectionReminder)) {
+                return $email;
+            }
+
             $template = new \ReflectionProperty(EmailCollectionReminder::class, 'template');
             self::assertInstanceOf(EmailTemplateStartCollecting::class, $template->getValue($email));
             $sent = true;
