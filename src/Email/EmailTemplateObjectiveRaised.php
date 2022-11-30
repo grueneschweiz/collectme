@@ -30,9 +30,7 @@ Your Team",
 
     public function getSubjectTemplate(): string
     {
-        /* Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. */
-        /* Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}} */
-        /* Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal. */
+        /* Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}. {{groupSignatureObjective}} resolves to the new, upgraded goal. */
         return __(
             "Goal upgraded! Awesome, {{firstName}}!
 Good choice, {{firstName}}!

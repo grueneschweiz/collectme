@@ -26,8 +26,7 @@ Your Team",
 
     public function getSubjectTemplate(): string
     {
-        /* Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. */
-        /* Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}} */
+        /* Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}} */
         return __(
             "Incredible, {{firstName}}!",
             'collectme'
