@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2022-11-30T12:35:46+01:00\n"
-"PO-Revision-Date: 2022-11-30 11:36\n"
+"PO-Revision-Date: 2022-11-30 12:51\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -621,13 +621,20 @@ msgid "Hello {{firstName}}\n\n"
 "A big thank you for your commitment 💚\n"
 "Happy collecting,\n"
 "Your Team"
-msgstr ""
+msgstr "Hallo {{firstName}}\n\n"
+"Vor einiger Zeit hast du unser Unterschriftensammel-Tool entdeckt. Das hat mich glücklich gemacht. Komm zurück und stecke dir ein Sammelziel: LINK\n\n"
+"Danach heisst es: Ran an die Sammelbrettli! Hier findest du die Unterschriftenbögen und die wichtigsten Argumente zum Herunterladen: LINK\n\n"
+"Hast du Fragen oder möchtest du ein paar Tipps? Nimm Kontakt mit mir auf!\n\n"
+"Vielen Dank für dein Engagement 💚\n"
+"Gutes Sammeln,\n"
+"Dein Team"
 
 #. Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}. {{groupSignatureObjective}} resolves to the new, upgraded goal.
 #: src/Email/EmailTemplateSetObjective.php:31
 msgid "Choose your collection target now!\n"
 "How many signatures will you collect, {{firstName}}?"
-msgstr ""
+msgstr "Wähle jetzt dein Sammelziel!\n"
+"Wie viele Unterschriften wirst du sammeln, {{firstName}}?"
 
 #. Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
 #: src/Email/EmailTemplateStartCollecting.php:13
