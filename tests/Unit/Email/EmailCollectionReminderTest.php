@@ -6,6 +6,7 @@ namespace Unit\Email;
 
 use Collectme\Email\EmailCollectionReminder;
 use Collectme\Email\EmailTemplateContinueCollecting;
+use Collectme\Email\EmailTemplateSetObjective;
 use Collectme\Email\EmailTemplateStartCollecting;
 use Collectme\Model\Entities\ActivityLog;
 use Collectme\Model\Entities\Cause;
@@ -35,6 +36,7 @@ class EmailCollectionReminderTest extends TestCase
         parent::setUp();
         $template1 = $this->createMock(EmailTemplateStartCollecting::class);
         $template2 = $this->createMock(EmailTemplateContinueCollecting::class);
+        $template3 = $this->createMock(EmailTemplateSetObjective::class);
 
         $subjects = <<<EOL
 Subject1 {{firstName}} {{groupName}}
@@ -47,11 +49,17 @@ EOL;
 
         $template1->method('getSubjectTemplate')->willReturn($subjects);
         $template2->method('getSubjectTemplate')->willReturn($subjects);
+        $template3->method('getSubjectTemplate')->willReturn($subjects);
 
         $template1->method('getBodyTemplate')->willReturn($body);
         $template2->method('getBodyTemplate')->willReturn($body);
+        $template3->method('getBodyTemplate')->willReturn($body);
 
-        $this->emailCollectionReminder = new EmailCollectionReminder($template1, $template2);
+        $this->emailCollectionReminder = new EmailCollectionReminder(
+            $template1,
+            $template2,
+            $template3
+        );
 
         $cause = new Cause(
             null,
@@ -182,7 +190,7 @@ EOL);
         $email->setUser($this->user);
         $email->prepareFor($this->mailQueueItem);
 
-        self::assertFalse($email->shouldBeSent());
+        self::assertTrue($email->shouldBeSent());
     }
 
     public function test_shouldBeSent__belowObjective(): void

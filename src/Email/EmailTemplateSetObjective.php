@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Collectme\Email;
 
-class EmailTemplateObjectiveRaised implements EmailTemplate
+class EmailTemplateSetObjective implements EmailTemplate
 {
-
     public function getBodyTemplate(): string
     {
         /* Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}. {{groupSignatureObjective}} resolves to the new, upgraded goal. */
         return __(
             "Hello {{firstName}}
 
-Yesterday you've upgraded your signature collection goal. Fantastic, congratulations. You're a true pro!
+Some time ago you discovered our signature collection tool. This made me happy. Now it's time to come back and set yourself a signature collection goal: LINK
 
-Keep collecting. Every signature gets you one step closer to your new goal of {{groupSignatureObjective}} signatures: LINK 
-
-Reminder: You can download the signature sheet and the most important arguments here: LINK
+You're then invited to start collecting. Download the signature sheet and the most important arguments here: LINK
 
 Do you have any questions or would you like some hints? Get in touch with me!
 
@@ -32,9 +29,8 @@ Your Team",
     {
         /* Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}. {{groupSignatureObjective}} resolves to the new, upgraded goal. */
         return __(
-            "Goal upgraded! Awesome, {{firstName}}!
-Good choice, {{firstName}}!
-{{groupSignatureObjective}} for the win",
+            "Choose your collection target now!
+How many signatures will you collect, {{firstName}}?",
             'collectme'
         );
     }

@@ -9,8 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-24T18:23:29+01:00\n"
-"PO-Revision-Date: 2022-11-24 17:23\n"
+"POT-Creation-Date: 2022-11-30T12:35:46+01:00\n"
+"PO-Revision-Date: 2022-11-30 11:36\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: collectme\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -511,8 +511,8 @@ msgid "Hello {{firstName}}\n\n"
 "Your Team"
 msgstr ""
 
-#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateObjectiveAchievedAndRaised.php:35
+#. Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAchievedAndRaised.php:34
 msgid "Kudos, {{firstName}}: You're awesome!\n"
 "Congrats, {{firstName}}: You're a true chief collector."
 msgstr ""
@@ -527,8 +527,8 @@ msgid "Wow {{firstName}},\n\n"
 "Your Team"
 msgstr ""
 
-#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateObjectiveAchievedFinal.php:31
+#. Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAchievedFinal.php:30
 msgid "Incredible, {{firstName}}!"
 msgstr ""
 
@@ -543,8 +543,8 @@ msgid "Hello {{firstName}}\n\n"
 "Your Team"
 msgstr ""
 
-#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateObjectiveAdded.php:33
+#. Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateObjectiveAdded.php:32
 msgid "You're making a change, {{firstName}}!"
 msgstr ""
 
@@ -560,11 +560,28 @@ msgid "Hello {{firstName}}\n\n"
 "Your Team"
 msgstr ""
 
-#. Translators: {{groupSignatureObjective}} resolves to the new, upgraded goal.
-#: src/Email/EmailTemplateObjectiveRaised.php:36
+#. Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}. {{groupSignatureObjective}} resolves to the new, upgraded goal.
+#: src/Email/EmailTemplateObjectiveRaised.php:34
 msgid "Goal upgraded! Awesome, {{firstName}}!\n"
 "Good choice, {{firstName}}!\n"
 "{{groupSignatureObjective}} for the win"
+msgstr ""
+
+#. Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}. {{groupSignatureObjective}} resolves to the new, upgraded goal.
+#: src/Email/EmailTemplateSetObjective.php:12
+msgid "Hello {{firstName}}\n\n"
+"Some time ago you discovered our signature collection tool. This made me happy. Now it's time to come back and set yourself a signature collection goal: LINK\n\n"
+"You're then invited to start collecting. Download the signature sheet and the most important arguments here: LINK\n\n"
+"Do you have any questions or would you like some hints? Get in touch with me!\n\n"
+"A big thank you for your commitment 💚\n"
+"Happy collecting,\n"
+"Your Team"
+msgstr ""
+
+#. Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}. {{groupSignatureObjective}} resolves to the new, upgraded goal.
+#: src/Email/EmailTemplateSetObjective.php:31
+msgid "Choose your collection target now!\n"
+"How many signatures will you collect, {{firstName}}?"
 msgstr ""
 
 #. Translators: Override LINK with the link to the tool. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
@@ -579,8 +596,8 @@ msgid "Hello {{firstName}}\n"
 "Your Team"
 msgstr ""
 
-#. Translators: Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
-#: src/Email/EmailTemplateStartCollecting.php:33
+#. Translators: One email subject per line. If more than one is provided, the mailer chooses one randomly. Available placeholders: {{firstName}} {{lastName}} {{userEmail}} {{groupName}} {{groupSignatureCount}} {{groupSignatureObjective}}
+#: src/Email/EmailTemplateStartCollecting.php:32
 msgid "Collect and enter signatures now!\n"
 "{{firstName}}, enter signatures now - it's worth it!\n"
 "{{firstName}}, only with you we can make a change!"
